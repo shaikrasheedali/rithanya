@@ -5,6 +5,7 @@ import { apiRequest } from '../../utils/api';
 import { useToast } from '../../components/common/Toast';
 import { formatCurrency } from '../../utils/formatters';
 import Modal from '../../components/common/Modal';
+import ImageUploadField from '../../components/common/ImageUploadField';
 
 export default function ProductsAdminPage() {
   const { addToast } = useToast();
@@ -240,15 +241,12 @@ export default function ProductsAdminPage() {
               </div>
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Image URL</label>
-              <input
-                type="url"
-                className="form-control"
-                value={formData.image}
-                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-              />
-            </div>
+            <ImageUploadField
+              label="Package Banner / Cover Image"
+              value={formData.image}
+              onChange={(url) => setFormData({ ...formData, image: url })}
+              helperText="Uploads to /assets/uploads and synchronizes with Media Assets"
+            />
 
             <div className="form-group">
               <label className="form-label">Summary</label>

@@ -1,21 +1,49 @@
+const path = require('path');
+const fs = require('fs');
 const prisma = require('../config/db');
 
-const ASSET_LIBRARY_PRESETS = [
-  { title: 'Doctor Examination', url: 'https://images.unsplash.com/photo-1666214280557-f1b5022eb634?auto=format&fit=crop&w=1200&q=85' },
-  { title: 'Glucose & Metabolic Monitoring', url: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1200&q=85' },
-  { title: 'Transfusion Daycare Bed', url: 'https://images.unsplash.com/photo-1615461066841-6116e61058f4?auto=format&fit=crop&w=1200&q=85' },
-  { title: 'Clinical Laboratory Analyzers', url: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&w=1200&q=85' },
-  { title: 'Pediatric Care & Stethoscope', url: 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=1200&q=85' },
-  { title: 'Senior Health Evaluation', url: 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=1200&q=85' },
-  { title: 'Modern Clean Clinic Room', url: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=1200&q=85' },
-  { title: 'Senior Physician Portrait', url: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=1200&q=85' },
-  { title: 'Hospital Daycare Nurse Care', url: 'https://images.unsplash.com/photo-1584515933487-779824d29309?auto=format&fit=crop&w=1200&q=85' },
-  { title: 'Clinical Consultation Desk', url: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1200&q=85' },
-  { title: 'Hospital Transfusion Operations', url: 'https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?auto=format&fit=crop&w=1200&q=85' }
-];
-
+/**
+ * Get all media assets from the uploads directory and database
+ */
 async function getMediaAssets(req, res, next) {
   try {
+    const uploadDir = path.join(__dirname, '../../client/public/assets/uploads');
+
+    // Sync any existing files on disk into the MediaAsset database table
+    if (fs.existsSync(uploadDir)) {
+      const diskFiles = fs.readdirSync(uploadDir);
+      for (const filename of diskFiles) {
+        if (filename.startsWith('.') || filename === 'README.md') continue;
+        try {
+          const filePath = path.join(uploadDir, filename);
+          const stat = fs.statSync(filePath);
+          if (stat.isFile()) {
+            const exists = await prisma.mediaAsset.findFirst({ where: { filename } });
+            if (!exists) {
+              const ext = path.extname(filename).toLowerCase();
+              const mimeType = ext === '.png' ? 'image/png'
+                : ext === '.svg' ? 'image/svg+xml'
+                : ext === '.webp' ? 'image/webp'
+                : ext === '.pdf' ? 'application/pdf'
+                : 'image/jpeg';
+
+              await prisma.mediaAsset.create({
+                data: {
+                  filename,
+                  originalName: filename,
+                  mimeType,
+                  size: stat.size,
+                  url: `/assets/uploads/${filename}`
+                }
+              });
+            }
+          }
+        } catch (e) {
+          // Continue syncing remaining files
+        }
+      }
+    }
+
     const dbAssets = await prisma.mediaAsset.findMany({
       orderBy: { createdAt: 'desc' }
     });
@@ -23,15 +51,19 @@ async function getMediaAssets(req, res, next) {
     return res.json({
       success: true,
       data: {
-        presets: ASSET_LIBRARY_PRESETS,
+        presets: [],
         uploaded: dbAssets
-      }
+      },
+      assets: dbAssets
     });
   } catch (err) {
     next(err);
   }
 }
 
+/**
+ * Handle multipart image/document upload to uploads directory
+ */
 async function uploadMedia(req, res, next) {
   try {
     if (!req.file) {
@@ -56,11 +88,28 @@ async function uploadMedia(req, res, next) {
   }
 }
 
+/**
+ * Delete a media asset from database and local disk
+ */
 async function deleteMedia(req, res, next) {
   try {
     const { id } = req.params;
-    await prisma.mediaAsset.delete({ where: { id } });
-    return res.json({ success: true, message: 'Asset deleted' });
+    const asset = await prisma.mediaAsset.findUnique({ where: { id } });
+
+    if (asset) {
+      const uploadDir = path.join(__dirname, '../../client/public/assets/uploads');
+      const filePath = path.join(uploadDir, asset.filename);
+      if (fs.existsSync(filePath)) {
+        try {
+          fs.unlinkSync(filePath);
+        } catch (e) {
+          // File might already be gone
+        }
+      }
+      await prisma.mediaAsset.delete({ where: { id } });
+    }
+
+    return res.json({ success: true, message: 'Asset deleted from storage' });
   } catch (err) {
     next(err);
   }

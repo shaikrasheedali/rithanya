@@ -15,7 +15,8 @@ import {
   Image,
   BookOpen,
   Mail,
-  ChevronRight
+  ChevronRight,
+  ArrowRight
 } from 'lucide-react';
 
 export default function PublicNavbar() {
@@ -109,12 +110,12 @@ export default function PublicNavbar() {
             </Link>
 
             <Link
-              to="/admin/dashboard"
-              className="island-btn island-btn-outline staff-portal-btn"
-              title="Staff & Administration Portal"
+              to="/admin/login"
+              className="island-circle-login-btn"
+              title="Staff Portal Login"
+              aria-label="Staff Portal Login"
             >
-              <ShieldCheck size={14} />
-              <span>Staff Portal</span>
+              <ArrowRight size={15} />
             </Link>
 
             {/* Mobile Hamburger Toggle Button */}

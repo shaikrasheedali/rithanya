@@ -28,7 +28,7 @@
   border: 1px solid rgba(169, 17, 41, 0.16);
   border-radius: 9999px;
   box-shadow: 0 12px 36px -6px rgba(24, 18, 20, 0.09), 0 4px 14px rgba(169, 17, 41, 0.05);
-  padding: 8px 14px 8px 18px;
+  padding: 11px 16px 11px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -39,7 +39,7 @@
 .floating-island-container.scrolled .floating-island {
   background: rgba(255, 255, 255, 0.97);
   box-shadow: 0 16px 42px -6px rgba(24, 18, 20, 0.14), 0 6px 18px rgba(169, 17, 41, 0.08);
-  padding: 6px 12px 6px 16px;
+  padding: 8px 14px 8px 18px;
 }
 
 /* Island Brand */
@@ -186,6 +186,32 @@
   border-color: var(--red-600);
   color: var(--red-700);
   background: var(--red-50);
+}
+
+/* Small Circular Right Arrow Login Button */
+.island-circle-login-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--canvas);
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.island-circle-login-btn:hover {
+  background: linear-gradient(135deg, var(--red-700), var(--red-900));
+  border-color: var(--red-700);
+  color: #fff;
+  transform: scale(1.08);
+  box-shadow: 0 4px 14px rgba(169, 17, 41, 0.35);
 }
 
 /* Mobile Hamburger Toggle Button */
@@ -936,3 +962,422 @@
     font-size: 11.5px;
   }
 }
+
+/* ==========================================================================
+   GOOGLE LABS INSPIRED HOSPITAL HERO VIDEO SLIDER
+   ========================================================================== */
+.featured-hero.hospital-hero-slider {
+  position: relative;
+  overflow: clip;
+  min-height: 640px;
+  height: 90vh;
+  max-height: 900px;
+  background: #0d0b0c;
+  color: #fff;
+}
+
+.featured-hero__mask {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-font-smoothing: auto;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 400%;
+  mask-size: 400%;
+  transform-origin: center center;
+  opacity: 0;
+}
+
+.featured-hero__container.hero-slide__container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform-origin: center center;
+}
+
+.featured-hero__video {
+  position: absolute;
+  inset: 0;
+  background: #140f12;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.featured-hero__video video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+
+.featured-hero__poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  z-index: 0;
+  filter: brightness(0.75);
+}
+
+.featured-hero__gradient--hospital {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(17, 12, 14, 0.72) 0%,
+    rgba(17, 12, 14, 0.18) 35%,
+    rgba(82, 10, 24, 0.48) 70%,
+    rgba(13, 11, 12, 0.95) 100%
+  );
+  z-index: 2;
+}
+
+/* 5-Layer Directional Blur Glassmorphism */
+.featured-hero__blur {
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 140px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.featured-hero__blur-layer {
+  position: absolute;
+  inset: 0;
+  background: #0000;
+  backdrop-filter: blur(var(--blur, 4px));
+  -webkit-backdrop-filter: blur(var(--blur, 4px));
+  mask-repeat: no-repeat;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+}
+
+.featured-hero__blur-layer--1 {
+  --blur: 4px;
+  mask-image: linear-gradient(to top, transparent 0%, transparent 40%, #000 60%, #000 80%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to top, transparent 0%, transparent 40%, #000 60%, #000 80%, transparent 100%);
+}
+
+.featured-hero__blur-layer--2 {
+  --blur: 8px;
+  mask-image: linear-gradient(to top, transparent 0%, transparent 20%, #000 40%, #000 60%, transparent 80%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to top, transparent 0%, transparent 20%, #000 40%, #000 60%, transparent 80%, transparent 100%);
+}
+
+.featured-hero__blur-layer--3 {
+  --blur: 14px;
+  mask-image: linear-gradient(to top, transparent 0%, #000 20%, #000 40%, transparent 60%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to top, transparent 0%, #000 20%, #000 40%, transparent 60%, transparent 100%);
+}
+
+.featured-hero__blur-layer--4 {
+  --blur: 22px;
+  mask-image: linear-gradient(to top, #000 0%, #000 20%, transparent 40%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to top, #000 0%, #000 20%, transparent 40%, transparent 100%);
+}
+
+.featured-hero__blur-layer--5 {
+  --blur: 32px;
+  mask-image: linear-gradient(to top, #000 0%, transparent 20%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to top, #000 0%, transparent 20%, transparent 100%);
+}
+
+/* Text Container */
+.featured-hero__text-container {
+  position: absolute;
+  bottom: clamp(120px, 25%, 240px);
+  left: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 24px;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.featured-hero__animation__text-container {
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  text-align: center;
+  max-width: 960px;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.hero-slide-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 9999px;
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 18px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.hospital-hero__heading {
+  font-size: clamp(32px, 5.2vw, 64px);
+  font-weight: 800;
+  line-height: 1.14;
+  letter-spacing: -1px;
+  margin-bottom: 16px;
+  color: #ffffff;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+}
+
+.hospital-hero__subheading {
+  font-size: clamp(15px, 1.8vw, 19px);
+  font-weight: 400;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.92);
+  max-width: 760px;
+  margin-bottom: 28px;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
+}
+
+.hero-slide-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.hospital-hero__cta-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, var(--red-600), var(--red-800));
+  color: #fff;
+  border-radius: 9999px;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 13px 32px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  box-shadow: 0 6px 22px rgba(169, 17, 41, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  cursor: pointer;
+}
+
+.hospital-hero__cta-primary:hover {
+  background: linear-gradient(135deg, var(--red-500), var(--red-700));
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(169, 17, 41, 0.6);
+  color: #fff;
+}
+
+.hospital-hero__cta-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #fff;
+  border-radius: 9999px;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 13px 26px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.hospital-hero__cta-secondary:hover {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: #fff;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* Controls and Progress Indicators */
+.featured-hero__controls {
+  position: absolute;
+  z-index: 10;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+.featured-hero__progress-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(20, 15, 18, 0.62);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 9999px;
+  padding: 8px 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+}
+
+.featured-hero__progress {
+  border-radius: 9999px;
+  position: relative;
+  transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  flex-shrink: 0;
+  height: 8px;
+  width: 8px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.featured-hero__progress[data-active="true"] {
+  width: 84px;
+}
+
+.featured-hero__progress-background {
+  background: rgba(255, 255, 255, 0.28);
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  inset: 0;
+}
+
+.featured-hero__progress[data-active="true"] .featured-hero__progress-background {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.featured-hero__progress-fill {
+  background: linear-gradient(90deg, #fff, #ffd4dc);
+  height: 100%;
+  width: 0%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 9999px;
+}
+
+.featured-hero__button {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(20, 15, 18, 0.62);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.featured-hero__button:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: #fff;
+  transform: scale(1.08);
+}
+
+/* Medical Heartbeat Wave Loading Skeleton */
+.hero-video-loader {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(13, 11, 12, 0.65);
+  backdrop-filter: blur(8px);
+  z-index: 3;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.hero-loader-pulse {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+}
+
+.hero-pulse-icon {
+  color: var(--red-500);
+  animation: ecgHeartbeat 1.4s ease-in-out infinite;
+}
+
+.ecg-wave {
+  width: 84px;
+  height: 20px;
+}
+
+.ecg-wave path {
+  stroke: var(--red-400);
+  stroke-dasharray: 120;
+  stroke-dashoffset: 120;
+  animation: ecgDash 1.8s ease-in-out infinite;
+}
+
+@keyframes ecgHeartbeat {
+  0%, 100% { transform: scale(1); }
+  25% { transform: scale(1.22); }
+  40% { transform: scale(1.05); }
+  60% { transform: scale(1.18); }
+}
+
+@keyframes ecgDash {
+  0% { stroke-dashoffset: 120; opacity: 0.4; }
+  50% { stroke-dashoffset: 0; opacity: 1; }
+  100% { stroke-dashoffset: -120; opacity: 0.4; }
+}
+
+@media (max-width: 768px) {
+  .featured-hero.hospital-hero-slider {
+    min-height: 560px;
+    height: 82vh;
+  }
+  .hospital-hero__heading {
+    font-size: 30px;
+  }
+  .hospital-hero__subheading {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+  .featured-hero__controls {
+    bottom: 20px;
+  }
+  .featured-hero__progress[data-active="true"] {
+    width: 50px;
+  }
+}
+

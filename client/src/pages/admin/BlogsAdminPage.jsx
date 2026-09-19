@@ -4,6 +4,8 @@ import AdminTopbar from '../../components/layout/AdminTopbar';
 import { apiRequest } from '../../utils/api';
 import { useToast } from '../../components/common/Toast';
 import Modal from '../../components/common/Modal';
+import ImageUploadField from '../../components/common/ImageUploadField';
+import RichTextEditor from '../../components/common/RichTextEditor';
 
 export default function BlogsAdminPage() {
   const { addToast } = useToast();
@@ -207,19 +209,16 @@ export default function BlogsAdminPage() {
               </div>
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Cover Image URL</label>
-              <input
-                type="url"
-                className="form-control"
-                value={formData.coverImage}
-                onChange={(e) => setFormData({ ...formData, coverImage: e.target.value })}
-                required
-              />
-            </div>
+            <ImageUploadField
+              label="Article Cover Image"
+              value={formData.coverImage}
+              onChange={(url) => setFormData({ ...formData, coverImage: url })}
+              required
+              helperText="Uploads directly to /assets/uploads and synchronizes with the Media Assets library"
+            />
 
             <div className="form-group">
-              <label className="form-label">Summary Brief</label>
+              <label className="form-label">Summary Brief *</label>
               <textarea
                 className="form-control"
                 rows="2"
@@ -229,17 +228,15 @@ export default function BlogsAdminPage() {
               />
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Article Content (HTML / Text)</label>
-              <textarea
-                className="form-control"
-                rows="8"
-                style={{ fontFamily: 'monospace', fontSize: 13 }}
-                value={formData.content}
-                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                required
-              />
-            </div>
+            <RichTextEditor
+              label="Article Content"
+              value={formData.content}
+              onChange={(html) => setFormData({ ...formData, content: html })}
+              placeholder="Compose comprehensive medical article with rich headings, images, lists, formatting, and tables..."
+              minHeight={320}
+              required
+              helperText="Rich WYSIWYG Editor supports direct image uploads, styling, lists, code blocks, alignments, and typography"
+            />
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12, marginTop: 20 }}>
               <button type="button" className="btn btn-secondary" onClick={() => setIsOpen(false)} disabled={submitting}>

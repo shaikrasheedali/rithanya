@@ -4,6 +4,8 @@ import AdminTopbar from '../../components/layout/AdminTopbar';
 import { apiRequest } from '../../utils/api';
 import { useToast } from '../../components/common/Toast';
 import Modal from '../../components/common/Modal';
+import ImageUploadField from '../../components/common/ImageUploadField';
+import RichTextEditor from '../../components/common/RichTextEditor';
 
 export default function ServicesAdminPage() {
   const { addToast } = useToast();
@@ -219,16 +221,13 @@ export default function ServicesAdminPage() {
               </div>
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Cover Image URL</label>
-              <input
-                type="url"
-                className="form-control"
-                value={formData.coverImage}
-                onChange={(e) => setFormData({ ...formData, coverImage: e.target.value })}
-                required
-              />
-            </div>
+            <ImageUploadField
+              label="Cover Image"
+              value={formData.coverImage}
+              onChange={(url) => setFormData({ ...formData, coverImage: url })}
+              required
+              helperText="Uploads to /assets/uploads and automatically registers in Media Library"
+            />
 
             <div className="form-group">
               <label className="form-label">Summary Brief *</label>
@@ -241,17 +240,15 @@ export default function ServicesAdminPage() {
               />
             </div>
 
-            <div className="form-group">
-              <label className="form-label">HTML / Rich Content *</label>
-              <textarea
-                className="form-control"
-                rows="8"
-                style={{ fontFamily: 'monospace', fontSize: 13 }}
-                value={formData.content}
-                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                required
-              />
-            </div>
+            <RichTextEditor
+              label="HTML / Rich Clinical Content"
+              value={formData.content}
+              onChange={(html) => setFormData({ ...formData, content: html })}
+              placeholder="Detail medical procedures, diagnostic protocols, patient guidelines, and equipment specs..."
+              minHeight={300}
+              required
+              helperText="Rich WYSIWYG Editor supports medical formatting, direct image uploads, links, lists, and tables"
+            />
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12, marginTop: 20 }}>
               <button type="button" className="btn btn-secondary" onClick={() => setIsOpen(false)} disabled={submitting}>

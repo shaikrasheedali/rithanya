@@ -4,6 +4,7 @@ import AdminTopbar from '../../components/layout/AdminTopbar';
 import { apiRequest } from '../../utils/api';
 import { useToast } from '../../components/common/Toast';
 import Modal from '../../components/common/Modal';
+import ImageUploadField from '../../components/common/ImageUploadField';
 
 export default function SpecialistsAdminPage() {
   const { addToast } = useToast();
@@ -214,15 +215,12 @@ export default function SpecialistsAdminPage() {
               />
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Photo Image URL</label>
-              <input
-                type="url"
-                className="form-control"
-                value={formData.image}
-                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-              />
-            </div>
+            <ImageUploadField
+              label="Specialist Portrait Photo"
+              value={formData.image}
+              onChange={(url) => setFormData({ ...formData, image: url })}
+              helperText="Uploads to /assets/uploads and synchronizes with Media Assets"
+            />
 
             <div className="form-group">
               <label className="form-label">Short Clinical Biography</label>

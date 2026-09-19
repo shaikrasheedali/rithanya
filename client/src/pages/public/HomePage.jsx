@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { apiRequest } from '../../utils/api';
 import { useToast } from '../../components/common/Toast';
+import HeroVideoSlider from '../../components/home/HeroVideoSlider';
 
 export default function HomePage() {
   const { addToast } = useToast();
@@ -82,67 +83,63 @@ export default function HomePage() {
 
   return (
     <div className="home-page">
-      {/* 1. HERO SECTION */}
-      <section className="hero-section">
-        <div className="container">
-          <div className="hero-grid">
-            <div className="hero-content">
-              <div className="hero-badge">
-                <Sparkles size={16} />
-                <span>Premier Daycare Transfusion & Diabetology Centre</span>
-              </div>
+      {/* 1. GOOGLE LABS-STYLE HERO VIDEO CAROUSEL */}
+      <HeroVideoSlider />
 
-              <h1 className="hero-title">
-                Compassionate Healthcare with <span>Clinical Precision</span>.
-              </h1>
-
-              <p className="hero-subtitle">
-                Under the clinical leadership of <strong>Dr. Narayana Murthy M.D.</strong>, Rithanya Hospital delivers specialized longitudinal diabetes management and Khammam's dedicated day-care transfusion centre for Thalassemia and Sickle-Cell warriors.
-              </p>
-
-              <div className="hero-ctas">
-                <a href="#appointment-section" className="btn btn-primary btn-lg">
-                  <Calendar size={18} />
-                  <span>Book Consultation</span>
-                </a>
-                <Link to="/services" className="btn btn-secondary btn-lg">
-                  <span>Explore Specialties</span>
-                  <ArrowRight size={18} />
-                </Link>
-              </div>
-
-              <div className="hero-stats">
-                <div className="stat-item">
-                  <h3>22+</h3>
-                  <p>Years Clinical Experience</p>
-                </div>
-                <div className="stat-item">
-                  <h3>8,500+</h3>
-                  <p>Diabetic Patients Managed</p>
-                </div>
-                <div className="stat-item">
-                  <h3>100%</h3>
-                  <p>Leukodepleted Blood Safety</p>
-                </div>
-              </div>
+      {/* QUICK CLINICAL STATS BAR */}
+      <section className="container" style={{ marginTop: -28, position: 'relative', zIndex: 12, marginBottom: 36 }}>
+        <div
+          style={{
+            background: 'rgba(255, 255, 255, 0.98)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            borderRadius: 20,
+            padding: '24px 36px',
+            boxShadow: '0 20px 45px -10px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(169, 17, 41, 0.08)',
+            border: '1.5px solid rgba(169, 17, 41, 0.12)',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+            gap: 24,
+            alignItems: 'center'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <div style={{ width: 50, height: 50, borderRadius: 14, background: 'var(--red-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--red-700)' }}>
+              <Stethoscope size={26} />
             </div>
+            <div>
+              <h3 style={{ fontSize: 26, fontWeight: 800, color: 'var(--red-900)', margin: 0, lineHeight: 1.1 }}>22+</h3>
+              <p style={{ fontSize: 13, color: 'var(--ink-soft)', margin: 0, fontWeight: 600 }}>Years Clinical Experience</p>
+            </div>
+          </div>
 
-            <div className="hero-card-stack">
-              <div className="hero-main-img">
-                <img
-                  src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=1200&q=85"
-                  alt="Rithanya Hospital Modern Clinical Facility"
-                />
-              </div>
-              <div className="hero-float-card">
-                <div className="hero-float-icon">
-                  <Droplet size={24} />
-                </div>
-                <div>
-                  <h4 style={{ fontSize: 15, fontWeight: 800 }}>Thalassemia Daycare</h4>
-                  <p style={{ fontSize: 12, color: 'var(--ink-soft)' }}>24/7 Monitored Blood Reserves</p>
-                </div>
-              </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <div style={{ width: 50, height: 50, borderRadius: 14, background: 'var(--red-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--red-700)' }}>
+              <Activity size={26} />
+            </div>
+            <div>
+              <h3 style={{ fontSize: 26, fontWeight: 800, color: 'var(--red-900)', margin: 0, lineHeight: 1.1 }}>8,500+</h3>
+              <p style={{ fontSize: 13, color: 'var(--ink-soft)', margin: 0, fontWeight: 600 }}>Diabetic Patients Managed</p>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <div style={{ width: 50, height: 50, borderRadius: 14, background: 'var(--red-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--red-700)' }}>
+              <Droplet size={26} />
+            </div>
+            <div>
+              <h3 style={{ fontSize: 26, fontWeight: 800, color: 'var(--red-900)', margin: 0, lineHeight: 1.1 }}>100%</h3>
+              <p style={{ fontSize: 13, color: 'var(--ink-soft)', margin: 0, fontWeight: 600 }}>Leukodepleted Blood Safety</p>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <div style={{ width: 50, height: 50, borderRadius: 14, background: 'var(--red-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--red-700)' }}>
+              <ShieldCheck size={26} />
+            </div>
+            <div>
+              <h3 style={{ fontSize: 26, fontWeight: 800, color: 'var(--red-900)', margin: 0, lineHeight: 1.1 }}>24/7</h3>
+              <p style={{ fontSize: 13, color: 'var(--ink-soft)', margin: 0, fontWeight: 600 }}>Emergency & Daycare Access</p>
             </div>
           </div>
         </div>

@@ -4,6 +4,7 @@ import AdminTopbar from '../../components/layout/AdminTopbar';
 import { apiRequest } from '../../utils/api';
 import { useToast } from '../../components/common/Toast';
 import Modal from '../../components/common/Modal';
+import ImageUploadField from '../../components/common/ImageUploadField';
 
 export default function GalleryAdminPage() {
   const { addToast } = useToast();
@@ -168,16 +169,13 @@ export default function GalleryAdminPage() {
               </select>
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Image URL *</label>
-              <input
-                type="url"
-                className="form-control"
-                value={formData.imageUrl}
-                onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-                required
-              />
-            </div>
+            <ImageUploadField
+              label="Gallery Photograph"
+              value={formData.imageUrl}
+              onChange={(url) => setFormData({ ...formData, imageUrl: url })}
+              required
+              helperText="Uploads to /assets/uploads and synchronizes with Media Assets"
+            />
 
             <div className="form-group">
               <label className="form-label">Caption / Description</label>

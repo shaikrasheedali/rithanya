@@ -487,3 +487,100 @@
     margin: 10px !important;
   }
 }
+
+/* ==========================================================================
+   WYSIWYG RICH TEXT EDITOR STYLING
+   ========================================================================== */
+.wysiwyg-editor-wrapper {
+  margin-bottom: 20px;
+}
+
+.editor-subtle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--canvas);
+  border: 1px solid var(--line);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.editor-subtle-btn:hover {
+  background: #fff;
+  border-color: var(--red-300);
+  color: var(--red-700);
+}
+
+.wysiwyg-container .ql-toolbar.ql-snow {
+  background: #faf9fa;
+  border: none;
+  border-bottom: 1px solid var(--line);
+  padding: 10px 14px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.wysiwyg-container .ql-container.ql-snow {
+  border: none;
+  font-family: inherit;
+  font-size: 14.5px;
+}
+
+.wysiwyg-container .ql-editor {
+  min-height: 260px;
+  padding: 16px 20px;
+  line-height: 1.7;
+}
+
+.wysiwyg-container .ql-editor.ql-blank::before {
+  color: #a8a0a5;
+  font-style: normal;
+  left: 20px;
+}
+
+.wysiwyg-container .ql-snow .ql-picker-label {
+  border-radius: 6px;
+  outline: none;
+}
+
+.wysiwyg-container .ql-snow .ql-stroke {
+  stroke: #4a4247;
+}
+
+.wysiwyg-container .ql-snow .ql-fill {
+  fill: #4a4247;
+}
+
+.wysiwyg-container .ql-snow .ql-picker.ql-expanded .ql-picker-options {
+  border-radius: 8px;
+  border-color: var(--line);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  z-index: 100;
+}
+
+.wysiwyg-container .ql-snow button:hover .ql-stroke,
+.wysiwyg-container .ql-snow .ql-picker-label:hover .ql-stroke {
+  stroke: var(--red-700);
+}
+
+.wysiwyg-container .ql-snow button:hover .ql-fill,
+.wysiwyg-container .ql-snow .ql-picker-label:hover .ql-fill {
+  fill: var(--red-700);
+}
+
+.wysiwyg-container .ql-snow button.ql-active .ql-stroke {
+  stroke: var(--red-700);
+}
+
+.wysiwyg-container .ql-snow button.ql-active .ql-fill {
+  fill: var(--red-700);
+}
+
