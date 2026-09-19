@@ -1,0 +1,47 @@
+const express = require('express');
+const router = express.Router();
+
+const authRouter = require('./authRouter');
+const patientRouter = require('./patientRouter');
+const clinicalRouter = require('./clinicalRouter');
+const admissionRouter = require('./admissionRouter');
+const inventoryRouter = require('./inventoryRouter');
+const appointmentRouter = require('./appointmentRouter');
+const serviceRouter = require('./serviceRouter');
+const blogRouter = require('./blogRouter');
+const specialistRouter = require('./specialistRouter');
+const productRouter = require('./productRouter');
+const inquiryRouter = require('./inquiryRouter');
+const galleryRouter = require('./galleryRouter');
+const mediaRouter = require('./mediaRouter');
+const staffRouter = require('./staffRouter');
+const credentialRouter = require('./credentialRouter');
+const financeRouter = require('./financeRouter');
+const erasureRouter = require('./erasureRouter');
+const auditRouter = require('./auditRouter');
+const settingsRouter = require('./settingsRouter');
+const healthRouter = require('./healthRouter');
+
+// API Mount points
+router.use('/health', healthRouter);
+router.use('/auth', authRouter);
+router.use('/patients', patientRouter);
+router.use('/clinical', clinicalRouter);
+router.use('/admissions', admissionRouter);
+router.use('/inventory', inventoryRouter);
+router.use('/appointments', appointmentRouter);
+router.use('/services', serviceRouter);
+router.use('/blogs', blogRouter);
+router.use('/specialists', specialistRouter);
+router.use('/products', productRouter);
+router.use('/inquiries', inquiryRouter);
+router.use('/gallery', galleryRouter);
+router.use('/media', mediaRouter);
+router.use('/staff', staffRouter);
+router.use('/credentials', credentialRouter);
+router.use('/finance', financeRouter);
+router.use('/erasure', erasureRouter);
+router.use('/audit', auditRouter);
+router.use('/settings', settingsRouter);
+
+module.exports = router;

@@ -1,0 +1,34 @@
+{
+  "name": "rithanya-hospital-platform",
+  "version": "1.0.0",
+  "description": "Rithanya Hospital & Daycare Transfusion Centre - Enterprise Full Stack Healthcare Platform",
+  "main": "server/index.js",
+  "scripts": {
+    "install:all": "npm install && cd server && npm install && cd ../client && npm install && cd ..",
+    "postinstall": "cd server && npm install && npx prisma generate && cd ../client && npm install && cd ..",
+    "build": "cd client && npm run build && cd ../server && npx prisma generate",
+    "start": "node server/index.js",
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm run dev",
+    "dev": "node -e \"const { spawn } = require('child_process'); spawn('npm', ['run', 'dev:server'], { stdio: 'inherit', shell: true }); spawn('npm', ['run', 'dev:client'], { stdio: 'inherit', shell: true });\"",
+    "db:push": "cd server && npx prisma db push --accept-data-loss",
+    "db:generate": "cd server && npx prisma generate",
+    "db:seed": "cd server && node prisma/seed.js",
+    "db:reset": "npm run db:push && npm run db:seed",
+    "test": "cd server && npm test"
+  },
+  "keywords": [
+    "hospital",
+    "healthcare",
+    "thalassemia",
+    "sickle-cell",
+    "diabetology",
+    "dpdp-compliant",
+    "express",
+    "react-19",
+    "prisma",
+    "mysql"
+  ],
+  "author": "Rithanya Hospital",
+  "license": "ISC"
+}

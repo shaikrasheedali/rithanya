@@ -1,0 +1,417 @@
+// Prisma Schema for Rithanya Hospital Platform
+// Target: MySQL Database (Aiven Cloud)
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  SUPERADMIN
+  ADMIN
+  STAFF
+}
+
+enum PatientStatus {
+  admitted
+  outpatient
+  discharged
+}
+
+enum AdmissionStatus {
+  admitted
+  discharged
+}
+
+enum AppointmentStatus {
+  pending
+  confirmed
+  completed
+  cancelled
+}
+
+enum PublishStatus {
+  published
+  draft
+}
+
+enum InquiryStatus {
+  new
+  contacted
+  converted
+  closed
+}
+
+enum ErasureStatus {
+  pending
+  approved
+  rejected
+  completed
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  name          String
+  role          Role      @default(STAFF)
+  passwordHash  String    @db.VarChar(255)
+  salt          String    @default("")
+  version       String    @default("v1")
+  enabled       Boolean   @default(true)
+  permissions   Json?     // Module permissions { dashboard: true, patients: true, ... }
+  lastLogin     DateTime?
+  staffProfile  Staff?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([email])
+}
+
+model Staff {
+  id          String   @id @default(uuid())
+  staffCode   String   @unique @default(uuid()) // e.g. RH-101
+  name        String
+  designation String
+  department  String
+  salary      Float    @default(0)
+  shift       String   @default("Day")
+  phone       String
+  email       String   @unique
+  joinedDate  DateTime @default(now())
+  status      String   @default("active") // active, on-leave, inactive
+  userId      String?  @unique
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([department])
+  @@index([status])
+}
+
+model Patient {
+  id                String            @id @default(uuid())
+  patientCode       String            @unique // e.g. RH-P24017
+  name              String
+  age               Int
+  gender            String            // Male, Female, Other
+  bloodGroup        String            // A+, B+, O+, AB+, etc.
+  phone             String
+  condition         String            // e.g. Beta Thalassemia Major, Type 2 Diabetes
+  allergies         String            @default("None reported")
+  status            PatientStatus     @default(outpatient)
+  // DPDP Act Consent Capture
+  consentPhotoBlob  String?           @db.LongText // Base64 / Blob dataURL of live camera photo signature
+  consentCapturedAt DateTime?
+  consentStaffId    String?
+  isErased          Boolean           @default(false)
+  admissions        Admission[]
+  clinicalReadings  ClinicalReading[]
+  inventoryLogs     InventoryLog[]
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  @@index([patientCode])
+  @@index([bloodGroup])
+  @@index([status])
+  @@index([phone])
+}
+
+model Admission {
+  id               String            @id @default(uuid())
+  admissionCode    String            @unique // e.g. ADM-901
+  patientId        String
+  patient          Patient           @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  admittedOn       DateTime          @default(now())
+  dischargedOn     DateTime?
+  status           AdmissionStatus   @default(admitted)
+  ward             String            @default("Daycare Transfusion Ward")
+  bed              String            @default("Bed-01")
+  attendingDoctor  String            @default("Dr. Narayana Murthy, MD")
+  diagnosis        String
+  dischargeSummary String?           @db.Text
+  readings         ClinicalReading[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  @@index([patientId])
+  @@index([status])
+}
+
+model ClinicalReading {
+  id                String     @id @default(uuid())
+  patientId         String
+  patient           Patient    @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  admissionId       String?
+  admission         Admission? @relation(fields: [admissionId], references: [id], onDelete: SetNull)
+  date              DateTime   @default(now())
+  time              String     @default("10:00 AM")
+  timeSlot          String     @default("Morning") // Morning, Afternoon, Evening, Night
+  bloodSugarFasting Float?
+  bloodSugarPP      Float?
+  bloodSugarRandom  Float?
+  hba1c             Float?
+  bpSystolic        Int?
+  bpDiastolic       Int?
+  haemoglobin       Float?
+  ferritin          Float?
+  spo2              Int?
+  temperature       Float?
+  pulse             Int?
+  notes             String?    @db.Text
+  recordedBy        String     @default("Dr. Narayana Murthy")
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+
+  @@index([patientId])
+  @@index([date])
+}
+
+model BloodInventory {
+  id            String   @id @default(uuid())
+  group         String   @unique // A+, A-, B+, B-, O+, O-, AB+, AB-
+  units         Int      @default(0)
+  reservedUnits Int      @default(0)
+  threshold     Int      @default(10)
+  capacity      Int      @default(30)
+  expiryDate    DateTime
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model InventoryLog {
+  id          String   @id @default(uuid())
+  logCode     String   @unique // e.g. BLD-101
+  bloodGroup  String
+  type        String   // Stock Load, Issued, Received, Adjusted, Expired
+  units       Int
+  date        DateTime @default(now())
+  expiryDate  DateTime?
+  performedBy String
+  notes       String?  @db.Text
+  patientId   String?
+  patient     Patient? @relation(fields: [patientId], references: [id], onDelete: SetNull)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([bloodGroup])
+  @@index([type])
+  @@index([date])
+}
+
+model Appointment {
+  id                String            @id @default(uuid())
+  apptCode          String            @unique // e.g. APT-1001
+  patientName       String
+  phone             String
+  email             String?
+  age               Int?
+  gender            String?
+  bloodGroup        String?
+  specialty         String            @default("General Medicine")
+  doctorName        String            @default("Dr. Narayana Murthy, MD")
+  preferredDate     DateTime
+  preferredTimeSlot String            @default("Morning (10:00 AM - 01:00 PM)")
+  reason            String?           @db.Text
+  status            AppointmentStatus @default(pending)
+  notes             String?           @db.Text
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  @@index([phone])
+  @@index([status])
+  @@index([preferredDate])
+}
+
+model Service {
+  id            String        @id @default(uuid())
+  slug          String        @unique // e.g. general-medicine
+  category      String
+  title         String
+  author        String        @default("Dr. Narayana Murthy, MD")
+  date          String        @default("Updated Weekly")
+  readTime      String        @default("5 min overview")
+  status        PublishStatus @default(published)
+  summary       String        @db.Text
+  content       String        @db.LongText
+  coverImage    String        @db.VarChar(1000)
+  galleryImages Json?         // Array of image URLs
+  sortOrder     Int           @default(0)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([slug])
+  @@index([status])
+}
+
+model Blog {
+  id         String        @id @default(uuid())
+  slug       String        @unique
+  category   String
+  title      String
+  author     String        @default("Dr. Narayana Murthy, MD")
+  date       String        @default("Recently Published")
+  readTime   String        @default("4 min read")
+  status     PublishStatus @default(published)
+  summary    String        @db.Text
+  content    String        @db.LongText
+  coverImage String        @db.VarChar(1000)
+  tags       Json?         // Array of tag strings
+  sortOrder  Int           @default(0)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  @@index([slug])
+  @@index([status])
+}
+
+model Specialist {
+  id             String   @id @default(uuid())
+  name           String
+  designation    String
+  department     String
+  qualifications String
+  experience     String   @default("15+ Years")
+  opdTimings     String   @default("Mon - Sat: 11:00 AM - 5:00 PM")
+  image          String   @db.VarChar(1000)
+  bio            String   @db.Text
+  availableDays  Json?    // ["Monday", "Tuesday", ...]
+  status         String   @default("active")
+  sortOrder      Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([department])
+  @@index([status])
+}
+
+model ProductPackage {
+  id            String   @id @default(uuid())
+  slug          String   @unique
+  name          String
+  category      String
+  price         Float
+  originalPrice Float?
+  discountText  String?
+  summary       String   @db.Text
+  features      Json?    // Array of feature strings
+  tag           String?  // Popular, Recommended, Essential
+  image         String   @db.VarChar(1000)
+  status        String   @default("active")
+  sortOrder     Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([slug])
+  @@index([status])
+}
+
+model ProductInquiry {
+  id            String        @id @default(uuid())
+  packageId     String?
+  packageName   String
+  name          String
+  phone         String
+  email         String?
+  message       String?       @db.Text
+  status        InquiryStatus @default(new)
+  followUpNotes String?       @db.Text
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([status])
+  @@index([phone])
+}
+
+model GalleryItem {
+  id        String   @id @default(uuid())
+  title     String
+  category  String   // Facility, Daycare, Diagnostics, Specialists, Patient Care
+  imageUrl  String   @db.VarChar(1000)
+  caption   String?  @db.Text
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([category])
+}
+
+model MediaAsset {
+  id           String   @id @default(uuid())
+  filename     String
+  originalName String
+  mimeType     String
+  size         Int
+  url          String   @db.VarChar(1000)
+  dimensions   String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Expense {
+  id          String   @id @default(uuid())
+  expenseCode String   @unique // e.g. EXP-101
+  name        String
+  category    String   // Medical supplies, Clinical operations, Utilities, Compliance, Payroll
+  vendor      String
+  amount      Float
+  date        DateTime @default(now())
+  status      String   @default("paid") // paid, pending
+  notes       String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@index([date])
+}
+
+model HospitalSetting {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  value       Json     // Dynamic JSON config value
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([key])
+}
+
+model ErasureRequest {
+  id              String        @id @default(uuid())
+  patientName     String
+  phone           String
+  identifierLast4 String?       // Last 4 digits of Aadhaar or ID
+  patientCode     String?       // RH-P... if known
+  reason          String        @db.Text
+  status          ErasureStatus @default(pending)
+  requestedAt     DateTime      @default(now())
+  processedAt     DateTime?
+  processedBy     String?
+  notes           String?       @db.Text
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([status])
+  @@index([phone])
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  actorId   String?
+  actorName String   @default("System")
+  actorRole String   @default("SYSTEM")
+  action    String   // LOGIN, LOGOUT, CREATE_PATIENT, UPDATE_PATIENT, DELETE_PATIENT, CONSENT_CAPTURED, ERASURE_EXECUTED, etc.
+  module    String   // AUTH, PATIENTS, CLINICAL, ADMISSIONS, INVENTORY, APPOINTMENTS, CMS, FINANCE, DPDP
+  recordId  String?
+  ipAddress String?
+  details   Json?
+  createdAt DateTime @default(now())
+
+  @@index([actorId])
+  @@index([module])
+  @@index([action])
+  @@index([createdAt])
+}
