@@ -334,17 +334,156 @@
   font-size: 15px;
 }
 
+/* ==========================================================================
+   ADMIN RESPONSIVE LAYOUT & MOBILE DRAWER
+   ========================================================================== */
+.admin-sidebar-close-btn {
+  display: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  color: #fff;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.admin-sidebar-close-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.admin-menu-toggle-btn {
+  display: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--canvas);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-right: 12px;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.admin-menu-toggle-btn:hover {
+  background: var(--red-50);
+  color: var(--red-700);
+  border-color: var(--red-200);
+}
+
+.admin-sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 12, 14, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 1040;
+  animation: fadeIn 0.2s ease forwards;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 16px;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Tablet & Compact Breakpoint (<= 1024px) */
 @media (max-width: 1024px) {
+  .admin-sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1050;
+    width: 280px;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: none;
+  }
+
+  .admin-sidebar.open {
+    transform: translateX(0);
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.4);
+  }
+
+  .admin-sidebar-close-btn {
+    display: flex;
+  }
+
+  .admin-menu-toggle-btn {
+    display: flex;
+  }
+
+  .admin-brand {
+    justify-content: space-between;
+  }
+
+  .admin-main {
+    width: 100%;
+    padding: 20px 16px;
+  }
+
   .kpi-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .patient-profile-header {
+    padding: 20px;
+  }
 }
 
+/* Mobile Breakpoint (<= 768px) */
 @media (max-width: 768px) {
-  .admin-sidebar {
-    display: none;
+  .admin-topbar {
+    padding: 12px 14px;
+    flex-wrap: wrap;
+    gap: 10px;
   }
+
+  .topbar-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+
   .kpi-grid {
     grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .patient-profile-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .patient-vital-summary {
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .vital-metric {
+    flex: 1 1 calc(50% - 8px);
+    padding: 8px 12px;
+  }
+
+  .data-table {
+    min-width: 600px;
+  }
+
+  .modal-container {
+    max-width: 95vw !important;
+    margin: 10px !important;
   }
 }

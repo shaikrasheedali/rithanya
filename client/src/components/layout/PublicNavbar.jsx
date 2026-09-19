@@ -1,74 +1,208 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Activity, Phone, ShieldCheck, UserCheck, Menu, X, Calendar } from 'lucide-react';
+import {
+  Activity,
+  Phone,
+  ShieldCheck,
+  Menu,
+  X,
+  Calendar,
+  Home,
+  Info,
+  Stethoscope,
+  Users,
+  Package,
+  Image,
+  BookOpen,
+  Mail,
+  ChevronRight
+} from 'lucide-react';
 
 export default function PublicNavbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Close mobile drawer on navigation
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
+
+  // Close on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') setMobileMenuOpen(false);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'About', path: '/about' },
-    { name: 'Services', path: '/services' },
-    { name: 'Specialists', path: '/specialists' },
-    { name: 'Health Packages', path: '/products' },
-    { name: 'Facility Tour', path: '/gallery' },
-    { name: 'Health Library', path: '/blogs' },
-    { name: 'Contact', path: '/contact' }
+    { name: 'Home', path: '/', icon: Home },
+    { name: 'About', path: '/about', icon: Info },
+    { name: 'Services', path: '/services', icon: Stethoscope },
+    { name: 'Specialists', path: '/specialists', icon: Users },
+    { name: 'Packages', path: '/products', icon: Package },
+    { name: 'Facility Tour', path: '/gallery', icon: Image },
+    { name: 'Health Library', path: '/blogs', icon: BookOpen },
+    { name: 'Contact', path: '/contact', icon: Mail }
   ];
 
   return (
-    <nav className="public-navbar">
-      <div className="container public-navbar-inner">
-        <Link to="/" className="brand-logo">
-          <div className="brand-icon">
-            <Activity size={24} />
-          </div>
-          <div className="brand-text">
-            <h1>Rithanya Hospital</h1>
-            <span>Diabetology & Thalassemia Daycare</span>
-          </div>
-        </Link>
+    <>
+      <header className={`floating-island-container ${isScrolled ? 'scrolled' : ''}`}>
+        <nav className="floating-island" aria-label="Main Navigation">
+          {/* Brand Logo */}
+          <Link to="/" className="island-brand" onClick={() => setMobileMenuOpen(false)}>
+            <div className="island-brand-icon">
+              <Activity size={20} />
+            </div>
+            <div className="island-brand-text">
+              <span className="brand-title">Rithanya Hospital</span>
+              <span className="brand-subtitle">Diabetology & Thalassemia Daycare</span>
+            </div>
+          </Link>
 
-        <ul className="nav-links" style={{ display: mobileMenuOpen ? 'flex' : undefined }}>
-          {navLinks.map((item) => (
-            <li key={item.path}>
+          {/* Desktop Navigation Links */}
+          <ul className="island-nav-links">
+            {navLinks.map((item) => {
+              const isActive = location.pathname === item.path;
+              return (
+                <li key={item.path}>
+                  <Link
+                    to={item.path}
+                    className={`island-nav-link ${isActive ? 'active' : ''}`}
+                  >
+                    {item.name}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+
+          {/* Action CTAs */}
+          <div className="island-actions">
+            <a
+              href="tel:+918328581019"
+              className="island-btn island-btn-phone"
+              title="24/7 Emergency Transfusion Hotline"
+            >
+              <Phone size={14} className="phone-icon" />
+              <span className="phone-text">+91 83285 81019</span>
+            </a>
+
+            <Link
+              to="/contact#appointment"
+              className="island-btn island-btn-primary"
+              title="Book an Outpatient Consultation"
+            >
+              <Calendar size={14} />
+              <span>Book Appointment</span>
+            </Link>
+
+            <Link
+              to="/admin/dashboard"
+              className="island-btn island-btn-outline staff-portal-btn"
+              title="Staff & Administration Portal"
+            >
+              <ShieldCheck size={14} />
+              <span>Staff Portal</span>
+            </Link>
+
+            {/* Mobile Hamburger Toggle Button */}
+            <button
+              type="button"
+              className="island-menu-toggle"
+              onClick={() => setMobileMenuOpen((prev) => !prev)}
+              aria-label={mobileMenuOpen ? 'Close Navigation Menu' : 'Open Navigation Menu'}
+              aria-expanded={mobileMenuOpen}
+            >
+              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
+        </nav>
+
+        {/* Mobile Floating Dropdown Card */}
+        {mobileMenuOpen && (
+          <div className="island-mobile-drawer">
+            <div className="drawer-header">
+              <span className="drawer-heading">Navigation Menu</span>
+              <span className="drawer-sub">Select a department or service</span>
+            </div>
+
+            <ul className="drawer-links">
+              {navLinks.map((item) => {
+                const Icon = item.icon;
+                const isActive = location.pathname === item.path;
+                return (
+                  <li key={item.path}>
+                    <Link
+                      to={item.path}
+                      className={`drawer-link ${isActive ? 'active' : ''}`}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <div className="drawer-link-left">
+                        <Icon size={18} className="drawer-icon" />
+                        <span>{item.name}</span>
+                      </div>
+                      <ChevronRight size={16} className="drawer-arrow" />
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+
+            <div className="drawer-actions">
               <Link
-                to={item.path}
-                className={`nav-link ${location.pathname === item.path ? 'active' : ''}`}
+                to="/contact#appointment"
+                className="btn btn-primary btn-block"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                {item.name}
+                <Calendar size={16} />
+                <span>Book Appointment</span>
               </Link>
-            </li>
-          ))}
-        </ul>
 
-        <div className="nav-actions">
-          <a href="tel:+918328581019" className="btn btn-secondary btn-sm" title="Emergency Hotline">
-            <Phone size={14} className="text-red" />
-            <span>+91 83285 81019</span>
-          </a>
+              <div className="drawer-actions-row">
+                <a
+                  href="tel:+918328581019"
+                  className="btn btn-secondary btn-sm"
+                  style={{ flex: 1, justifyContent: 'center' }}
+                >
+                  <Phone size={14} className="text-red" />
+                  <span>Call Emergency</span>
+                </a>
 
-          <Link to="/contact#appointment" className="btn btn-primary btn-sm">
-            <Calendar size={14} />
-            <span>Book OPD</span>
-          </Link>
+                <Link
+                  to="/admin/dashboard"
+                  className="btn btn-outline btn-sm"
+                  style={{ flex: 1, justifyContent: 'center' }}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <ShieldCheck size={14} />
+                  <span>Staff Portal</span>
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+      </header>
 
-          <Link to="/admin/dashboard" className="btn btn-outline btn-sm" title="Staff & Administration Portal">
-            <ShieldCheck size={14} />
-            <span>Staff Portal</span>
-          </Link>
-
-          <button
-            className="btn btn-secondary btn-sm mobile-menu-toggle"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            style={{ display: 'none' }}
-          >
-            {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
-          </button>
-        </div>
-      </div>
-    </nav>
+      {/* Backdrop overlay for mobile menu */}
+      {mobileMenuOpen && (
+        <div
+          className="island-backdrop"
+          onClick={() => setMobileMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+    </>
   );
 }

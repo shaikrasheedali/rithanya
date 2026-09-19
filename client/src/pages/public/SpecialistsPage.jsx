@@ -56,7 +56,7 @@ export default function SpecialistsPage() {
 
                     <Link to="/contact#appointment" className="btn btn-primary btn-sm">
                       <Calendar size={14} />
-                      <span>Book OPD</span>
+                      <span>Book Appointment</span>
                     </Link>
                   </div>
                 </div>

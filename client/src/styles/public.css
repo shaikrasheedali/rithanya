@@ -1,36 +1,59 @@
 /* ==========================================================================
-   PUBLIC LAYOUT: NAVBAR & FOOTER
+   FLOATING DYNAMIC ISLAND NAVBAR
    ========================================================================== */
-.public-navbar {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--line);
-  transition: var(--transition);
+.floating-island-container {
+  position: fixed;
+  top: 16px;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  padding: 0 16px;
+  pointer-events: none;
+  transition: top 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.public-navbar-inner {
+.floating-island-container.scrolled {
+  top: 8px;
+}
+
+.floating-island {
+  pointer-events: auto;
+  width: 100%;
+  max-width: 1260px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(169, 17, 41, 0.16);
+  border-radius: 9999px;
+  box-shadow: 0 12px 36px -6px rgba(24, 18, 20, 0.09), 0 4px 14px rgba(169, 17, 41, 0.05);
+  padding: 8px 14px 8px 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 76px;
-  gap: 20px;
+  gap: 12px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.brand-logo {
+.floating-island-container.scrolled .floating-island {
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 16px 42px -6px rgba(24, 18, 20, 0.14), 0 6px 18px rgba(169, 17, 41, 0.08);
+  padding: 6px 12px 6px 16px;
+}
+
+/* Island Brand */
+.island-brand {
   display: flex;
   align-items: center;
-  gap: 12px;
-  color: var(--ink);
-  font-weight: 800;
+  gap: 10px;
   text-decoration: none;
+  flex-shrink: 0;
 }
 
-.brand-icon {
-  width: 42px;
-  height: 42px;
+.island-brand-icon {
+  width: 38px;
+  height: 38px;
   background: linear-gradient(135deg, var(--red-700), var(--red-900));
   color: #fff;
   border-radius: 12px;
@@ -38,60 +61,293 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 12px rgba(169, 17, 41, 0.3);
+  flex-shrink: 0;
 }
 
-.brand-text h1 {
-  font-size: 18px;
+.island-brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-title {
+  font-size: 15px;
   font-weight: 800;
-  letter-spacing: -0.5px;
   color: var(--red-950);
+  line-height: 1.2;
+  white-space: nowrap !important;
+  letter-spacing: -0.3px;
 }
 
-.brand-text span {
-  display: block;
-  font-size: 11px;
-  font-weight: 500;
+.brand-subtitle {
+  font-size: 10px;
+  font-weight: 600;
   color: var(--ink-soft);
-  margin-top: -2px;
+  white-space: nowrap !important;
 }
 
-.nav-links {
+/* Desktop Island Navigation Links */
+.island-nav-links {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 2px;
   list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-shrink: 1;
 }
 
-.nav-link {
-  font-size: 14px;
+.island-nav-link {
+  font-size: 13px;
   font-weight: 600;
   color: var(--ink-soft);
   text-decoration: none;
-  padding: 6px 0;
-  position: relative;
-  transition: var(--transition);
+  padding: 7px 11px;
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+  white-space: nowrap !important;
+  display: inline-block;
 }
 
-.nav-link:hover,
-.nav-link.active {
+.island-nav-link:hover {
+  color: var(--red-700);
+  background: rgba(169, 17, 41, 0.06);
+}
+
+.island-nav-link.active {
+  color: var(--red-700);
+  background: var(--red-50);
+  font-weight: 700;
+}
+
+/* Island Action CTAs */
+.island-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.island-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 9999px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  white-space: nowrap !important;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+
+.island-btn span {
+  white-space: nowrap !important;
+  display: inline-block;
+}
+
+.island-btn-phone {
+  background: var(--canvas);
+  border: 1px solid var(--line);
+  color: var(--ink);
+}
+
+.island-btn-phone:hover {
+  background: var(--red-50);
+  border-color: var(--red-200);
   color: var(--red-700);
 }
 
-.nav-link.active::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: var(--red-700);
-  border-radius: 2px;
+.island-btn-phone .phone-icon {
+  color: var(--red-700);
 }
 
-.nav-actions {
+.island-btn-primary {
+  background: linear-gradient(135deg, var(--red-700), var(--red-900));
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(169, 17, 41, 0.28);
+}
+
+.island-btn-primary:hover {
+  background: linear-gradient(135deg, var(--red-600), var(--red-800));
+  box-shadow: 0 6px 18px rgba(169, 17, 41, 0.38);
+  transform: translateY(-1px);
+}
+
+.island-btn-outline {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+}
+
+.island-btn-outline:hover {
+  border-color: var(--red-600);
+  color: var(--red-700);
+  background: var(--red-50);
+}
+
+/* Mobile Hamburger Toggle Button */
+.island-menu-toggle {
+  display: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--canvas);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.island-menu-toggle:hover {
+  background: var(--red-50);
+  color: var(--red-700);
+  border-color: var(--red-200);
+}
+
+/* Floating Mobile Drawer */
+.island-mobile-drawer {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 16px;
+  right: 16px;
+  max-width: 500px;
+  margin: 0 auto;
+  pointer-events: auto;
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  border: 1px solid rgba(169, 17, 41, 0.16);
+  border-radius: 24px;
+  box-shadow: 0 24px 56px -8px rgba(0, 0, 0, 0.16), 0 8px 24px rgba(169, 17, 41, 0.08);
+  padding: 16px;
+  animation: islandDrawerDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  z-index: 1001;
+}
+
+@keyframes islandDrawerDown {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.drawer-header {
+  padding: 4px 8px 10px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 8px;
+}
+
+.drawer-heading {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--red-900);
+}
+
+.drawer-sub {
+  display: block;
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+
+.drawer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+.drawer-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-radius: 12px;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.drawer-link-left {
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+.drawer-icon {
+  color: var(--red-700);
+  opacity: 0.85;
+}
+
+.drawer-arrow {
+  color: var(--ink-soft);
+  opacity: 0.5;
+  transition: transform 0.2s ease;
+}
+
+.drawer-link:hover,
+.drawer-link.active {
+  background: var(--red-50);
+  color: var(--red-700);
+}
+
+.drawer-link:hover .drawer-arrow,
+.drawer-link.active .drawer-arrow {
+  opacity: 1;
+  transform: translateX(3px);
+  color: var(--red-700);
+}
+
+.drawer-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.drawer-actions-row {
+  display: flex;
+  gap: 8px;
+}
+
+/* Backdrop */
+.island-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 12, 14, 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 999;
+  animation: fadeIn 0.25s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Public Main Content Offset for Floating Island */
+.public-main-content {
+  padding-top: 96px;
 }
 
 /* ==========================================================================
@@ -506,26 +762,177 @@
   gap: 12px;
 }
 
-@media (max-width: 980px) {
+/* ==========================================================================
+   COMPREHENSIVE RESPONSIVENESS (MOBILE, TABLET, DESKTOP)
+   ========================================================================== */
+
+/* Large Tablets & Compact Desktops (1081px - 1240px) */
+@media (max-width: 1240px) {
+  .island-nav-link {
+    padding: 6px 8px;
+    font-size: 12.5px;
+  }
+  .island-btn-phone .phone-text {
+    display: none;
+  }
+  .island-btn-phone {
+    padding: 8px 10px;
+  }
+  .staff-portal-btn {
+    display: none;
+  }
+}
+
+/* Tablets (769px - 1080px) */
+@media (max-width: 1080px) {
+  .island-nav-links {
+    display: none !important;
+  }
+  .island-menu-toggle {
+    display: flex !important;
+  }
   .hero-grid {
     grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .hero-card-stack {
+    max-width: 580px;
+    margin: 0 auto;
+  }
+  .footer-grid {
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 32px;
+  }
+}
+
+/* Medium Tablets & Mobile Landscape (641px - 860px) */
+@media (max-width: 860px) {
+  .hero-title {
+    font-size: 36px;
   }
   .footer-grid {
     grid-template-columns: 1fr 1fr;
+    gap: 32px;
   }
   .daycare-features-grid {
     grid-template-columns: 1fr;
   }
+  .hero-float-card {
+    position: static;
+    margin-top: 14px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .hero-stats {
+    flex-wrap: wrap;
+    gap: 20px;
+  }
 }
 
+/* Mobile Phones (up to 640px) */
 @media (max-width: 640px) {
-  .footer-grid {
-    grid-template-columns: 1fr;
+  .floating-island-container {
+    top: 10px;
+    padding: 0 10px;
+  }
+  .floating-island-container.scrolled {
+    top: 6px;
+  }
+  .floating-island {
+    padding: 6px 8px 6px 12px;
+    border-radius: 9999px;
+  }
+  .brand-title {
+    font-size: 14px;
+  }
+  .brand-subtitle {
+    display: none;
+  }
+  .island-brand-icon {
+    width: 32px;
+    height: 32px;
+  }
+  .island-btn-primary {
+    padding: 6px 12px;
+    font-size: 12px;
+    gap: 4px;
+  }
+  .island-btn-primary svg {
+    width: 13px;
+    height: 13px;
+  }
+  .island-btn-phone {
+    padding: 6px 8px;
+  }
+  .island-menu-toggle {
+    width: 34px;
+    height: 34px;
+  }
+  .public-main-content {
+    padding-top: 80px;
+  }
+
+  .hero-section {
+    padding: 40px 0 60px;
   }
   .hero-title {
-    font-size: 32px;
+    font-size: 28px;
+    letter-spacing: -0.5px;
+    line-height: 1.25;
   }
-  .public-navbar-inner {
-    height: 64px;
+  .hero-subtitle {
+    font-size: 15px;
+  }
+  .hero-ctas {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .hero-ctas .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .stat-item h3 {
+    font-size: 22px;
+  }
+  .stat-item p {
+    font-size: 11px;
+  }
+
+  .section-head {
+    margin-bottom: 32px;
+  }
+  .section-title {
+    font-size: 26px;
+  }
+  .section-subtitle {
+    font-size: 14px;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+  }
+}
+
+/* Small Phones (under 380px) */
+@media (max-width: 380px) {
+  .island-btn-phone {
+    display: none;
+  }
+  .brand-title {
+    font-size: 13px;
+  }
+  .island-btn-primary span {
+    font-size: 11.5px;
   }
 }

@@ -1,16 +1,30 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Eye, Shield, User, Bell } from 'lucide-react';
+import { Link, useOutletContext } from 'react-router-dom';
+import { Eye, Shield, User, Bell, Menu } from 'lucide-react';
 import { getStoredUser } from '../../utils/auth';
 
-export default function AdminTopbar({ title, subtitle, actions }) {
+export default function AdminTopbar({ title, subtitle, actions, onMenuClick }) {
   const user = getStoredUser();
+  const outletCtx = useOutletContext();
+  const handleToggle = onMenuClick || (outletCtx && outletCtx.toggleSidebar);
 
   return (
     <header className="admin-topbar">
       <div className="topbar-left">
-        <h2>{title || 'Dashboard'}</h2>
-        {subtitle && <p style={{ fontSize: 13, color: 'var(--ink-soft)', marginTop: 2 }}>{subtitle}</p>}
+        {handleToggle && (
+          <button
+            type="button"
+            className="admin-menu-toggle-btn"
+            onClick={handleToggle}
+            aria-label="Toggle navigation menu"
+          >
+            <Menu size={20} />
+          </button>
+        )}
+        <div>
+          <h2>{title || 'Dashboard'}</h2>
+          {subtitle && <p style={{ fontSize: 13, color: 'var(--ink-soft)', marginTop: 2 }}>{subtitle}</p>}
+        </div>
       </div>
 
       <div className="topbar-right">

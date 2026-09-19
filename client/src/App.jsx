@@ -48,7 +48,7 @@ function PublicLayout() {
   return (
     <div className="public-wrapper" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <PublicNavbar />
-      <main style={{ flexGrow: 1 }}>
+      <main className="public-main-content" style={{ flexGrow: 1 }}>
         <Outlet />
       </main>
       <PublicFooter />
@@ -57,15 +57,24 @@ function PublicLayout() {
 }
 
 function AdminLayout() {
+  const [sidebarOpen, setSidebarOpen] = React.useState(false);
+
   if (!isAuthenticated()) {
     return <Navigate to="/admin/login" replace />;
   }
 
   return (
-    <div className="admin-layout">
-      <AdminSidebar />
+    <div className={`admin-layout ${sidebarOpen ? 'sidebar-open' : ''}`}>
+      <AdminSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      {sidebarOpen && (
+        <div
+          className="admin-sidebar-backdrop"
+          onClick={() => setSidebarOpen(false)}
+          aria-hidden="true"
+        />
+      )}
       <div className="admin-main">
-        <Outlet />
+        <Outlet context={{ toggleSidebar: () => setSidebarOpen((prev) => !prev) }} />
       </div>
     </div>
   );

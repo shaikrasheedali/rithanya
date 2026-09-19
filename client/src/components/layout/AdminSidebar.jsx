@@ -19,14 +19,19 @@ import {
   IndianRupee,
   ShieldAlert,
   Settings,
-  LogOut
+  LogOut,
+  X
 } from 'lucide-react';
 import { getStoredUser, clearSession, hasPermission, isSuperAdmin } from '../../utils/auth';
 
-export default function AdminSidebar() {
+export default function AdminSidebar({ isOpen, onClose }) {
   const location = useLocation();
   const navigate = useNavigate();
   const user = getStoredUser();
+
+  React.useEffect(() => {
+    if (onClose) onClose();
+  }, [location.pathname]);
 
   const handleLogout = () => {
     clearSession();
@@ -70,15 +75,27 @@ export default function AdminSidebar() {
   ];
 
   return (
-    <aside className="admin-sidebar">
+    <aside className={`admin-sidebar ${isOpen ? 'open' : ''}`}>
       <div className="admin-brand">
-        <div className="brand-icon" style={{ width: 36, height: 36 }}>
-          <Activity size={20} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div className="brand-icon" style={{ width: 36, height: 36 }}>
+            <Activity size={20} />
+          </div>
+          <div>
+            <h2>Rithanya Hospital</h2>
+            <span>ERP & Clinical Center</span>
+          </div>
         </div>
-        <div>
-          <h2>Rithanya Hospital</h2>
-          <span>ERP & Clinical Center</span>
-        </div>
+        {onClose && (
+          <button
+            type="button"
+            className="admin-sidebar-close-btn"
+            onClick={onClose}
+            aria-label="Close Sidebar"
+          >
+            <X size={18} />
+          </button>
+        )}
       </div>
 
       <nav className="sidebar-nav">
