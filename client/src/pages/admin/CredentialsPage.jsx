@@ -263,7 +263,7 @@ export default function CredentialsPage() {
         actions={
           <button type="button" className="btn btn-primary btn-sm" onClick={() => setIsOpen(true)}>
             <Plus size={16} />
-            <span>{superAdmin ? 'Create Admin or Staff' : 'Create Staff Account'}</span>
+            <span>{superAdmin ? 'Create Account' : 'Create Staff Account'}</span>
           </button>
         }
       />
@@ -290,15 +290,12 @@ export default function CredentialsPage() {
               <strong style={{ fontSize: 14 }}>Hierarchical Role-Based Access Control Active</strong>
             </div>
             <p style={{ margin: 0, fontSize: 13, color: 'var(--ink-soft)' }}>
-              {superAdmin
-                ? 'You are logged in as Superadmin (Hameed). You can configure Admin and Staff credentials, reveal passwords, and toggle module access.'
-                : 'You are logged in as Administrator (Dr. Narayana Murthy). You can create and manage Staff accounts, view their credentials, and customize module access.'}
+              You are logged in with Administrator privileges. You can manage staff accounts, configure credentials, and customize module access.
             </p>
           </div>
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-            <span className="badge badge-red" style={{ padding: '6px 12px' }}>Superadmin: Hameed</span>
-            <span className="badge badge-blue" style={{ padding: '6px 12px' }}>Admin: Dr. Narayana Murthy</span>
-            <span className="badge badge-green" style={{ padding: '6px 12px' }}>Role: Staff (Granular Access)</span>
+            <span className="badge badge-blue" style={{ padding: '6px 12px' }}>Tier: Administrator</span>
+            <span className="badge badge-green" style={{ padding: '6px 12px' }}>Tier: Staff (Granular Access)</span>
           </div>
         </div>
 
@@ -345,10 +342,10 @@ export default function CredentialsPage() {
                       <td>
                         <span
                           className={`badge ${
-                            isUserSuperAdmin ? 'badge-red' : isUserAdmin ? 'badge-blue' : 'badge-green'
+                            (isUserSuperAdmin || isUserAdmin) ? 'badge-blue' : 'badge-green'
                           }`}
                         >
-                          {u.role}
+                          {isUserSuperAdmin ? 'ADMIN' : u.role}
                         </span>
                       </td>
                       <td>
@@ -479,7 +476,7 @@ export default function CredentialsPage() {
         <Modal
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
-          title={superAdmin ? 'Create Admin or Staff Credential' : 'Create New Staff Credential'}
+          title={superAdmin ? 'Create Administrator or Staff Credential' : 'Create New Staff Credential'}
           size="md"
         >
           <form onSubmit={handleCreateUser}>

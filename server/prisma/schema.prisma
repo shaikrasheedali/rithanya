@@ -369,7 +369,7 @@ model GalleryItem {
   category  String   // Facility, Daycare, Diagnostics, Specialists, Patient Care, Social
   imageUrl  String   @db.VarChar(1000)
   mediaType String   @default("IMAGE") // IMAGE, YOUTUBE, INSTAGRAM, FACEBOOK, VIDEO
-  embedUrl  String?  @db.VarChar(1000)
+  embedUrl  String?  @db.Text
   caption   String?  @db.Text
   sortOrder Int      @default(0)
   createdAt DateTime @default(now())

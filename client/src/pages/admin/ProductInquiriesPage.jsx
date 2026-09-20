@@ -59,7 +59,7 @@ export default function ProductInquiriesPage() {
     try {
       await apiRequest(`/inquiries/${id}/status`, {
         method: 'PUT',
-        body: JSON.stringify({ orderStatus: newStatus, status: newStatus.toLowerCase() })
+        body: JSON.stringify({ orderStatus: newStatus })
       });
       addToast(`Order status updated to ${newStatus}`, 'success');
       if (selectedOrder && selectedOrder.id === id) {

@@ -127,6 +127,31 @@
   flex-direction: column;
   min-width: 0;
   overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(169, 17, 41, 0.32) transparent;
+}
+
+/* Custom CSS Scrollbar ONLY for Dashboard Pages (Keep sidebar scrollbar hidden) */
+.admin-main::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+  display: block;
+}
+
+.admin-main::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.admin-main::-webkit-scrollbar-thumb {
+  background: rgba(169, 17, 41, 0.24);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.admin-main::-webkit-scrollbar-thumb:hover {
+  background: rgba(169, 17, 41, 0.5);
 }
 
 .admin-topbar {

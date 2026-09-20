@@ -45,6 +45,7 @@ import StaffPage from './pages/admin/StaffPage';
 import FinancePage from './pages/admin/FinancePage';
 import ErasureRequestsAdminPage from './pages/admin/ErasureRequestsAdminPage';
 import SettingsPage from './pages/admin/SettingsPage';
+import { useDynamicSEO } from './utils/useSEO';
 
 // Layout wrappers
 function PublicLayout() {
@@ -84,6 +85,7 @@ function AdminLayout() {
 }
 
 export default function App() {
+  useDynamicSEO();
   return (
     <ToastProvider>
       <BrowserRouter>

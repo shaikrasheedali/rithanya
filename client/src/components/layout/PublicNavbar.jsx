@@ -113,7 +113,7 @@ export default function PublicNavbar() {
 
             <Link
               to="/contact#appointment"
-              className="island-btn island-btn-primary"
+              className="island-btn island-btn-primary island-desktop-btn"
               title="Book an Outpatient Consultation"
             >
               <Calendar size={14} />
@@ -122,7 +122,7 @@ export default function PublicNavbar() {
 
             <Link
               to="/admin/login"
-              className="island-circle-login-btn"
+              className="island-circle-login-btn island-desktop-btn"
               title="Staff Portal Login"
               aria-label="Staff Portal Login"
             >

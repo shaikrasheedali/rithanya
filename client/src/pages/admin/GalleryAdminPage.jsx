@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit2, Trash2, Image, Video, Youtube, Instagram, Facebook } from 'lucide-react';
+import { Plus, Edit2, Trash2, Image, Video, Youtube, Instagram, Facebook, Eye } from 'lucide-react';
 import AdminTopbar from '../../components/layout/AdminTopbar';
 import { apiRequest } from '../../utils/api';
 import { useToast } from '../../components/common/Toast';
 import Modal from '../../components/common/Modal';
 import ImageUploadField from '../../components/common/ImageUploadField';
+import { parseEmbedSource } from '../../utils/mediaEmbed';
 
 export default function GalleryAdminPage() {
   const { addToast } = useToast();
   const [items, setItems] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [editItem, setEditItem] = useState(null);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewTarget, setPreviewTarget] = useState(null);
+
   const [formData, setFormData] = useState({
     title: '',
     category: 'Facility',
@@ -105,11 +109,13 @@ export default function GalleryAdminPage() {
     }
   };
 
+  const parsedModalEmbed = parseEmbedSource(formData.embedUrl, formData.mediaType);
+
   return (
     <div className="admin-page">
       <AdminTopbar
         title="Hospital Media Gallery CMS"
-        subtitle="Manage Facility Photos, Clinical Tour Videos, YouTube & Instagram Social Embeds"
+        subtitle="Facility Photos, Clinical Videos & Direct Social Media iframe Embeds"
         actions={
           <button type="button" className="btn btn-primary btn-sm" onClick={() => openModal()}>
             <Plus size={16} />
@@ -127,7 +133,7 @@ export default function GalleryAdminPage() {
                 <th>Title</th>
                 <th>Media Type</th>
                 <th>Category</th>
-                <th>Embed / Caption</th>
+                <th>Embed Preview</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -171,9 +177,25 @@ export default function GalleryAdminPage() {
                     <td>
                       <span className="badge badge-red">{item.category}</span>
                     </td>
-                    <td style={{ maxWidth: 220, fontSize: 12 }}>
+                    <td style={{ maxWidth: 260, fontSize: 12 }}>
                       {item.embedUrl ? (
-                        <code style={{ fontSize: 11, color: 'var(--red-700)' }}>{item.embedUrl}</code>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                          <button
+                            type="button"
+                            className="btn btn-secondary btn-sm"
+                            style={{ padding: '3px 8px', fontSize: 11 }}
+                            onClick={() => {
+                              setPreviewTarget(item);
+                              setPreviewOpen(true);
+                            }}
+                          >
+                            <Eye size={12} />
+                            <span>Preview</span>
+                          </button>
+                          <span style={{ fontSize: 11, color: 'var(--ink-soft)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 160 }}>
+                            {item.embedUrl.startsWith('<iframe') ? 'Direct iframe snippet' : item.embedUrl}
+                          </span>
+                        </div>
                       ) : (
                         item.caption || '—'
                       )}
@@ -211,7 +233,7 @@ export default function GalleryAdminPage() {
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
           title={editItem ? 'Edit Media Gallery Item' : 'Add Media Item to Gallery'}
-          size="md"
+          size="lg"
         >
           <form onSubmit={handleSave}>
             <div className="form-group">
@@ -235,9 +257,9 @@ export default function GalleryAdminPage() {
                   onChange={(e) => setFormData({ ...formData, mediaType: e.target.value })}
                 >
                   <option value="IMAGE">Photograph (Static Image)</option>
-                  <option value="YOUTUBE">YouTube Video Embed</option>
-                  <option value="INSTAGRAM">Instagram Post / Reel Embed</option>
-                  <option value="FACEBOOK">Facebook Video Embed</option>
+                  <option value="YOUTUBE">YouTube Video / Shorts (iframe or link)</option>
+                  <option value="INSTAGRAM">Instagram Reel / Post (iframe or link)</option>
+                  <option value="FACEBOOK">Facebook Video / Reel (iframe or link)</option>
                   <option value="VIDEO">Direct Video URL</option>
                 </select>
               </div>
@@ -260,18 +282,49 @@ export default function GalleryAdminPage() {
 
             {formData.mediaType !== 'IMAGE' && (
               <div className="form-group">
-                <label className="form-label">Social Media Video / Embed URL *</label>
-                <input
-                  type="url"
+                <label className="form-label">Direct iframe Embed Code or Media URL *</label>
+                <textarea
                   className="form-control"
-                  placeholder="e.g. https://www.youtube.com/watch?v=... or https://www.instagram.com/reel/..."
+                  rows="3"
+                  placeholder='Paste direct iframe embed code (e.g. <iframe src="..." ...></iframe>) or social share link...'
                   value={formData.embedUrl}
                   onChange={(e) => setFormData({ ...formData, embedUrl: e.target.value })}
                   required={formData.mediaType !== 'IMAGE'}
                 />
                 <small style={{ color: 'var(--ink-soft)', display: 'block', marginTop: 4 }}>
-                  Supports YouTube standard/shorts links, Instagram reel URLs, and Facebook video embeds.
+                  Supports YouTube standard/shorts iframes, Instagram reel/post iframe snippets, and Facebook embeds. Automatically adapts to vertical (9:16) and landscape (16:9) aspect ratios.
                 </small>
+
+                {/* Live Preview Inside Modal */}
+                {parsedModalEmbed.src && (
+                  <div style={{ marginTop: 12, padding: 12, background: 'var(--canvas)', borderRadius: 10, border: '1px solid var(--line)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                      <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--red-900)' }}>
+                        ✓ Live Responsive Preview ({parsedModalEmbed.aspectRatio} format):
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        width: '100%',
+                        maxWidth: parsedModalEmbed.isVertical ? 340 : '100%',
+                        aspectRatio: parsedModalEmbed.aspectRatio,
+                        maxHeight: 380,
+                        margin: '0 auto',
+                        borderRadius: 8,
+                        overflow: 'hidden',
+                        background: '#000'
+                      }}
+                    >
+                      <iframe
+                        src={parsedModalEmbed.src}
+                        title="Live Embed Preview"
+                        style={{ width: '100%', height: '100%', border: 'none' }}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
@@ -308,6 +361,47 @@ export default function GalleryAdminPage() {
               </button>
             </div>
           </form>
+        </Modal>
+
+        {/* ADMIN PREVIEW MODAL */}
+        <Modal
+          isOpen={previewOpen}
+          onClose={() => setPreviewOpen(false)}
+          title={previewTarget?.title || 'Embed Preview'}
+          size="lg"
+        >
+          {previewTarget && (() => {
+            const embed = parseEmbedSource(previewTarget.embedUrl, previewTarget.mediaType);
+            return (
+              <div style={{ textAlign: 'center' }}>
+                <div
+                  style={{
+                    width: '100%',
+                    maxWidth: embed.isVertical ? 420 : 800,
+                    aspectRatio: embed.aspectRatio,
+                    maxHeight: '75vh',
+                    margin: '0 auto',
+                    borderRadius: 12,
+                    overflow: 'hidden',
+                    background: '#000'
+                  }}
+                >
+                  <iframe
+                    src={embed.src}
+                    title={previewTarget.title}
+                    style={{ width: '100%', height: '100%', border: 'none' }}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                  />
+                </div>
+                {previewTarget.caption && (
+                  <p style={{ marginTop: 14, color: 'var(--ink)', fontSize: 13 }}>
+                    {previewTarget.caption}
+                  </p>
+                )}
+              </div>
+            );
+          })()}
         </Modal>
       </div>
     </div>

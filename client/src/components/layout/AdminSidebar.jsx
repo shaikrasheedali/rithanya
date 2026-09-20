@@ -45,9 +45,9 @@ export default function AdminSidebar({ isOpen, onClose }) {
         { name: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard, perm: 'dashboard' },
         { name: 'Patients EMR', path: '/admin/patients', icon: Users, perm: 'patients' },
         { name: 'Clinical Vitals', path: '/admin/clinical', icon: Stethoscope, perm: 'clinical' },
-        { name: 'Daycare Admissions', path: '/admin/admissions', icon: BedDouble, perm: 'admissions' },
+        { name: 'Daycare Admissions (IPD)', path: '/admin/admissions', icon: BedDouble, perm: 'admissions' },
         { name: 'Blood Bank & Stock', path: '/admin/inventory', icon: Droplet, perm: 'inventory' },
-        { name: 'Appointments', path: '/admin/appointments', icon: CalendarCheck, perm: 'appointments' }
+        { name: 'Appointments (OPD)', path: '/admin/appointments', icon: CalendarCheck, perm: 'appointments' }
       ]
     },
     {
@@ -150,7 +150,7 @@ export default function AdminSidebar({ isOpen, onClose }) {
           </div>
           <div>
             <div className="sidebar-user-name">{user ? user.name : 'Hospital Staff'}</div>
-            <div className="sidebar-user-role">{user ? user.role : 'Staff'}</div>
+            <div className="sidebar-user-role">{user ? (user.role === 'SUPERADMIN' ? 'Admin' : user.role) : 'Staff'}</div>
           </div>
         </div>
 

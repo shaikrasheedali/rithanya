@@ -21,14 +21,14 @@
 .floating-island {
   pointer-events: auto;
   width: 100%;
-  max-width: 1260px;
-  background: rgba(255, 255, 255, 0.92);
+  max-width: min(1520px, calc(100vw - 28px));
+  background: rgba(255, 255, 255, 0.94);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid rgba(169, 17, 41, 0.16);
   border-radius: 9999px;
   box-shadow: 0 12px 36px -6px rgba(24, 18, 20, 0.09), 0 4px 14px rgba(169, 17, 41, 0.05);
-  padding: 11px 16px 11px 20px;
+  padding: 10px 16px 10px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -809,13 +809,16 @@
   }
 }
 
-/* Tablets (769px - 1080px) */
-@media (max-width: 1080px) {
+/* Tablets & Compact Laptops (769px - 1160px) */
+@media (max-width: 1160px) {
   .island-nav-links {
     display: none !important;
   }
   .island-menu-toggle {
     display: flex !important;
+  }
+  .island-circle-login-btn {
+    display: none !important;
   }
   .hero-grid {
     grid-template-columns: 1fr;
@@ -855,47 +858,57 @@
   }
 }
 
-/* Mobile Phones (up to 640px) */
-@media (max-width: 640px) {
+/* Mobile Devices & Phones (up to 768px) */
+@media (max-width: 768px) {
   .floating-island-container {
-    top: 10px;
+    top: 8px;
     padding: 0 10px;
   }
   .floating-island-container.scrolled {
     top: 6px;
   }
   .floating-island {
-    padding: 6px 8px 6px 12px;
+    padding: 6px 10px 6px 12px;
     border-radius: 9999px;
+    gap: 8px;
   }
   .brand-title {
     font-size: 14px;
+    letter-spacing: -0.2px;
   }
   .brand-subtitle {
-    display: none;
+    display: none !important;
   }
   .island-brand-icon {
     width: 32px;
     height: 32px;
   }
+  /* Hide wide desktop buttons on mobile to avoid overflow */
   .island-btn-primary {
-    padding: 6px 12px;
-    font-size: 12px;
-    gap: 4px;
+    display: none !important;
   }
-  .island-btn-primary svg {
-    width: 13px;
-    height: 13px;
+  .island-circle-login-btn {
+    display: none !important;
+  }
+  .island-btn-phone .phone-text {
+    display: none !important;
   }
   .island-btn-phone {
     padding: 6px 8px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
   .island-menu-toggle {
+    display: flex !important;
     width: 34px;
     height: 34px;
   }
   .public-main-content {
-    padding-top: 80px;
+    padding-top: 76px;
   }
 
   .hero-section {
@@ -1219,17 +1232,30 @@
   transform: translateY(-2px);
 }
 
-/* Controls and Progress Indicators */
+/* Controls and Progress Indicators: Positioned directly below hero CTA buttons */
 .featured-hero__controls {
   position: absolute;
   z-index: 10;
-  bottom: 32px;
+  top: calc(50% + 140px);
+  bottom: auto;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 14px;
+}
+
+@media (max-height: 800px) {
+  .featured-hero__controls {
+    top: calc(50% + 115px);
+  }
+}
+
+@media (max-width: 768px) {
+  .featured-hero__controls {
+    top: calc(50% + 155px);
+  }
 }
 
 .featured-hero__progress-container {
@@ -1373,11 +1399,105 @@
     font-size: 14px;
     margin-bottom: 20px;
   }
-  .featured-hero__controls {
-    bottom: 20px;
-  }
   .featured-hero__progress[data-active="true"] {
     width: 50px;
   }
 }
+
+/* ==========================================================================
+   HOMEPAGE VIEWPORT SECTIONS (HEIGHT: 100VH - NAVBAR HEIGHT)
+   ========================================================================== */
+.home-viewport-section {
+  min-height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 56px 0;
+  box-sizing: border-box;
+  position: relative;
+  width: 100%;
+  border-bottom: 1px solid var(--line);
+}
+
+.home-viewport-section.bg-white {
+  background: #ffffff;
+}
+
+.home-viewport-section.bg-soft {
+  background: #fbf9fa;
+}
+
+.home-viewport-section.bg-gradient {
+  background: radial-gradient(circle at 50% 20%, #fff6f7 0%, var(--canvas) 100%);
+}
+
+.home-viewport-section .section-head {
+  margin-bottom: 28px;
+}
+
+.home-viewport-section .section-title {
+  margin-bottom: 10px;
+}
+
+/* Responsive Blood Bank Stock Cards on Home Page */
+.home-blood-card {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  padding: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.home-blood-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(169, 17, 41, 0.12);
+  border-color: rgba(169, 17, 41, 0.3);
+}
+
+.home-blood-card.is-low {
+  background: #fffbfa;
+  border: 1.5px solid var(--red-500);
+}
+
+.home-blood-group-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--red-800);
+  line-height: 1;
+  margin: 0;
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  display: inline-block;
+  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  animation: pulseLive 2s infinite;
+}
+
+@keyframes pulseLive {
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+@media (max-width: 768px) {
+  .home-viewport-section {
+    min-height: calc(100dvh - 76px);
+    padding: 40px 0;
+    justify-content: flex-start;
+  }
+}
+
 

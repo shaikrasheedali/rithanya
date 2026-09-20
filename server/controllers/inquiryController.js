@@ -97,14 +97,30 @@ async function updateInquiryStatus(req, res, next) {
     const { id } = req.params;
     const { status, orderStatus, followUpNotes } = req.body;
 
+    const validInquiryStatuses = ['new', 'contacted', 'converted', 'closed'];
+    const updateData = {};
+
+    // Validate status against InquiryStatus enum
+    if (status && typeof status === 'string') {
+      const lower = status.toLowerCase();
+      if (validInquiryStatuses.includes(lower)) {
+        updateData.status = lower;
+      }
+    }
+
+    if (orderStatus && typeof orderStatus === 'string') {
+      updateData.orderStatus = orderStatus.toUpperCase();
+    }
+
+    if (followUpNotes !== undefined) {
+      updateData.followUpNotes = followUpNotes;
+    }
+
     const inquiry = await prisma.productInquiry.update({
       where: { id },
-      data: {
-        ...(status && { status }),
-        ...(orderStatus && { orderStatus }),
-        ...(followUpNotes !== undefined && { followUpNotes })
-      }
+      data: updateData
     });
+
 
     recordAuditLog({
       actorId: req.user ? req.user.id : null,

@@ -179,9 +179,57 @@ async function getInventoryLogs(req, res, next) {
   }
 }
 
+async function getPublicBloodStock(req, res, next) {
+  try {
+    const bloodStocks = await prisma.bloodInventory.findMany({
+      orderBy: { group: 'asc' }
+    });
+
+    const formattedStocks = bloodStocks.map((s) => {
+      const reserved = s.reservedUnits || 0;
+      const unreserved = Math.max(0, s.units - reserved);
+      return {
+        id: s.id,
+        group: s.group,
+        totalUnits: s.units,
+        reservedUnits: reserved,
+        unreservedUnits: unreserved,
+        availableUnits: unreserved, // exact live unreserved count
+        threshold: s.threshold,
+        isLow: unreserved <= s.threshold,
+        status: unreserved <= s.threshold ? 'Near Low' : 'Optimal',
+        expiryDate: s.expiryDate
+      };
+    });
+
+    const totals = formattedStocks.reduce(
+      (acc, curr) => {
+        acc.totalUnits += curr.totalUnits;
+        acc.totalReserved += curr.reservedUnits;
+        acc.availableUnits += curr.unreservedUnits;
+        if (curr.isLow) acc.criticalAlerts += 1;
+        return acc;
+      },
+      { totalUnits: 0, totalReserved: 0, availableUnits: 0, criticalAlerts: 0 }
+    );
+
+    return res.json({
+      success: true,
+      data: {
+        stocks: formattedStocks,
+        totals
+      }
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   getBloodInventory,
   quickLoadStock,
   quickDispenseStock,
-  getInventoryLogs
+  getInventoryLogs,
+  getPublicBloodStock
 };
+

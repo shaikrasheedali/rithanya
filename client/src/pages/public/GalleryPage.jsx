@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Play, Image as ImageIcon, Youtube, Instagram, Facebook, Video, ExternalLink } from 'lucide-react';
 import { apiRequest } from '../../utils/api';
 import Modal from '../../components/common/Modal';
+import { parseEmbedSource } from '../../utils/mediaEmbed';
 
 function getEmbedIframeUrl(mediaType, url) {
   if (!url) return null;
@@ -250,25 +251,32 @@ export default function GalleryPage() {
         >
           {activeItem && (
             <div>
-              {activeItem.embedUrl ? (
-                <div
-                  style={{
-                    width: '100%',
-                    aspectRatio: '16/9',
-                    borderRadius: 12,
-                    overflow: 'hidden',
-                    background: '#000'
-                  }}
-                >
-                  <iframe
-                    src={getEmbedIframeUrl(activeItem.mediaType, activeItem.embedUrl)}
-                    title={activeItem.title}
-                    style={{ width: '100%', height: '100%', border: 'none' }}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
-                </div>
-              ) : activeItem.mediaType === 'VIDEO' ? (
+              {activeItem.embedUrl ? (() => {
+                const embed = parseEmbedSource(activeItem.embedUrl, activeItem.mediaType);
+                return (
+                  <div
+                    style={{
+                      width: '100%',
+                      maxWidth: embed.isVertical ? 420 : '100%',
+                      aspectRatio: embed.aspectRatio,
+                      maxHeight: '76vh',
+                      margin: '0 auto',
+                      borderRadius: 12,
+                      overflow: 'hidden',
+                      background: '#000',
+                      boxShadow: '0 8px 30px rgba(0,0,0,0.35)'
+                    }}
+                  >
+                    <iframe
+                      src={embed.src}
+                      title={activeItem.title}
+                      style={{ width: '100%', height: '100%', border: 'none' }}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                    />
+                  </div>
+                );
+              })() : activeItem.mediaType === 'VIDEO' ? (
                 <div
                   style={{
                     width: '100%',

@@ -141,9 +141,27 @@ export default function MediaLibraryPage() {
             </p>
           </div>
         ) : (
-          <div className="grid-4">
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
+              gap: 20,
+              width: '100%',
+              minWidth: 0
+            }}
+          >
             {uploaded.map((asset) => (
-              <div key={asset.id} className="card" style={{ padding: 12, display: 'flex', flexDirection: 'column' }}>
+              <div
+                key={asset.id}
+                className="card"
+                style={{
+                  padding: 12,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  minWidth: 0,
+                  overflow: 'hidden'
+                }}
+              >
                 <div
                   className="card-image-wrap"
                   style={{
@@ -181,8 +199,8 @@ export default function MediaLibraryPage() {
                   </span>
                 </div>
 
-                <div style={{ marginTop: 10, flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                  <div>
+                <div style={{ marginTop: 10, flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minWidth: 0 }}>
+                  <div style={{ minWidth: 0 }}>
                     <p
                       style={{
                         fontSize: 13,
@@ -196,7 +214,19 @@ export default function MediaLibraryPage() {
                     >
                       {asset.originalName}
                     </p>
-                    <small style={{ fontSize: 11, color: 'var(--ink-soft)', display: 'block', marginTop: 2 }}>
+                    <small
+                      style={{
+                        fontSize: 11,
+                        color: 'var(--ink-soft)',
+                        display: 'block',
+                        marginTop: 2,
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        wordBreak: 'break-all'
+                      }}
+                      title={asset.url}
+                    >
                       {asset.url}
                     </small>
                   </div>

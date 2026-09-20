@@ -41,8 +41,8 @@ async function createExpense(req, res, next) {
       return res.status(400).json({ success: false, message: 'Name, category, vendor, and amount are required' });
     }
 
-    const count = await prisma.expense.count();
-    const expenseCode = `EXP-${100 + count + 1}`;
+    const uniqueSuffix = `${Date.now().toString().slice(-5)}${Math.floor(10 + Math.random() * 90)}`;
+    const expenseCode = `EXP-${uniqueSuffix}`;
 
     const expense = await prisma.expense.create({
       data: {
