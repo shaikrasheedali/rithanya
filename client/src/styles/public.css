@@ -980,6 +980,7 @@
    GOOGLE LABS INSPIRED HOSPITAL HERO VIDEO SLIDER
    ========================================================================== */
 .featured-hero.hospital-hero-slider {
+  --hero-content-bottom: clamp(120px, 20vh, 190px);
   position: relative;
   overflow: clip;
   min-height: 640px;
@@ -1115,7 +1116,7 @@
 /* Text Container */
 .featured-hero__text-container {
   position: absolute;
-  bottom: clamp(120px, 25%, 240px);
+  bottom: var(--hero-content-bottom);
   left: 0;
   width: 100%;
   display: flex;
@@ -1236,26 +1237,13 @@
 .featured-hero__controls {
   position: absolute;
   z-index: 10;
-  top: calc(50% + 140px);
-  bottom: auto;
+  bottom: calc(var(--hero-content-bottom) - 62px);
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 14px;
-}
-
-@media (max-height: 800px) {
-  .featured-hero__controls {
-    top: calc(50% + 115px);
-  }
-}
-
-@media (max-width: 768px) {
-  .featured-hero__controls {
-    top: calc(50% + 155px);
-  }
 }
 
 .featured-hero__progress-container {
@@ -1391,6 +1379,7 @@
   .featured-hero.hospital-hero-slider {
     min-height: 560px;
     height: 82vh;
+    --hero-content-bottom: clamp(80px, 14vh, 120px);
   }
   .hospital-hero__heading {
     font-size: 30px;
