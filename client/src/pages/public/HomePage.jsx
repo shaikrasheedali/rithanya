@@ -50,7 +50,9 @@ export default function HomePage() {
   const [bookingLoading, setBookingLoading] = useState(false);
 
   useEffect(() => {
+    let isMounted = true;
     async function loadHomeData() {
+      setLoading(true);
       try {
         const [servRes, treatRes, bloodRes, specRes, prodRes, blogRes] = await Promise.allSettled([
           apiRequest('/services'),
@@ -61,39 +63,38 @@ export default function HomePage() {
           apiRequest('/blogs')
         ]);
 
-        if (servRes.status === 'fulfilled' && servRes.value?.data) setServices(servRes.value.data);
-        if (treatRes.status === 'fulfilled' && treatRes.value?.data) setTreatments(treatRes.value.data);
+        if (!isMounted) return;
 
-        if (bloodRes.status === 'fulfilled' && bloodRes.value?.data) {
-          setBloodStocks(bloodRes.value.data.stocks || []);
-          setBloodTotals(bloodRes.value.data.totals || { totalUnits: 0, availableUnits: 0, criticalAlerts: 0 });
-        } else {
-          // Fallback blood bank stock data matching 8 blood groups
-          const fallbackGroups = [
-            { id: '1', group: 'A+', units: 14, reservedUnits: 2, availableUnits: 12, threshold: 5, status: 'Optimal' },
-            { id: '2', group: 'A-', units: 6, reservedUnits: 1, availableUnits: 5, threshold: 4, status: 'Optimal' },
-            { id: '3', group: 'B+', units: 18, reservedUnits: 3, availableUnits: 15, threshold: 6, status: 'Optimal' },
-            { id: '4', group: 'B-', units: 4, reservedUnits: 0, availableUnits: 4, threshold: 3, status: 'Optimal' },
-            { id: '5', group: 'O+', units: 22, reservedUnits: 4, availableUnits: 18, threshold: 8, status: 'Optimal' },
-            { id: '6', group: 'O-', units: 5, reservedUnits: 2, availableUnits: 3, threshold: 4, status: 'Near Low' },
-            { id: '7', group: 'AB+', units: 9, reservedUnits: 1, availableUnits: 8, threshold: 4, status: 'Optimal' },
-            { id: '8', group: 'AB-', units: 3, reservedUnits: 1, availableUnits: 2, threshold: 3, status: 'Near Low' }
-          ];
-          setBloodStocks(fallbackGroups);
-          setBloodTotals({ totalUnits: 81, availableUnits: 67, criticalAlerts: 2 });
+        if (servRes.status === 'fulfilled' && servRes.value?.data) {
+          setServices(Array.isArray(servRes.value.data) ? servRes.value.data : []);
         }
-
-        if (specRes.status === 'fulfilled' && specRes.value?.data) setSpecialists(specRes.value.data);
-        if (prodRes.status === 'fulfilled' && prodRes.value?.data) setProducts(prodRes.value.data);
-        if (blogRes.status === 'fulfilled' && blogRes.value?.data) setBlogs(blogRes.value.data);
+        if (treatRes.status === 'fulfilled' && treatRes.value?.data) {
+          setTreatments(Array.isArray(treatRes.value.data) ? treatRes.value.data : []);
+        }
+        if (bloodRes.status === 'fulfilled' && bloodRes.value?.data) {
+          setBloodStocks(Array.isArray(bloodRes.value.data.stocks) ? bloodRes.value.data.stocks : []);
+          setBloodTotals(bloodRes.value.data.totals || { totalUnits: 0, availableUnits: 0, criticalAlerts: 0 });
+        }
+        if (specRes.status === 'fulfilled' && specRes.value?.data) {
+          setSpecialists(Array.isArray(specRes.value.data) ? specRes.value.data : []);
+        }
+        if (prodRes.status === 'fulfilled' && prodRes.value?.data) {
+          setProducts(Array.isArray(prodRes.value.data) ? prodRes.value.data : []);
+        }
+        if (blogRes.status === 'fulfilled' && blogRes.value?.data) {
+          setBlogs(Array.isArray(blogRes.value.data) ? blogRes.value.data : []);
+        }
       } catch (err) {
         console.error('Home data load error:', err);
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     }
 
     loadHomeData();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const handleBookingSubmit = async (e) => {
@@ -214,49 +215,39 @@ export default function HomePage() {
           </div>
 
           <div className="grid-3" style={{ marginBottom: 28 }}>
-            {(services.length > 0 ? services.slice(0, 3) : [
-              {
-                id: 's1',
-                slug: 'thalassemia-daycare-transfusion',
-                category: 'Centre of Excellence',
-                title: 'Thalassemia Daycare Transfusion Centre',
-                summary: 'Dedicated day-care beds equipped with micro-aggregate leukodepletion filtration and continuous pediatric monitoring.',
-                coverImage: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=800&q=80'
-              },
-              {
-                id: 's2',
-                slug: 'clinical-diabetology-endocrinology',
-                category: 'Endocrinology',
-                title: 'Diabetology & Endocrine Management',
-                summary: 'Comprehensive glycemic stabilization, diabetic neuropathy diagnostics, dietary charting, and vascular wellness under Dr. Narayana Murthy.',
-                coverImage: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=800&q=80'
-              },
-              {
-                id: 's3',
-                slug: 'hplc-pathology-diagnostics',
-                category: 'Clinical Laboratory',
-                title: 'HPLC Diagnostics & Bio-Chemistry Lab',
-                summary: 'Gold-standard high performance liquid chromatography for hemoglobinopathies, automated biochemistry, and complete blood counts.',
-                coverImage: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80'
-              }
-            ]).map((s) => (
-              <div key={s.id} className="service-card" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                <div className="card-image-wrap" style={{ aspectRatio: '16/9' }}>
-                  <img src={s.coverImage} alt={s.title} />
+            {loading ? (
+              Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="card" style={{ padding: 20, minHeight: 280, opacity: 0.6, animation: 'pulse 1.5s infinite ease-in-out' }}>
+                  <div style={{ width: '100%', aspectRatio: '16/9', background: 'var(--line)', borderRadius: 10, marginBottom: 16 }} />
+                  <div style={{ width: '40%', height: 14, background: 'var(--line)', borderRadius: 4, marginBottom: 12 }} />
+                  <div style={{ width: '80%', height: 20, background: 'var(--line)', borderRadius: 4, marginBottom: 10 }} />
+                  <div style={{ width: '100%', height: 14, background: 'var(--line)', borderRadius: 4 }} />
                 </div>
-                <div className="service-card-body" style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                  <div>
-                    <span className="service-category">{s.category}</span>
-                    <h3 className="service-card-title">{s.title}</h3>
-                    <p className="service-card-desc">{s.summary}</p>
+              ))
+            ) : services.length > 0 ? (
+              services.slice(0, 6).map((s) => (
+                <div key={s.id} className="service-card" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                  <div className="card-image-wrap" style={{ aspectRatio: '16/9' }}>
+                    <img src={s.coverImage} alt={s.title} />
                   </div>
-                  <Link to={`/services/${s.slug}`} className="btn btn-outline btn-sm" style={{ alignSelf: 'flex-start', marginTop: 12 }}>
-                    <span>Explore Department</span>
-                    <ArrowRight size={13} />
-                  </Link>
+                  <div className="service-card-body" style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                    <div>
+                      <span className="service-category">{s.category}</span>
+                      <h3 className="service-card-title">{s.title}</h3>
+                      <p className="service-card-desc">{s.summary}</p>
+                    </div>
+                    <Link to={`/services/${s.slug}`} className="btn btn-outline btn-sm" style={{ alignSelf: 'flex-start', marginTop: 12 }}>
+                      <span>Explore Department</span>
+                      <ArrowRight size={13} />
+                    </Link>
+                  </div>
                 </div>
+              ))
+            ) : (
+              <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '36px 0', color: 'var(--ink-soft)' }}>
+                <p>Clinical departments are updated live from our clinical registry. None currently listed.</p>
               </div>
-            ))}
+            )}
           </div>
 
           <div style={{ textAlign: 'center' }}>
@@ -280,68 +271,58 @@ export default function HomePage() {
           </div>
 
           <div className="grid-3" style={{ marginBottom: 28 }}>
-            {(treatments.length > 0 ? treatments.slice(0, 3) : [
-              {
-                id: 't1',
-                slug: 'leukodepleted-prbc-transfusion',
-                title: 'Leukodepleted Packed Red Cell Transfusion',
-                category: 'Daycare Transfusion',
-                summary: 'Triple pre-crossmatching and micro-aggregate leukodepletion to prevent febrile non-hemolytic transfusion reactions (FNHTR).',
-                duration: '2 - 3 Hours',
-                indicators: ['Saline Crossmatch', 'Leukofiltration', 'Vitals Logging']
-              },
-              {
-                id: 't2',
-                slug: 'advanced-iron-chelation-therapy',
-                title: 'Longitudinal Iron Chelation & Serum Ferritin Care',
-                category: 'Chelation Therapy',
-                summary: 'Customized oral chelation dosages paired with regular liver and cardiac iron overload assessments to safeguard vital organs.',
-                duration: 'Ongoing Protocol',
-                indicators: ['Serum Ferritin', 'Dosage Calibration', 'Organ Screening']
-              },
-              {
-                id: 't3',
-                slug: 'glycemic-stabilization-insulin-titration',
-                title: 'Comprehensive Diabetology & Neuropathy Care',
-                category: 'Diabetology',
-                summary: 'Personalized insulin titration, biothesiometer vibration perception thresholding, and continuous glucose monitoring.',
-                duration: 'Outpatient / Daycare',
-                indicators: ['HbA1c Tracking', 'Vibration Threshold', 'Diet Charting']
-              }
-            ]).map((t) => (
-              <div key={t.id} className="card" style={{ padding: 24, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-                    <span className="badge badge-red">{t.category}</span>
-                    <span style={{ fontSize: 12, color: 'var(--ink-soft)', display: 'flex', alignItems: 'center', gap: 4 }}>
-                      <Clock size={12} />
-                      {t.duration || 'Standard Session'}
-                    </span>
-                  </div>
-                  <h3 style={{ fontSize: 18, color: 'var(--ink)', marginBottom: 10 }}>{t.title}</h3>
-                  <p style={{ fontSize: 13.5, color: 'var(--ink-soft)', lineHeight: 1.6, marginBottom: 16 }}>
-                    {t.summary}
-                  </p>
+            {loading ? (
+              Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="card" style={{ padding: 24, minHeight: 260, opacity: 0.6, animation: 'pulse 1.5s infinite ease-in-out' }}>
+                  <div style={{ width: '30%', height: 16, background: 'var(--line)', borderRadius: 4, marginBottom: 16 }} />
+                  <div style={{ width: '85%', height: 22, background: 'var(--line)', borderRadius: 4, marginBottom: 12 }} />
+                  <div style={{ width: '100%', height: 14, background: 'var(--line)', borderRadius: 4, marginBottom: 8 }} />
+                  <div style={{ width: '60%', height: 14, background: 'var(--line)', borderRadius: 4 }} />
                 </div>
-
-                <div>
-                  {t.indicators && Array.isArray(t.indicators) && (
-                    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 16 }}>
-                      {t.indicators.map((ind, i) => (
-                        <span key={i} className="badge" style={{ background: 'var(--canvas)', fontSize: 11, border: '1px solid var(--line)' }}>
-                          ✓ {ind}
+              ))
+            ) : treatments.length > 0 ? (
+              treatments.slice(0, 6).map((t) => {
+                const indicators = Array.isArray(t.procedures) ? t.procedures : (Array.isArray(t.indicators) ? t.indicators : []);
+                return (
+                  <div key={t.id} className="card" style={{ padding: 24, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                    <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                        <span className="badge badge-red">{t.category}</span>
+                        <span style={{ fontSize: 12, color: 'var(--ink-soft)', display: 'flex', alignItems: 'center', gap: 4 }}>
+                          <Clock size={12} />
+                          {t.duration || 'Standard Session'}
                         </span>
-                      ))}
+                      </div>
+                      <h3 style={{ fontSize: 18, color: 'var(--ink)', marginBottom: 10 }}>{t.title}</h3>
+                      <p style={{ fontSize: 13.5, color: 'var(--ink-soft)', lineHeight: 1.6, marginBottom: 16 }}>
+                        {t.summary}
+                      </p>
                     </div>
-                  )}
 
-                  <Link to={`/treatments/${t.slug}`} className="btn btn-outline btn-sm" style={{ width: '100%', justifyContent: 'center' }}>
-                    <span>Protocol Details</span>
-                    <ArrowRight size={13} />
-                  </Link>
-                </div>
+                    <div>
+                      {indicators.length > 0 && (
+                        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 16 }}>
+                          {indicators.slice(0, 3).map((ind, i) => (
+                            <span key={i} className="badge" style={{ background: 'var(--canvas)', fontSize: 11, border: '1px solid var(--line)' }}>
+                              ✓ {typeof ind === 'string' ? ind : (ind.name || 'Protocol')}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      <Link to={`/treatments/${t.slug}`} className="btn btn-outline btn-sm" style={{ width: '100%', justifyContent: 'center' }}>
+                        <span>Protocol Details</span>
+                        <ArrowRight size={13} />
+                      </Link>
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '36px 0', color: 'var(--ink-soft)' }}>
+                <p>Treatment pathways are retrieved directly from clinical protocols. None currently listed.</p>
               </div>
-            ))}
+            )}
           </div>
 
           <div style={{ textAlign: 'center' }}>
@@ -415,41 +396,57 @@ export default function HomePage() {
               marginBottom: 24
             }}
           >
-            {bloodStocks.map((stock) => {
-              const liveCount = stock.availableUnits !== undefined ? stock.availableUnits : Math.max(0, stock.units - (stock.reservedUnits || 0));
-              const isLow = liveCount <= (stock.threshold || 5);
-
-              return (
-                <div
-                  key={stock.id || stock.group}
-                  className={`home-blood-card ${isLow ? 'is-low' : ''}`}
-                >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-                    <h3 className="home-blood-group-title">{stock.group}</h3>
-                    <span className={`badge ${isLow ? 'badge-red' : 'badge-green'}`} style={{ fontSize: 11 }}>
-                      {isLow ? 'Near Low' : 'Optimal'}
-                    </span>
-                  </div>
-
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginBottom: 8 }}>
-                    <span style={{ color: 'var(--ink-soft)' }}>Units Available:</span>
-                    <strong style={{ fontSize: 15, color: isLow ? 'var(--red-700)' : 'var(--ink)' }}>
-                      {liveCount} units
-                    </strong>
-                  </div>
-
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'var(--ink-soft)', marginBottom: 8 }}>
-                    <span>Threshold:</span>
-                    <span>{stock.threshold || 5} units</span>
-                  </div>
-
-                  <div style={{ borderTop: '1px solid var(--line)', paddingTop: 8, fontSize: 11, color: 'var(--green)', display: 'flex', alignItems: 'center', gap: 4 }}>
-                    <Check size={12} />
-                    <span>Unreserved & Ready</span>
-                  </div>
+            {loading ? (
+              Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="home-blood-card" style={{ padding: 20, minHeight: 140, opacity: 0.6, animation: 'pulse 1.5s infinite ease-in-out' }}>
+                  <div style={{ width: '40%', height: 28, background: 'var(--line)', borderRadius: 6, marginBottom: 12 }} />
+                  <div style={{ width: '70%', height: 16, background: 'var(--line)', borderRadius: 4, marginBottom: 8 }} />
+                  <div style={{ width: '50%', height: 14, background: 'var(--line)', borderRadius: 4 }} />
                 </div>
-              );
-            })}
+              ))
+            ) : bloodStocks.length > 0 ? (
+              bloodStocks.map((stock) => {
+                const liveCount = stock.availableUnits !== undefined ? stock.availableUnits : (stock.unreservedUnits !== undefined ? stock.unreservedUnits : Math.max(0, (stock.units || 0) - (stock.reservedUnits || 0)));
+                const thresholdVal = stock.threshold || 5;
+                const isLow = stock.isLow !== undefined ? stock.isLow : (liveCount <= thresholdVal);
+                const statusLabel = stock.status || (isLow ? 'Near Low' : 'Optimal');
+
+                return (
+                  <div
+                    key={stock.id || stock.group}
+                    className={`home-blood-card ${isLow ? 'is-low' : ''}`}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                      <h3 className="home-blood-group-title">{stock.group}</h3>
+                      <span className={`badge ${isLow ? 'badge-red' : 'badge-green'}`} style={{ fontSize: 11 }}>
+                        {statusLabel}
+                      </span>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginBottom: 8 }}>
+                      <span style={{ color: 'var(--ink-soft)' }}>Units Available:</span>
+                      <strong style={{ fontSize: 15, color: isLow ? 'var(--red-700)' : 'var(--ink)' }}>
+                        {liveCount} units
+                      </strong>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'var(--ink-soft)', marginBottom: 8 }}>
+                      <span>Threshold:</span>
+                      <span>{thresholdVal} units</span>
+                    </div>
+
+                    <div style={{ borderTop: '1px solid var(--line)', paddingTop: 8, fontSize: 11, color: 'var(--green)', display: 'flex', alignItems: 'center', gap: 4 }}>
+                      <Check size={12} />
+                      <span>Unreserved & Ready</span>
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '36px 0', color: 'var(--ink-soft)' }}>
+                <p>Blood bank stock units are synchronized live with hospital inventory. Connecting to registry...</p>
+              </div>
+            )}
           </div>
 
           <div style={{ textAlign: 'center', fontSize: 12.5, color: 'var(--ink-soft)' }}>
@@ -470,48 +467,44 @@ export default function HomePage() {
           </div>
 
           <div className="grid-2" style={{ gap: 24, marginBottom: 28 }}>
-            {(specialists.length > 0 ? specialists.slice(0, 2) : [
-              {
-                id: 'doc-1',
-                name: 'Dr. Narayana Murthy M.D.',
-                department: 'Senior Diabetologist & General Physician',
-                qualifications: 'M.B.B.S., M.D. (General Medicine)',
-                bio: 'With over 22 years of clinical excellence, Dr. Narayana Murthy has successfully stabilized more than 8,500 diabetic and thalassemia patients across Telangana.',
-                opdTimings: 'Mon - Sat: 11:00 AM - 3:00 PM & 6:00 PM - 8:30 PM',
-                image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=800&q=80'
-              },
-              {
-                id: 'doc-2',
-                name: 'Dr. S. K. Ayesha M.D.',
-                department: 'Consultant Pediatrician & Daycare In-Charge',
-                qualifications: 'M.B.B.S., D.C.H., Fellow in Pediatric Hematology',
-                bio: 'Dedicated to painless, anxiety-free transfusions for children with Thalassemia major and Sickle Cell Disease with continuous micro-filtration monitoring.',
-                opdTimings: 'Mon - Fri: 10:00 AM - 4:00 PM',
-                image: 'https://images.unsplash.com/photo-1594824813626-d621b1a7d65b?auto=format&fit=crop&w=800&q=80'
-              }
-            ]).map((doc) => (
-              <div key={doc.id} className="specialist-card" style={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
-                <div style={{ width: '38%', minHeight: 220, position: 'relative' }}>
-                  <img
-                    src={doc.image}
-                    alt={doc.name}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-                  />
+            {loading ? (
+              Array.from({ length: 2 }).map((_, i) => (
+                <div key={i} className="card" style={{ padding: 24, minHeight: 240, opacity: 0.6, animation: 'pulse 1.5s infinite ease-in-out' }}>
+                  <div style={{ width: '40%', height: 16, background: 'var(--line)', borderRadius: 4, marginBottom: 12 }} />
+                  <div style={{ width: '70%', height: 22, background: 'var(--line)', borderRadius: 4, marginBottom: 10 }} />
+                  <div style={{ width: '100%', height: 14, background: 'var(--line)', borderRadius: 4, marginBottom: 8 }} />
+                  <div style={{ width: '60%', height: 14, background: 'var(--line)', borderRadius: 4 }} />
                 </div>
-                <div className="specialist-card-body" style={{ width: '62%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                  <span className="specialist-dept">{doc.department}</span>
-                  <h3 className="specialist-name">{doc.name}</h3>
-                  <p className="specialist-qual">{doc.qualifications}</p>
-                  <p style={{ fontSize: 13, color: 'var(--ink-soft)', marginBottom: 12, lineHeight: 1.6 }}>
-                    {doc.bio}
-                  </p>
-                  <div className="specialist-timings">
-                    <Clock size={14} style={{ color: 'var(--red-700)' }} />
-                    <span>{doc.opdTimings}</span>
+              ))
+            ) : specialists.length > 0 ? (
+              specialists.slice(0, 4).map((doc) => (
+                <div key={doc.id} className="specialist-card" style={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
+                  <div style={{ width: '38%', minHeight: 220, position: 'relative' }}>
+                    <img
+                      src={doc.image}
+                      alt={doc.name}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                    />
+                  </div>
+                  <div className="specialist-card-body" style={{ width: '62%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                    <span className="specialist-dept">{doc.department}</span>
+                    <h3 className="specialist-name">{doc.name}</h3>
+                    <p className="specialist-qual">{doc.qualifications}</p>
+                    <p style={{ fontSize: 13, color: 'var(--ink-soft)', marginBottom: 12, lineHeight: 1.6 }}>
+                      {doc.bio}
+                    </p>
+                    <div className="specialist-timings">
+                      <Clock size={14} style={{ color: 'var(--red-700)' }} />
+                      <span>{doc.opdTimings}</span>
+                    </div>
                   </div>
                 </div>
+              ))
+            ) : (
+              <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '36px 0', color: 'var(--ink-soft)' }}>
+                <p>Specialist medical roster is synchronized live from hospital directory. None currently listed.</p>
               </div>
-            ))}
+            )}
           </div>
 
           <div style={{ textAlign: 'center' }}>
@@ -535,68 +528,51 @@ export default function HomePage() {
           </div>
 
           <div className="grid-3" style={{ marginBottom: 28 }}>
-            {(products.length > 0 ? products.slice(0, 3) : [
-              {
-                id: 'p1',
-                slug: 'diabetic-comprehensive-profile',
-                name: 'Comprehensive Diabetic Evaluation Profile',
-                price: 1499,
-                originalPrice: 2200,
-                inStock: true,
-                image: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80',
-                features: ['Fasting & PP Blood Sugar', 'HbA1c Glycated Hemoglobin', 'Lipid Profile', 'Serum Creatinine (Kidney)', 'Physician Consultation']
-              },
-              {
-                id: 'p2',
-                slug: 'thalassemia-chelation-monitoring',
-                name: 'Thalassemia Routine Chelation Panel',
-                price: 1899,
-                originalPrice: 2600,
-                inStock: true,
-                image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=800&q=80',
-                features: ['Complete Blood Picture (CBP)', 'Serum Ferritin Level', 'Liver Function Test (LFT)', 'Serum Electrolytes', 'Pediatric Review']
-              },
-              {
-                id: 'p3',
-                slug: 'executive-full-body-wellness',
-                name: 'Executive Preventive Health Checkup',
-                price: 2499,
-                originalPrice: 3800,
-                inStock: true,
-                image: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=800&q=80',
-                features: ['Complete Hemogram (60 Parameters)', 'Cardiac Lipid Risk Panel', 'Kidney & Liver Function', 'Thyroid Profile (TSH)', 'ECG & Doctor Consultation']
-              }
-            ]).map((pkg) => (
-              <div key={pkg.id} className="card" style={{ padding: 22, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                <div>
-                  <div style={{ width: '100%', height: 160, borderRadius: 12, overflow: 'hidden', marginBottom: 14 }}>
-                    <img src={pkg.image} alt={pkg.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            {loading ? (
+              Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="card" style={{ padding: 22, minHeight: 280, opacity: 0.6, animation: 'pulse 1.5s infinite ease-in-out' }}>
+                  <div style={{ width: '100%', height: 150, background: 'var(--line)', borderRadius: 10, marginBottom: 14 }} />
+                  <div style={{ width: '70%', height: 20, background: 'var(--line)', borderRadius: 4, marginBottom: 10 }} />
+                  <div style={{ width: '40%', height: 18, background: 'var(--line)', borderRadius: 4 }} />
+                </div>
+              ))
+            ) : products.length > 0 ? (
+              products.slice(0, 6).map((pkg) => (
+                <div key={pkg.id} className="card" style={{ padding: 22, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                  <div>
+                    <div style={{ width: '100%', height: 160, borderRadius: 12, overflow: 'hidden', marginBottom: 14 }}>
+                      <img src={pkg.image} alt={pkg.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
+                    <h3 style={{ fontSize: 17, marginBottom: 8, color: 'var(--ink)' }}>{pkg.name}</h3>
+                    <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 14 }}>
+                      <span style={{ fontSize: 22, fontWeight: 800, color: 'var(--red-700)' }}>₹{pkg.price}</span>
+                      {pkg.originalPrice && (
+                        <span style={{ fontSize: 13, textDecoration: 'line-through', color: 'var(--muted)' }}>
+                          ₹{pkg.originalPrice}
+                        </span>
+                      )}
+                    </div>
                   </div>
-                  <h3 style={{ fontSize: 17, marginBottom: 8, color: 'var(--ink)' }}>{pkg.name}</h3>
-                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 14 }}>
-                    <span style={{ fontSize: 22, fontWeight: 800, color: 'var(--red-700)' }}>₹{pkg.price}</span>
-                    {pkg.originalPrice && (
-                      <span style={{ fontSize: 13, textDecoration: 'line-through', color: 'var(--muted)' }}>
-                        ₹{pkg.originalPrice}
-                      </span>
-                    )}
+
+                  <div>
+                    <ul style={{ paddingLeft: 18, fontSize: 12.5, color: 'var(--ink-soft)', lineHeight: 1.8, marginBottom: 16 }}>
+                      {(Array.isArray(pkg.features) ? pkg.features : []).slice(0, 4).map((f, i) => (
+                        <li key={i}>{f}</li>
+                      ))}
+                    </ul>
+
+                    <Link to="/products" className="btn btn-outline btn-sm" style={{ width: '100%', justifyContent: 'center' }}>
+                      <span>View Package & Inquire</span>
+                      <ArrowRight size={13} />
+                    </Link>
                   </div>
                 </div>
-
-                <div>
-                  <ul style={{ paddingLeft: 18, fontSize: 12.5, color: 'var(--ink-soft)', lineHeight: 1.8, marginBottom: 16 }}>
-                    {(Array.isArray(pkg.features) ? pkg.features : []).slice(0, 4).map((f, i) => (
-                      <li key={i}>{f}</li>
-                    ))}
-                  </ul>
-
-                  <Link to="/products" className="btn btn-outline btn-sm" style={{ width: '100%', justifyContent: 'center' }}>
-                    <span>View Package & Inquire</span>
-                    <ArrowRight size={13} />
-                  </Link>
-                </div>
+              ))
+            ) : (
+              <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '36px 0', color: 'var(--ink-soft)' }}>
+                <p>Health checkup packages are synchronized live from database catalog. None currently listed.</p>
               </div>
-            ))}
+            )}
           </div>
 
           <div style={{ textAlign: 'center' }}>
@@ -620,60 +596,44 @@ export default function HomePage() {
           </div>
 
           <div className="grid-3" style={{ marginBottom: 28 }}>
-            {(blogs.length > 0 ? blogs.slice(0, 3) : [
-              {
-                id: 'b1',
-                slug: 'understanding-hba1c-glycemic-targets',
-                title: 'Understanding Your HbA1c: Glycemic Targets Beyond Daily Glucose',
-                category: 'Diabetology',
-                summary: 'Why longitudinal 90-day hemoglobin A1c testing is the clinical gold standard for preventing microvascular neuropathy.',
-                createdAt: new Date().toISOString(),
-                readTime: '4 min read',
-                coverImage: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80'
-              },
-              {
-                id: 'b2',
-                slug: 'importance-of-leukodepleted-blood-transfusions',
-                title: 'Why Leukodepletion Matters for Regular Transfusion Recipients',
-                category: 'Hematology',
-                summary: 'How micro-aggregate white blood cell filtration prevents alloimmunization and febrile reactions in Thalassemia warriors.',
-                createdAt: new Date().toISOString(),
-                readTime: '5 min read',
-                coverImage: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=800&q=80'
-              },
-              {
-                id: 'b3',
-                slug: 'hplc-diagnostics-for-hemoglobinopathies',
-                title: 'HPLC Chromatography: Precise Hemoglobinopathy Detection',
-                category: 'Diagnostics',
-                summary: 'The crucial role of automated high performance liquid chromatography in diagnosing sickle trait and thalassemia carrier states.',
-                createdAt: new Date().toISOString(),
-                readTime: '4 min read',
-                coverImage: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=800&q=80'
-              }
-            ]).map((blog) => (
-              <div key={blog.id} className="card" style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column', height: '100%' }}>
-                <div style={{ width: '100%', height: 160, overflow: 'hidden' }}>
-                  <img src={blog.coverImage} alt={blog.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            {loading ? (
+              Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="card" style={{ padding: 20, minHeight: 280, opacity: 0.6, animation: 'pulse 1.5s infinite ease-in-out' }}>
+                  <div style={{ width: '100%', height: 150, background: 'var(--line)', borderRadius: 10, marginBottom: 14 }} />
+                  <div style={{ width: '35%', height: 14, background: 'var(--line)', borderRadius: 4, marginBottom: 10 }} />
+                  <div style={{ width: '80%', height: 20, background: 'var(--line)', borderRadius: 4, marginBottom: 8 }} />
+                  <div style={{ width: '100%', height: 14, background: 'var(--line)', borderRadius: 4 }} />
                 </div>
-                <div style={{ padding: 20, flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                  <div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                      <span className="badge badge-red" style={{ fontSize: 11 }}>{blog.category}</span>
-                      <span style={{ fontSize: 11, color: 'var(--ink-soft)' }}>{blog.readTime || '4 min read'}</span>
-                    </div>
-                    <h3 style={{ fontSize: 16, marginBottom: 8, lineHeight: 1.4, color: 'var(--ink)' }}>{blog.title}</h3>
-                    <p style={{ fontSize: 13, color: 'var(--ink-soft)', lineHeight: 1.5, marginBottom: 14 }}>
-                      {blog.summary}
-                    </p>
+              ))
+            ) : blogs.length > 0 ? (
+              blogs.slice(0, 6).map((blog) => (
+                <div key={blog.id} className="card" style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column', height: '100%' }}>
+                  <div style={{ width: '100%', height: 160, overflow: 'hidden' }}>
+                    <img src={blog.coverImage} alt={blog.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
-                  <Link to={`/insights/${blog.slug}`} className="btn btn-outline btn-sm" style={{ alignSelf: 'flex-start' }}>
-                    <span>Read Article</span>
-                    <ArrowRight size={13} />
-                  </Link>
+                  <div style={{ padding: 20, flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                    <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                        <span className="badge badge-red" style={{ fontSize: 11 }}>{blog.category}</span>
+                        <span style={{ fontSize: 11, color: 'var(--ink-soft)' }}>{blog.readTime || '4 min read'}</span>
+                      </div>
+                      <h3 style={{ fontSize: 16, marginBottom: 8, lineHeight: 1.4, color: 'var(--ink)' }}>{blog.title}</h3>
+                      <p style={{ fontSize: 13, color: 'var(--ink-soft)', lineHeight: 1.5, marginBottom: 14 }}>
+                        {blog.summary}
+                      </p>
+                    </div>
+                    <Link to={`/insights/${blog.slug}`} className="btn btn-outline btn-sm" style={{ alignSelf: 'flex-start' }}>
+                      <span>Read Article</span>
+                      <ArrowRight size={13} />
+                    </Link>
+                  </div>
                 </div>
+              ))
+            ) : (
+              <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '36px 0', color: 'var(--ink-soft)' }}>
+                <p>Clinical articles and research insights are loaded live from hospital archive. None currently listed.</p>
               </div>
-            ))}
+            )}
           </div>
 
           <div style={{ textAlign: 'center' }}>
