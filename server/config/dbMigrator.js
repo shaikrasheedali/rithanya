@@ -191,6 +191,20 @@ async function autoMigrate() {
   } else {
     console.log(`[AutoMigrate] ✓ Database schema verified. Active users: ${usersCount}.`);
   }
+
+  // 5. Ensure legacy domain emails are migrated to rithanyahospital.com
+  try {
+    await prisma.user.updateMany({
+      where: { email: 'admin@rithanya.in' },
+      data: { email: 'admin@rithanyahospital.com' }
+    });
+    await prisma.user.updateMany({
+      where: { email: 'staff@rithanya.in' },
+      data: { email: 'staff@rithanyahospital.com' }
+    });
+  } catch {
+    // Ignore migration error if schema not initialized
+  }
 }
 
 module.exports = { autoMigrate, getDbConnectionConfig };

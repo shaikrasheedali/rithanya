@@ -31,7 +31,7 @@ export default function PrivacyPage() {
 
           <h3 style={{ fontSize: 18, color: 'var(--ink)', marginBottom: 10 }}>5. Data Protection Officer (DPO) Contact</h3>
           <p>
-            For any inquiries, grievance redressals, or data queries, contact our Data Protection Officer at: <strong>dpo@rithanya.in</strong> or call <strong>+91 83285 81019</strong>.
+            For any inquiries, grievance redressals, or data queries, contact our Data Protection Officer at: <strong>dpo@rithanyahospital.com</strong> or call <strong>+91 83285 81019</strong>.
           </p>
         </div>
       </div>

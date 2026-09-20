@@ -28,7 +28,7 @@ test('Rithanya Hospital - New Features Integration Test Suite', async (t) => {
   // 2. Authenticate Admin (Dr. Narayana Murthy)
   await t.test('POST /api/auth/login - Admin login', async () => {
     const res = await request(app).post('/api/auth/login').send({
-      email: 'admin@rithanya.in',
+      email: 'admin@rithanyahospital.com',
       password: 'Admin@2026'
     });
     assert.strictEqual(res.status, 200);
@@ -60,7 +60,7 @@ test('Rithanya Hospital - New Features Integration Test Suite', async (t) => {
       .set('Authorization', `Bearer ${adminToken}`)
       .send({
         name: 'Unauthorized Admin Attempt',
-        email: `unauth.${Date.now()}@rithanya.in`,
+        email: `unauth.${Date.now()}@rithanyahospital.com`,
         password: 'Password123!',
         role: 'ADMIN'
       });
@@ -69,7 +69,7 @@ test('Rithanya Hospital - New Features Integration Test Suite', async (t) => {
   });
 
   await t.test('Admin creates STAFF account with customized allowedModules', async () => {
-    const testEmail = `nurse.${Date.now()}@rithanya.in`;
+    const testEmail = `nurse.${Date.now()}@rithanyahospital.com`;
     const res = await request(app)
       .post('/api/credentials')
       .set('Authorization', `Bearer ${adminToken}`)

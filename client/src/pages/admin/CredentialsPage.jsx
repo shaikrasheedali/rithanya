@@ -497,7 +497,7 @@ export default function CredentialsPage() {
               <input
                 type="email"
                 className="form-control"
-                placeholder="e.g. ramesh@rithanya.in"
+                placeholder="e.g. ramesh@rithanyahospital.com"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 required

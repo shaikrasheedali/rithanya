@@ -235,7 +235,7 @@ test('Comprehensive Full-Stack Hospital ERP & DPDP Suite', async (t) => {
 
   // 8. STAFF HR & CREDENTIALS
   await t.test('Staff HR & User Credential Creation with Argon2', async () => {
-    const testStaffEmail = `anand.${Date.now()}@rithanya.in`;
+    const testStaffEmail = `anand.${Date.now()}@rithanyahospital.com`;
 
     // Create staff
     const staffRes = await request(app)

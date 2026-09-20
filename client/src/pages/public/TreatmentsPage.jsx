@@ -3,6 +3,15 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Search, Clock, Stethoscope, CheckCircle2, Droplet, Sparkles, Activity } from 'lucide-react';
 import { apiRequest } from '../../utils/api';
 
+const DEFAULT_TREATMENT_IMAGES = [
+  'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1631815589968-fdb09a223b1e?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1581594693702-fbdc51b2763b?auto=format&fit=crop&w=800&q=80'
+];
+
 export default function TreatmentsPage() {
   const [treatments, setTreatments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -129,7 +138,10 @@ export default function TreatmentsPage() {
               gap: 'clamp(16px, 3.5vw, 28px)'
             }}
           >
-            {filtered.map((item) => (
+            {filtered.map((item, idx) => {
+              const fallbackImg = DEFAULT_TREATMENT_IMAGES[idx % DEFAULT_TREATMENT_IMAGES.length];
+              const imgSrc = item.coverImage && item.coverImage.trim() !== '' ? item.coverImage : fallbackImg;
+              return (
               <div
                 key={item.id}
                 className="treatment-card"
@@ -147,8 +159,12 @@ export default function TreatmentsPage() {
                 {/* Media Container */}
                 <div style={{ position: 'relative', width: '100%', height: 210, overflow: 'hidden', background: '#000' }}>
                   <img
-                    src={item.coverImage}
+                    src={imgSrc}
                     alt={item.title}
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = fallbackImg;
+                    }}
                     style={{
                       width: '100%',
                       height: '100%',
@@ -246,7 +262,7 @@ export default function TreatmentsPage() {
                   </Link>
                 </div>
               </div>
-            ))}
+            );})}
           </div>
         )}
       </div>

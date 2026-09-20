@@ -18,6 +18,7 @@ import {
   ChevronRight,
   ArrowRight
 } from 'lucide-react';
+import RithanyaLogo from '../common/RithanyaLogo';
 
 export default function PublicNavbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -75,7 +76,7 @@ export default function PublicNavbar() {
           {/* Brand Logo */}
           <Link to="/" className="island-brand" onClick={() => setMobileMenuOpen(false)}>
             <div className="island-brand-icon">
-              <Activity size={20} />
+              <RithanyaLogo size="100%" />
             </div>
             <div className="island-brand-text">
               <span className="brand-title">Rithanya Hospital</span>

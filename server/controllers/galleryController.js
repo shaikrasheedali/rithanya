@@ -44,11 +44,13 @@ async function createGalleryItem(req, res, next) {
 async function updateGalleryItem(req, res, next) {
   try {
     const { id } = req.params;
-    const updateData = { ...req.body };
-    delete updateData.id;
-
+    const allowed = ['title', 'category', 'url', 'mediaType', 'description', 'sortOrder'];
+    const updateData = {};
+    for (const key of allowed) {
+      if (req.body[key] !== undefined) updateData[key] = req.body[key];
+    }
     if (updateData.sortOrder !== undefined) {
-      updateData.sortOrder = parseInt(updateData.sortOrder, 10);
+      updateData.sortOrder = parseInt(updateData.sortOrder, 10) || 0;
     }
 
     const item = await prisma.galleryItem.update({

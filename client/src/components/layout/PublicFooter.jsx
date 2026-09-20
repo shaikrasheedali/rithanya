@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Activity, ShieldCheck, HeartHandshake, Phone, MapPin, Mail, Lock } from 'lucide-react';
+import { ShieldCheck, HeartHandshake, Phone, MapPin, Mail, Lock } from 'lucide-react';
+import RithanyaLogo from '../common/RithanyaLogo';
 
 export default function PublicFooter() {
   return (
@@ -9,13 +10,27 @@ export default function PublicFooter() {
         <div className="footer-grid">
           {/* Col 1: About Hospital */}
           <div className="footer-col">
-            <div className="brand-logo" style={{ color: '#fff', marginBottom: 16 }}>
-              <div className="brand-icon">
-                <Activity size={24} />
+            <div className="brand-logo" style={{ display: 'flex', alignItems: 'center', gap: 12, color: '#fff', marginBottom: 16 }}>
+              <div
+                style={{
+                  width: 44,
+                  height: 44,
+                  background: '#ffffff',
+                  borderRadius: 10,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: 2,
+                  flexShrink: 0,
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+                  overflow: 'hidden'
+                }}
+              >
+                <RithanyaLogo size="100%" />
               </div>
               <div className="brand-text">
-                <h1 style={{ color: '#fff' }}>Rithanya Hospital</h1>
-                <span style={{ color: '#aaa' }}>Compassionate Clinical Medicine</span>
+                <h1 style={{ color: '#fff', fontSize: 18, margin: 0 }}>Rithanya Hospital</h1>
+                <span style={{ color: '#aaa', fontSize: 12 }}>Compassionate Clinical Medicine</span>
               </div>
             </div>
             <p style={{ fontSize: 13.5, color: '#aaa', lineHeight: 1.7, marginBottom: 16 }}>
@@ -72,7 +87,7 @@ export default function PublicFooter() {
               </li>
               <li style={{ display: 'flex', gap: 10, fontSize: 13, color: '#aaa' }}>
                 <Mail size={18} style={{ color: '#df3850', flexShrink: 0 }} />
-                <span>info@rithanya.in / dr.narayana5@gmail.com</span>
+                <span>info@rithanyahospital.com / dr.narayana5@gmail.com</span>
               </li>
             </ul>
           </div>

@@ -26,6 +26,15 @@ import { useToast } from '../../components/common/Toast';
 import HeroVideoSlider from '../../components/home/HeroVideoSlider';
 import { formatDate } from '../../utils/formatters';
 
+const DEFAULT_TREATMENT_IMAGES = [
+  'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1631815589968-fdb09a223b1e?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1581594693702-fbdc51b2763b?auto=format&fit=crop&w=800&q=80'
+];
+
 export default function HomePage() {
   const { addToast } = useToast();
 
@@ -142,6 +151,54 @@ export default function HomePage() {
           </div>
 
           <div className="grid-2" style={{ gap: 36, alignItems: 'center', marginBottom: 32 }}>
+            {/* Hospital Campus Building Visual Feature */}
+            <div style={{ position: 'relative', borderRadius: 20, overflow: 'hidden', boxShadow: '0 16px 40px rgba(0,0,0,0.08)', border: '1px solid var(--line)', minHeight: 340, height: '100%', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ position: 'relative', flex: 1, minHeight: 320 }}>
+                <img
+                  src="/assets/hospital-building.jpg"
+                  alt="Rithanya Hospital Building & Daycare Transfusion Centre"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', minHeight: 320 }}
+                />
+                <div style={{
+                  position: 'absolute',
+                  top: 16,
+                  left: 16,
+                  background: 'rgba(255, 255, 255, 0.95)',
+                  backdropFilter: 'blur(8px)',
+                  padding: '6px 14px',
+                  borderRadius: 20,
+                  fontSize: 12,
+                  fontWeight: 700,
+                  color: 'var(--red-800)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  boxShadow: '0 4px 14px rgba(0,0,0,0.12)'
+                }}>
+                  <Award size={15} style={{ color: 'var(--red-700)' }} />
+                  <span>Clinical Excellence Center</span>
+                </div>
+                <div style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  background: 'linear-gradient(to top, rgba(10, 20, 40, 0.92) 0%, rgba(10, 20, 40, 0.6) 60%, transparent 100%)',
+                  padding: '24px 20px 16px',
+                  color: '#fff'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                    <Building size={16} style={{ color: '#00a5e5' }} />
+                    <span style={{ fontSize: 15, fontWeight: 800, letterSpacing: 0.3 }}>Rithanya Hospital Campus</span>
+                  </div>
+                  <p style={{ fontSize: 12.5, color: 'rgba(255, 255, 255, 0.88)', margin: 0, lineHeight: 1.4 }}>
+                    Daycare Transfusion Centre & Diabetology Institute • Khammam, Telangana
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Narrative & Metrics */}
             <div>
               <h3 style={{ fontSize: 22, color: 'var(--red-950)', marginBottom: 14 }}>
                 Transforming Chronic Care with Dignity & Safety
@@ -153,6 +210,41 @@ export default function HomePage() {
                 With fully automated HPLC hemoglobin electrophoresis, triple pre-crossmatching protocols, and micro-aggregate leukodepletion filters, we eliminate febrile transfusion risks and deliver precise glycemic outcomes.
               </p>
 
+              {/* 4 Pillars Stats Grid */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, marginBottom: 24 }}>
+                <div className="card" style={{ padding: 14, background: 'var(--canvas)', border: '1px solid var(--line)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
+                    <Stethoscope size={18} style={{ color: 'var(--red-700)' }} />
+                    <h3 style={{ fontSize: 20, fontWeight: 800, color: 'var(--red-900)', margin: 0 }}>22+</h3>
+                  </div>
+                  <p style={{ fontSize: 11.5, fontWeight: 600, color: 'var(--ink-soft)', margin: 0 }}>Years Clinical Experience</p>
+                </div>
+
+                <div className="card" style={{ padding: 14, background: 'var(--canvas)', border: '1px solid var(--line)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
+                    <Activity size={18} style={{ color: 'var(--red-700)' }} />
+                    <h3 style={{ fontSize: 20, fontWeight: 800, color: 'var(--red-900)', margin: 0 }}>8,500+</h3>
+                  </div>
+                  <p style={{ fontSize: 11.5, fontWeight: 600, color: 'var(--ink-soft)', margin: 0 }}>Diabetic Patients Managed</p>
+                </div>
+
+                <div className="card" style={{ padding: 14, background: 'var(--canvas)', border: '1px solid var(--line)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
+                    <Droplet size={18} style={{ color: 'var(--red-700)' }} />
+                    <h3 style={{ fontSize: 20, fontWeight: 800, color: 'var(--red-900)', margin: 0 }}>100%</h3>
+                  </div>
+                  <p style={{ fontSize: 11.5, fontWeight: 600, color: 'var(--ink-soft)', margin: 0 }}>Leukodepleted Blood Safety</p>
+                </div>
+
+                <div className="card" style={{ padding: 14, background: 'var(--canvas)', border: '1px solid var(--line)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
+                    <ShieldCheck size={18} style={{ color: 'var(--red-700)' }} />
+                    <h3 style={{ fontSize: 20, fontWeight: 800, color: 'var(--red-900)', margin: 0 }}>DPDP</h3>
+                  </div>
+                  <p style={{ fontSize: 11.5, fontWeight: 600, color: 'var(--ink-soft)', margin: 0 }}>Act 2023 Digital Privacy</p>
+                </div>
+              </div>
+
               <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
                 <Link to="/about" className="btn btn-primary">
                   <span>Learn More About Our Legacy</span>
@@ -162,41 +254,6 @@ export default function HomePage() {
                   <Phone size={14} className="text-red" />
                   <span>Call Emergency Helpline</span>
                 </a>
-              </div>
-            </div>
-
-            {/* 4 Pillars Stats Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16 }}>
-              <div className="card" style={{ padding: 22, background: 'var(--canvas)', border: '1px solid var(--line)' }}>
-                <div style={{ width: 42, height: 42, borderRadius: 12, background: 'var(--red-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--red-700)', marginBottom: 12 }}>
-                  <Stethoscope size={22} />
-                </div>
-                <h3 style={{ fontSize: 26, fontWeight: 800, color: 'var(--red-900)', margin: '0 0 4px' }}>22+</h3>
-                <p style={{ fontSize: 12.5, fontWeight: 600, color: 'var(--ink-soft)', margin: 0 }}>Years Clinical Experience</p>
-              </div>
-
-              <div className="card" style={{ padding: 22, background: 'var(--canvas)', border: '1px solid var(--line)' }}>
-                <div style={{ width: 42, height: 42, borderRadius: 12, background: 'var(--red-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--red-700)', marginBottom: 12 }}>
-                  <Activity size={22} />
-                </div>
-                <h3 style={{ fontSize: 26, fontWeight: 800, color: 'var(--red-900)', margin: '0 0 4px' }}>8,500+</h3>
-                <p style={{ fontSize: 12.5, fontWeight: 600, color: 'var(--ink-soft)', margin: 0 }}>Diabetic Patients Managed</p>
-              </div>
-
-              <div className="card" style={{ padding: 22, background: 'var(--canvas)', border: '1px solid var(--line)' }}>
-                <div style={{ width: 42, height: 42, borderRadius: 12, background: 'var(--red-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--red-700)', marginBottom: 12 }}>
-                  <Droplet size={22} />
-                </div>
-                <h3 style={{ fontSize: 26, fontWeight: 800, color: 'var(--red-900)', margin: '0 0 4px' }}>100%</h3>
-                <p style={{ fontSize: 12.5, fontWeight: 600, color: 'var(--ink-soft)', margin: 0 }}>Leukodepleted Blood Safety</p>
-              </div>
-
-              <div className="card" style={{ padding: 22, background: 'var(--canvas)', border: '1px solid var(--line)' }}>
-                <div style={{ width: 42, height: 42, borderRadius: 12, background: 'var(--red-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--red-700)', marginBottom: 12 }}>
-                  <ShieldCheck size={22} />
-                </div>
-                <h3 style={{ fontSize: 26, fontWeight: 800, color: 'var(--red-900)', margin: '0 0 4px' }}>DPDP</h3>
-                <p style={{ fontSize: 12.5, fontWeight: 600, color: 'var(--ink-soft)', margin: 0 }}>Act 2023 Digital Privacy</p>
               </div>
             </div>
           </div>
@@ -281,39 +338,70 @@ export default function HomePage() {
                 </div>
               ))
             ) : treatments.length > 0 ? (
-              treatments.slice(0, 6).map((t) => {
+              treatments.slice(0, 6).map((t, idx) => {
                 const indicators = Array.isArray(t.procedures) ? t.procedures : (Array.isArray(t.indicators) ? t.indicators : []);
+                const fallbackImg = DEFAULT_TREATMENT_IMAGES[idx % DEFAULT_TREATMENT_IMAGES.length];
+                const imgSrc = t.coverImage && t.coverImage.trim() !== '' ? t.coverImage : fallbackImg;
                 return (
-                  <div key={t.id} className="card" style={{ padding: 24, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                    <div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-                        <span className="badge badge-red">{t.category}</span>
-                        <span style={{ fontSize: 12, color: 'var(--ink-soft)', display: 'flex', alignItems: 'center', gap: 4 }}>
-                          <Clock size={12} />
-                          {t.duration || 'Standard Session'}
+                  <div key={t.id} className="card" style={{ padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', borderRadius: 16 }}>
+                    <div style={{ position: 'relative', width: '100%', height: 165, overflow: 'hidden', background: '#0b162c' }}>
+                      <img
+                        src={imgSrc}
+                        alt={t.title}
+                        onError={(e) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = fallbackImg;
+                        }}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      />
+                      <div style={{ position: 'absolute', top: 10, left: 10 }}>
+                        <span className="badge badge-red" style={{ fontSize: 11, background: 'rgba(169, 17, 41, 0.9)', color: '#fff' }}>
+                          {t.category}
                         </span>
                       </div>
-                      <h3 style={{ fontSize: 18, color: 'var(--ink)', marginBottom: 10 }}>{t.title}</h3>
-                      <p style={{ fontSize: 13.5, color: 'var(--ink-soft)', lineHeight: 1.6, marginBottom: 16 }}>
-                        {t.summary}
-                      </p>
+                      <div style={{
+                        position: 'absolute',
+                        bottom: 10,
+                        right: 10,
+                        background: 'rgba(17, 12, 14, 0.85)',
+                        backdropFilter: 'blur(6px)',
+                        color: '#fff',
+                        padding: '3px 8px',
+                        borderRadius: 8,
+                        fontSize: 11.5,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 4
+                      }}>
+                        <Clock size={11} />
+                        <span>{t.duration || 'Standard Session'}</span>
+                      </div>
                     </div>
 
-                    <div>
-                      {indicators.length > 0 && (
-                        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 16 }}>
-                          {indicators.slice(0, 3).map((ind, i) => (
-                            <span key={i} className="badge" style={{ background: 'var(--canvas)', fontSize: 11, border: '1px solid var(--line)' }}>
-                              ✓ {typeof ind === 'string' ? ind : (ind.name || 'Protocol')}
-                            </span>
-                          ))}
-                        </div>
-                      )}
+                    <div style={{ padding: '20px 22px 22px', flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div>
+                        <h3 style={{ fontSize: 17, color: 'var(--ink)', marginBottom: 8, lineHeight: 1.35 }}>{t.title}</h3>
+                        <p style={{ fontSize: 13, color: 'var(--ink-soft)', lineHeight: 1.6, marginBottom: 14 }}>
+                          {t.summary}
+                        </p>
+                      </div>
 
-                      <Link to={`/treatments/${t.slug}`} className="btn btn-outline btn-sm" style={{ width: '100%', justifyContent: 'center' }}>
-                        <span>Protocol Details</span>
-                        <ArrowRight size={13} />
-                      </Link>
+                      <div>
+                        {indicators.length > 0 && (
+                          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 14 }}>
+                            {indicators.slice(0, 2).map((ind, i) => (
+                              <span key={i} className="badge" style={{ background: 'var(--canvas)', fontSize: 11, border: '1px solid var(--line)' }}>
+                                ✓ {typeof ind === 'string' ? ind : (ind.name || 'Protocol')}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+
+                        <Link to={`/treatments/${t.slug}`} className="btn btn-outline btn-sm" style={{ width: '100%', justifyContent: 'center' }}>
+                          <span>Protocol Details</span>
+                          <ArrowRight size={13} />
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 );
@@ -513,10 +601,10 @@ export default function HomePage() {
       <section className="home-viewport-section bg-soft" id="products" aria-label="Healthcare Products & Packages">
         <div className="container">
           <div className="section-head">
-            <span className="section-tag">Preventive Health</span>
-            <h2 className="section-title">Diagnostic & Care Packages</h2>
+            <span className="section-tag">Healthcare Catalog</span>
+            <h2 className="section-title">Products</h2>
             <p className="section-subtitle">
-              Curated clinical health checkups offering automated bio-analyzer blood profiling, HbA1c tests, and physician reviews.
+              Curated clinical healthcare packages, diabetic supplies, and diagnostic profiling tests designed for comprehensive wellness.
             </p>
           </div>
 
@@ -570,7 +658,7 @@ export default function HomePage() {
 
           <div style={{ textAlign: 'center' }}>
             <Link to="/products" className="btn btn-secondary">
-              <span>View All Health Checkup Packages</span>
+              <span>View All Products</span>
               <ArrowRight size={15} />
             </Link>
           </div>
@@ -778,7 +866,7 @@ export default function HomePage() {
                     Emergency & Transfusions: <a href="tel:+918328581019" style={{ color: 'var(--red-700)', fontWeight: 600 }}>+91 83285 81019</a>
                   </p>
                   <p style={{ fontSize: 13, color: 'var(--ink-soft)', margin: '2px 0 0' }}>
-                    Email: info@rithanya.in
+                    Email: info@rithanyahospital.com
                   </p>
                 </div>
               </div>

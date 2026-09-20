@@ -69,11 +69,13 @@ async function createBlog(req, res, next) {
 async function updateBlog(req, res, next) {
   try {
     const { id } = req.params;
-    const updateData = { ...req.body };
-    delete updateData.id;
-
+    const allowed = ['slug', 'title', 'category', 'author', 'readTime', 'coverImage', 'summary', 'content', 'tags', 'status', 'publishedAt', 'sortOrder'];
+    const updateData = {};
+    for (const key of allowed) {
+      if (req.body[key] !== undefined) updateData[key] = req.body[key];
+    }
     if (updateData.sortOrder !== undefined) {
-      updateData.sortOrder = parseInt(updateData.sortOrder, 10);
+      updateData.sortOrder = parseInt(updateData.sortOrder, 10) || 0;
     }
 
     const blog = await prisma.blog.update({

@@ -22,6 +22,7 @@ import {
   LogOut,
   X
 } from 'lucide-react';
+import RithanyaLogo from '../common/RithanyaLogo';
 import { getStoredUser, clearSession, hasPermission, isSuperAdmin } from '../../utils/auth';
 
 export default function AdminSidebar({ isOpen, onClose }) {
@@ -79,8 +80,23 @@ export default function AdminSidebar({ isOpen, onClose }) {
     <aside className={`admin-sidebar ${isOpen ? 'open' : ''}`}>
       <div className="admin-brand">
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div className="brand-icon" style={{ width: 36, height: 36 }}>
-            <Activity size={20} />
+          <div
+            className="brand-icon"
+            style={{
+              width: 38,
+              height: 38,
+              background: '#ffffff',
+              borderRadius: 10,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: 2,
+              flexShrink: 0,
+              boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+              overflow: 'hidden'
+            }}
+          >
+            <RithanyaLogo size="100%" />
           </div>
           <div>
             <h2>Rithanya Hospital</h2>

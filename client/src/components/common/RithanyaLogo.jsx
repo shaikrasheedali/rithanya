@@ -1,0 +1,151 @@
+import React from 'react';
+
+export default function RithanyaLogo({ size = 44, className = '', style = {}, title = 'Rithanya Hospital Logo' }) {
+  const widthStyle = typeof size === 'number' ? `${size}px` : size;
+  const heightStyle = typeof size === 'number' ? `${size}px` : size;
+
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 500 500"
+      width={widthStyle}
+      height={heightStyle}
+      className={className}
+      style={{ display: 'block', flexShrink: 0, ...style }}
+      role="img"
+      aria-label={title}
+    >
+      <defs>
+        {/* Gradient for the Medical Cross */}
+        <linearGradient id="crossGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#00a5e5" />
+          <stop offset="100%" stopColor="#00509a" />
+        </linearGradient>
+
+        <style>
+          {`
+            .brand-text { font-family: 'Times New Roman', Times, Georgia, serif; font-weight: 900; fill: #004b9a; }
+            .hospital-text { font-family: 'Arial Black', Arial, sans-serif; font-weight: 900; fill: #38a32a; letter-spacing: 12px; }
+            .doc-text { font-family: Arial, sans-serif; font-weight: bold; fill: #004b9a; }
+            .spec-text { font-family: Arial, sans-serif; font-weight: bold; fill: #004b9a; }
+            .red-text { font-family: Arial, sans-serif; font-weight: bold; fill: #ffffff; }
+            .daycare-text { font-family: Arial, sans-serif; font-weight: bold; fill: #0076ba; }
+          `}
+        </style>
+      </defs>
+
+      {/* ================= LOGO ICON ================= */}
+      <g id="logo-graphics">
+        {/* Medical Cross Background */}
+        <rect x="215" y="35" width="70" height="155" rx="10" fill="url(#crossGrad)" />
+        <rect x="155" y="75" width="190" height="70" rx="10" fill="url(#crossGrad)" />
+
+        {/* Head */}
+        <circle cx="250" cy="78" r="16" fill="#00509a" stroke="#ffffff" strokeWidth="5" />
+
+        {/* Left Arm (Light Blue) */}
+        <path
+          d="M 248,140 C 225,135 200,105 195,75 C 210,80 220,95 228,115 C 235,128 245,135 248,135 Z"
+          fill="#00a5e5"
+          stroke="#ffffff"
+          strokeWidth="5"
+          strokeLinejoin="round"
+        />
+
+        {/* Right Arm (Green) */}
+        <path
+          d="M 252,140 C 275,135 300,105 305,75 C 290,80 280,95 272,115 C 265,128 255,135 252,135 Z"
+          fill="#38a32a"
+          stroke="#ffffff"
+          strokeWidth="5"
+          strokeLinejoin="round"
+        />
+
+        {/* Green Bottom Swoosh (Leaves) */}
+        <path
+          d="M 145,150 C 150,220 200,250 250,250 C 300,250 350,220 355,150 C 340,210 295,235 250,235 C 205,235 160,210 145,150 Z"
+          fill="#38a32a"
+        />
+
+        {/* Dark Blue Hand */}
+        <path
+          d="M 175,190 C 190,180 220,195 240,200 C 260,205 280,185 305,170 C 315,165 320,175 310,185 C 290,200 275,205 270,210 C 295,195 310,185 320,190 C 330,195 325,205 315,205 C 285,220 230,230 175,205 Z"
+          fill="#00509a"
+          stroke="#ffffff"
+          strokeWidth="5"
+          strokeLinejoin="round"
+        />
+        {/* Thumb Crease on Hand */}
+        <path
+          d="M 265,212 C 275,205 290,195 295,185"
+          fill="none"
+          stroke="#ffffff"
+          strokeWidth="3"
+          strokeLinecap="round"
+        />
+
+        {/* Red Blood Drop */}
+        <path
+          d="M 250,115 Q 272,145 272,165 A 22 22 0 0 1 228,165 Q 228,145 250,115 Z"
+          fill="#e31212"
+          stroke="#ffffff"
+          strokeWidth="4"
+          strokeLinejoin="round"
+        />
+        {/* White Highlight in Blood Drop */}
+        <path
+          d="M 235,150 A 10 10 0 0 0 242,165"
+          fill="none"
+          stroke="#ffffff"
+          strokeWidth="3"
+          strokeLinecap="round"
+        />
+      </g>
+
+      {/* ================= TYPOGRAPHY ================= */}
+      <g id="logo-text">
+        {/* Brand Name: Rithanya (Centered Alignment) */}
+        <g transform="translate(0,0)">
+          <text x="115" y="305" className="brand-text" fontSize="75">
+            R
+          </text>
+          <text x="175" y="305" className="brand-text" fontSize="68" letterSpacing="-1.5">
+            ithanya
+          </text>
+          {/* Green leaf cutout inside the 'R' shifted accordingly */}
+          <path d="M 112,305 Q 125,275 145,260 Q 130,265 117,295 Z" fill="#38a32a" />
+        </g>
+
+        {/* HOSPITAL Sub-brand */}
+        <line x1="75" y1="335" x2="135" y2="335" stroke="#38a32a" strokeWidth="2" />
+        <text x="250" y="342" className="hospital-text" fontSize="26" textAnchor="middle">
+          HOSPITAL
+        </text>
+        <line x1="370" y1="335" x2="430" y2="335" stroke="#38a32a" strokeWidth="2" />
+
+        {/* Doctor Name */}
+        <text x="250" y="378" className="doc-text" fontSize="20" textAnchor="middle">
+          Dr. Narayana Murthy, M.D.
+        </text>
+
+        {/* Specialty */}
+        <line x1="120" y1="394" x2="165" y2="394" stroke="#004b9a" strokeWidth="1.5" />
+        <text x="250" y="399" className="spec-text" fontSize="16" textAnchor="middle">
+          Diabetic Specialist
+        </text>
+        <line x1="335" y1="394" x2="380" y2="394" stroke="#004b9a" strokeWidth="1.5" />
+
+        {/* Red Pill Box (Thalassemia and Sickle Cell) */}
+        <rect x="115" y="414" width="270" height="28" rx="14" fill="#e31212" />
+        <text x="250" y="434" className="red-text" fontSize="15.5" textAnchor="middle">
+          Thalassemia and Sickle Cell
+        </text>
+
+        {/* Daycare Transfusion Centre */}
+        <text x="250" y="462" className="daycare-text" fontSize="15" textAnchor="middle">
+          Daycare Transfusion Centre
+        </text>
+      </g>
+    </svg>
+  );
+}

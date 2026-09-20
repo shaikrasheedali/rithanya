@@ -15,7 +15,7 @@ export default function SettingsPage() {
     tagline: 'Care with precision — Diabetology & Thalassemia Daycare Centre',
     phone: '+91 83285 81019',
     emergencyPhone: '+91 83285 81019',
-    email: 'info@rithanya.in',
+    email: 'info@rithanyahospital.com',
     address: 'Wyra Road, opposite Old LIC Office, Nehru Nagar, Khammam, Telangana - 507001',
     timings: 'OPD: Mon-Sat 11:00 AM - 5:00 PM | Daycare: 24/7 Support',
     bloodThreshold: 10
@@ -25,10 +25,10 @@ export default function SettingsPage() {
     metaTitle: 'Rithanya Hospital & Daycare Transfusion Centre | Diabetology & HPLC Diagnostics Khammam',
     metaDescription: 'Premier healthcare facility in Khammam specializing in Thalassemia daycare transfusions with leukodepletion, longitudinal diabetology, and HPLC diagnostics under Dr. Narayana Murthy M.D.',
     keywords: 'hospital in khammam, thalassemia daycare transfusion, diabetology, blood bank, dr narayana murthy, HPLC diagnostics, emergency healthcare khammam',
-    favicon: '/favicon.ico',
+    favicon: '/logo.svg',
     ogImage: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=1200&q=85',
     author: 'Dr. Narayana Murthy M.D. / Rithanya Hospital',
-    canonicalUrl: 'https://rithanya.in',
+    canonicalUrl: 'https://rithanyahospital.com',
     robots: 'index, follow'
   });
 
@@ -308,7 +308,7 @@ export default function SettingsPage() {
                   <input
                     type="url"
                     className="form-control"
-                    placeholder="https://rithanya.in"
+                    placeholder="https://rithanyahospital.com"
                     value={seo.canonicalUrl}
                     onChange={(e) => setSeo({ ...seo, canonicalUrl: e.target.value })}
                   />
@@ -350,7 +350,7 @@ export default function SettingsPage() {
                 </span>
                 <div style={{ marginTop: 8 }}>
                   <div style={{ fontSize: 13, color: '#202124' }}>
-                    {seo.canonicalUrl || 'https://rithanya.in'}
+                    {seo.canonicalUrl || 'https://rithanyahospital.com'}
                   </div>
                   <div style={{ fontSize: 18, color: '#1a0dab', fontWeight: 600, marginTop: 2, cursor: 'pointer', textDecoration: 'underline' }}>
                     {seo.metaTitle || 'Rithanya Hospital'}

@@ -140,13 +140,44 @@ async function updateTreatment(req, res, next) {
       return res.status(404).json({ success: false, message: 'Treatment not found' });
     }
 
+    const allowedFields = [
+      'title',
+      'slug',
+      'category',
+      'department',
+      'doctorName',
+      'duration',
+      'indications',
+      'summary',
+      'content',
+      'coverImage',
+      'videoUrl',
+      'procedures',
+      'tag',
+      'status',
+      'sortOrder'
+    ];
+
+    const updateData = {};
+    for (const key of allowedFields) {
+      if (req.body[key] !== undefined) {
+        updateData[key] = req.body[key];
+      }
+    }
+
+    if (Array.isArray(req.body.procedures)) {
+      updateData.procedures = req.body.procedures;
+    } else if (typeof req.body.proceduresText === 'string') {
+      updateData.procedures = req.body.proceduresText.split('\n').map((s) => s.trim()).filter(Boolean);
+    }
+
+    if (updateData.sortOrder !== undefined) {
+      updateData.sortOrder = parseInt(updateData.sortOrder, 10) || 0;
+    }
+
     const updated = await prisma.treatment.update({
       where: { id },
-      data: {
-        ...req.body,
-        procedures: Array.isArray(req.body.procedures) ? req.body.procedures : existing.procedures,
-        sortOrder: req.body.sortOrder !== undefined ? parseInt(req.body.sortOrder, 10) : existing.sortOrder
-      }
+      data: updateData
     });
 
     recordAuditLog({

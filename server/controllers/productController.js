@@ -51,12 +51,14 @@ async function createPackage(req, res, next) {
 async function updatePackage(req, res, next) {
   try {
     const { id } = req.params;
-    const updateData = { ...req.body };
-    delete updateData.id;
-
+    const allowed = ['slug', 'name', 'category', 'price', 'originalPrice', 'discountText', 'summary', 'features', 'tag', 'image', 'stock', 'inStock', 'status', 'sortOrder'];
+    const updateData = {};
+    for (const key of allowed) {
+      if (req.body[key] !== undefined) updateData[key] = req.body[key];
+    }
     if (updateData.price !== undefined) updateData.price = parseFloat(updateData.price);
     if (updateData.originalPrice !== undefined) updateData.originalPrice = parseFloat(updateData.originalPrice);
-    if (updateData.sortOrder !== undefined) updateData.sortOrder = parseInt(updateData.sortOrder, 10);
+    if (updateData.sortOrder !== undefined) updateData.sortOrder = parseInt(updateData.sortOrder, 10) || 0;
 
     const pack = await prisma.productPackage.update({
       where: { id },

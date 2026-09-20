@@ -91,8 +91,9 @@ export default function TreatmentsAdminPage() {
       ? formData.proceduresText.split('\n').map((s) => s.trim()).filter(Boolean)
       : [];
 
+    const { proceduresText: _omitted, ...cleanFormData } = formData;
     const payload = {
-      ...formData,
+      ...cleanFormData,
       procedures
     };
 

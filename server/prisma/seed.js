@@ -48,13 +48,27 @@ async function main() {
   });
   console.log('✓ Superadmin initialized: Hameed (mgrhameed@gmail.com)');
 
+  // Migrate legacy user emails to rithanyahospital.com if present
+  try {
+    await prisma.user.updateMany({
+      where: { email: 'admin@rithanya.in' },
+      data: { email: 'admin@rithanyahospital.com' }
+    });
+    await prisma.user.updateMany({
+      where: { email: 'staff@rithanya.in' },
+      data: { email: 'staff@rithanyahospital.com' }
+    });
+  } catch (e) {
+    // ignore
+  }
+
   // 2. Admin User ("Dr. Narayana Murthy")
   const adminPlain = 'Admin@2026';
   const adminHash = await hashPassword(adminPlain);
   const adminEnc = encrypt(adminPlain);
 
   const adminUser = await prisma.user.upsert({
-    where: { email: 'admin@rithanya.in' },
+    where: { email: 'admin@rithanyahospital.com' },
     update: {
       passwordHash: adminHash,
       plainPasswordEnc: adminEnc,
@@ -69,7 +83,7 @@ async function main() {
       ]
     },
     create: {
-      email: 'admin@rithanya.in',
+      email: 'admin@rithanyahospital.com',
       name: 'Dr. Narayana Murthy (Admin)',
       role: 'ADMIN',
       passwordHash: adminHash,
@@ -85,7 +99,7 @@ async function main() {
       ]
     }
   });
-  console.log('✓ Admin user initialized: Dr. Narayana Murthy (admin@rithanya.in)');
+  console.log('✓ Admin user initialized: Dr. Narayana Murthy (admin@rithanyahospital.com)');
 
   // 3. Clinical Staff User
   const staffPlain = 'StaffNurse@2026';
@@ -93,7 +107,7 @@ async function main() {
   const staffEnc = encrypt(staffPlain);
 
   const staffUser = await prisma.user.upsert({
-    where: { email: 'staff@rithanya.in' },
+    where: { email: 'staff@rithanyahospital.com' },
     update: {
       passwordHash: staffHash,
       plainPasswordEnc: staffEnc,
@@ -103,7 +117,7 @@ async function main() {
       allowedModules: ['dashboard', 'patients', 'clinical', 'admissions', 'inventory', 'appointments']
     },
     create: {
-      email: 'staff@rithanya.in',
+      email: 'staff@rithanyahospital.com',
       name: 'Clinical Staff Nurse',
       role: 'STAFF',
       passwordHash: staffHash,
@@ -121,7 +135,7 @@ async function main() {
       }
     }
   });
-  console.log('✓ Staff user initialized: Clinical Staff (staff@rithanya.in)');
+  console.log('✓ Staff user initialized: Clinical Staff (staff@rithanyahospital.com)');
 
   // 3. Staff Profiles
   const staffMembers = [
@@ -145,7 +159,7 @@ async function main() {
       salary: 38000,
       shift: 'Day',
       phone: '+91 98480 11223',
-      email: 'sujatha.reddy@rithanya.in',
+      email: 'sujatha.reddy@rithanyahospital.com',
       status: 'active'
     },
     {
@@ -156,7 +170,7 @@ async function main() {
       salary: 32000,
       shift: 'Rotational',
       phone: '+91 99890 33445',
-      email: 'venkatesh.b@rithanya.in',
+      email: 'venkatesh.b@rithanyahospital.com',
       status: 'active'
     },
     {
@@ -167,17 +181,29 @@ async function main() {
       salary: 26000,
       shift: 'Morning',
       phone: '+91 91210 55667',
-      email: 'lakshmi.p@rithanya.in',
+      email: 'lakshmi.p@rithanyahospital.com',
       status: 'active'
     }
   ];
 
   for (const s of staffMembers) {
-    await prisma.staff.upsert({
-      where: { email: s.email },
-      update: s,
-      create: s
+    const existing = await prisma.staff.findFirst({
+      where: {
+        OR: [
+          { staffCode: s.staffCode },
+          { email: s.email },
+          { email: s.email.replace('@rithanyahospital.com', '@rithanya.in') }
+        ]
+      }
     });
+    if (existing) {
+      await prisma.staff.update({
+        where: { id: existing.id },
+        data: s
+      });
+    } else {
+      await prisma.staff.create({ data: s });
+    }
   }
   console.log('✓ Staff profiles seeded');
 
@@ -191,7 +217,7 @@ async function main() {
         tagline: 'Care with precision — Diabetology & Thalassemia Daycare Centre',
         phone: '+91 83285 81019',
         emergencyPhone: '+91 83285 81019',
-        email: 'info@rithanya.in',
+        email: 'info@rithanyahospital.com',
         address: 'Wyra Road, opposite Old LIC Office, Nehru Nagar, Khammam, Telangana - 507001',
         timings: 'OPD: Mon-Sat 11:00 AM - 5:00 PM | Daycare: 24/7 Support',
         currency: 'INR',
@@ -205,7 +231,7 @@ async function main() {
         consentRequired: true,
         cameraConsentEnabled: true,
         dataRetentionYears: 10,
-        dpoContact: 'dpo@rithanya.in',
+        dpoContact: 'dpo@rithanyahospital.com',
         erasureProcessingDays: 3
       }
     }

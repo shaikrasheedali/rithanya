@@ -83,7 +83,7 @@ export default function ContactPage() {
                   <div>
                     <h4 style={{ fontSize: 14, fontWeight: 700 }}>Email Communications</h4>
                     <p style={{ fontSize: 13, color: 'var(--ink-soft)', marginTop: 2 }}>
-                      info@rithanya.in / dr.narayana5@gmail.com
+                      info@rithanyahospital.com / dr.narayana5@gmail.com
                     </p>
                   </div>
                 </div>

@@ -48,11 +48,13 @@ async function createSpecialist(req, res, next) {
 async function updateSpecialist(req, res, next) {
   try {
     const { id } = req.params;
-    const updateData = { ...req.body };
-    delete updateData.id;
-
+    const allowed = ['name', 'qualification', 'designation', 'department', 'experience', 'opdTimings', 'image', 'bio', 'sortOrder'];
+    const updateData = {};
+    for (const key of allowed) {
+      if (req.body[key] !== undefined) updateData[key] = req.body[key];
+    }
     if (updateData.sortOrder !== undefined) {
-      updateData.sortOrder = parseInt(updateData.sortOrder, 10);
+      updateData.sortOrder = parseInt(updateData.sortOrder, 10) || 0;
     }
 
     const specialist = await prisma.specialist.update({

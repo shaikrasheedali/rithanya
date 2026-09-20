@@ -4495,7 +4495,7 @@
               ><input
                 id="loginEmail"
                 type="email"
-                value="admin@rithanya.in"
+                value="admin@rithanyahospital.com"
                 required
                 autocomplete="username"
               />
@@ -4542,8 +4542,8 @@
           </button>
           <div class="demo-note">
             <strong>Synthetic demo access only</strong><br />Admin:
-            admin@rithanya.in · Rithanya@2026<br />Sample staff:
-            staff@rithanya.in · Staff@2026 (fresh/reset demo)<br />Existing
+            admin@rithanyahospital.com · Rithanya@2026<br />Sample staff:
+            staff@rithanyahospital.com · Staff@2026 (fresh/reset demo)<br />Existing
             workspaces: authorized users can create and manage staff accounts.<br />Data
             and authentication are local to this browser, not production-secure.
           </div>
@@ -6052,7 +6052,7 @@
               id: "admin",
               role: "admin",
               name: "Dr. Narayana Murthy",
-              email: "admin@rithanya.in",
+              email: "admin@rithanyahospital.com",
               password: "Rithanya@2026",
               salt: "rh_admin_1",
               hash: "c7fa9ae606f7cba731a31d99eee91cb4d935072e051c2ab72382f9294e2725ac",
@@ -6086,7 +6086,7 @@
                 email: "dr.narayana5@gmail.com",
                 joined: "2021-03-15",
                 status: "active",
-                login: { enabled: true, email: "staff@rithanya.in", password: "Staff@2026", salt: "rh_salt_1", hash: "7dad7b5fd7240491894347765a04855e2378ad4066d979ed5098a26b5c4db2a8", version: "v1", permissions: { dashboard: true, patients: true, clinical: true, admissions: true, inventory: true, appointments: true, services: true, blogs: true, specialists: true, products: true, productInquiries: true, gallery: true, media: true, credentials: true, staff: true, finance: true, settings: true } }
+                login: { enabled: true, email: "staff@rithanyahospital.com", password: "Staff@2026", salt: "rh_salt_1", hash: "7dad7b5fd7240491894347765a04855e2378ad4066d979ed5098a26b5c4db2a8", version: "v1", permissions: { dashboard: true, patients: true, clinical: true, admissions: true, inventory: true, appointments: true, services: true, blogs: true, specialists: true, products: true, productInquiries: true, gallery: true, media: true, credentials: true, staff: true, finance: true, settings: true } }
               },
               {
                 id: "RH-103",
@@ -6096,7 +6096,7 @@
                 salary: 38000,
                 shift: "Day",
                 phone: "+91 98480 11223",
-                email: "sujatha.reddy@rithanya.in",
+                email: "sujatha.reddy@rithanyahospital.com",
                 joined: "2022-08-01",
                 status: "active"
               },
@@ -6108,7 +6108,7 @@
                 salary: 32000,
                 shift: "Rotational",
                 phone: "+91 99890 33445",
-                email: "venkatesh.b@rithanya.in",
+                email: "venkatesh.b@rithanyahospital.com",
                 joined: "2023-02-14",
                 status: "active"
               },
@@ -6120,7 +6120,7 @@
                 salary: 26000,
                 shift: "Morning",
                 phone: "+91 91210 55667",
-                email: "lakshmi.p@rithanya.in",
+                email: "lakshmi.p@rithanyahospital.com",
                 joined: "2023-11-20",
                 status: "active"
               }
@@ -6316,7 +6316,7 @@
           data.accounts.superadmin = Object.assign({}, initial.accounts.superadmin, data.accounts.superadmin || {});
           data.staff = Array.isArray(data.staff) ? data.staff : initial.staff;
           data.staff = data.staff.filter(function (member) {
-            return !(member.id === "RH-102" && member.name === "Anil Kumar" && member.email === "admin@rithanya.in");
+            return !(member.id === "RH-102" && member.name === "Anil Kumar" && member.email === "admin@rithanyahospital.com");
           });
           data.staff.forEach(function (member) {
             if (member.login) {
@@ -6324,7 +6324,7 @@
                 { dashboard: true, patients: true, clinical: true, admissions: true, inventory: true, appointments: true, services: true, blogs: true, specialists: true, products: true, productInquiries: true, gallery: true, media: true, credentials: true, staff: true, finance: false, settings: false },
                 member.login.permissions || {}
               );
-              if (member.login.email === "staff@rithanya.in" && !member.login.password && member.login.salt === "rh_salt_1" && member.login.hash === "9580efba9a764d2626e2feaa34ff1a6a575a2d65451ecfd61f1816f1c42f0d98") {
+              if (member.login.email === "staff@rithanyahospital.com" && !member.login.password && member.login.salt === "rh_salt_1" && member.login.hash === "9580efba9a764d2626e2feaa34ff1a6a575a2d65451ecfd61f1816f1c42f0d98") {
                 member.login.password = "Staff@2026";
                 member.login.salt = "rh_salt_1";
                 member.login.hash = "7dad7b5fd7240491894347765a04855e2378ad4066d979ed5098a26b5c4db2a8";
@@ -11029,7 +11029,7 @@
               openModal({
                 title: "Demo access help",
                 subtitle: "No email or recovery service is connected",
-                body: "<p>Administrator demo: <strong>admin@rithanya.in</strong> / <strong>Rithanya@2026</strong>.</p><p>For staff access, ask an administrator to enable your account or reset your password in Staff management. Public sample credentials work only while the sample account remains enabled and unchanged.</p><p>Use synthetic demo data only.</p>",
+                body: "<p>Administrator demo: <strong>admin@rithanyahospital.com</strong> / <strong>Rithanya@2026</strong>.</p><p>For staff access, ask an administrator to enable your account or reset your password in Staff management. Public sample credentials work only while the sample account remains enabled and unchanged.</p><p>Use synthetic demo data only.</p>",
               });
             };
           }

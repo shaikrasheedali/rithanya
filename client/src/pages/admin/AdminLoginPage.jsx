@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Activity, Lock, Mail, ArrowRight } from 'lucide-react';
+import { Lock, Mail, ArrowRight } from 'lucide-react';
 import { apiRequest } from '../../utils/api';
 import { setSession } from '../../utils/auth';
 import { useToast } from '../../components/common/Toast';
+import RithanyaLogo from '../../components/common/RithanyaLogo';
 
 export default function AdminLoginPage() {
   const navigate = useNavigate();
@@ -61,10 +62,22 @@ export default function AdminLoginPage() {
       >
         <div style={{ textAlign: 'center', marginBottom: 26 }}>
           <div
-            className="brand-icon"
-            style={{ width: 52, height: 52, margin: '0 auto 14px', borderRadius: 16 }}
+            style={{
+              width: 72,
+              height: 72,
+              margin: '0 auto 14px',
+              background: '#ffffff',
+              borderRadius: 16,
+              boxShadow: '0 4px 16px rgba(0, 80, 154, 0.12)',
+              border: '1px solid rgba(0, 75, 154, 0.1)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: 4,
+              overflow: 'hidden'
+            }}
           >
-            <Activity size={26} />
+            <RithanyaLogo size="100%" />
           </div>
           <h2 style={{ fontSize: 'clamp(20px, 4.5vw, 24px)', fontWeight: 800 }}>Rithanya Hospital</h2>
           <p style={{ color: 'var(--ink-soft)', fontSize: 13, marginTop: 4 }}>

@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin/
 Disallow: /api/
 
-Sitemap: https://rithanya.in/sitemap.xml
+Sitemap: https://rithanyahospital.com/sitemap.xml
