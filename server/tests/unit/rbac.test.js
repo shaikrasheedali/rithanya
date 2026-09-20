@@ -53,4 +53,15 @@ test('RBAC Middleware Permissions Matrix', async (t) => {
     middleware(req, res, next);
     assert.strictEqual(calledNext, true);
   });
+
+  await t.test('requirePermission should check staff allowedModules array', () => {
+    const middleware = requirePermission('treatments');
+    let calledNext = false;
+    const req = { user: { role: 'STAFF', allowedModules: ['dashboard', 'treatments'] } };
+    const res = {};
+    const next = () => { calledNext = true; };
+
+    middleware(req, res, next);
+    assert.strictEqual(calledNext, true);
+  });
 });

@@ -54,19 +54,22 @@ enum ErasureStatus {
 }
 
 model User {
-  id            String    @id @default(uuid())
-  email         String    @unique
-  name          String
-  role          Role      @default(STAFF)
-  passwordHash  String    @db.VarChar(255)
-  salt          String    @default("")
-  version       String    @default("v1")
-  enabled       Boolean   @default(true)
-  permissions   Json?     // Module permissions { dashboard: true, patients: true, ... }
-  lastLogin     DateTime?
-  staffProfile  Staff?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id                String    @id @default(uuid())
+  email             String    @unique
+  name              String
+  role              Role      @default(STAFF)
+  passwordHash      String    @db.VarChar(255)
+  plainPasswordEnc  String?   @db.Text // AES-256 encrypted password for authorized viewing
+  salt              String    @default("")
+  version           String    @default("v1")
+  enabled           Boolean   @default(true)
+  permissions       Json?     // Module permissions { dashboard: true, patients: true, ... }
+  allowedModules    Json?     // Array of allowed module slugs
+  creatorId         String?   // User ID of the admin/superadmin who created this account
+  lastLogin         DateTime?
+  staffProfile      Staff?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 
   @@index([email])
 }
@@ -288,6 +291,31 @@ model Specialist {
   @@index([status])
 }
 
+model Treatment {
+  id            String        @id @default(uuid())
+  slug          String        @unique
+  title         String
+  category      String        // e.g. Daycare Hematology, Clinical Diabetology, Laboratory & Diagnostics, Critical Care
+  department    String        @default("General Medicine & Diabetology")
+  doctorName    String        @default("Dr. Narayana Murthy, MD")
+  duration      String        @default("45 - 90 mins")
+  indications   String?       @db.Text
+  summary       String        @db.Text
+  content       String        @db.LongText
+  coverImage    String        @db.VarChar(1000)
+  videoUrl      String?       @db.VarChar(1000)
+  procedures    Json?         // Array of procedure bullet points
+  tag           String?       // Specialized, Comprehensive, Emergency
+  status        PublishStatus @default(published)
+  sortOrder     Int           @default(0)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([slug])
+  @@index([status])
+  @@index([category])
+}
+
 model ProductPackage {
   id            String   @id @default(uuid())
   slug          String   @unique
@@ -300,6 +328,8 @@ model ProductPackage {
   features      Json?    // Array of feature strings
   tag           String?  // Popular, Recommended, Essential
   image         String   @db.VarChar(1000)
+  stock         Int      @default(50)
+  inStock       Boolean  @default(true)
   status        String   @default("active")
   sortOrder     Int      @default(0)
   createdAt     DateTime @default(now())
@@ -311,13 +341,20 @@ model ProductPackage {
 
 model ProductInquiry {
   id            String        @id @default(uuid())
+  orderCode     String?       // e.g. ORD-10023
   packageId     String?
   packageName   String
+  items         Json?         // Array of cart items: [{ id, name, price, quantity, image }]
+  totalAmount   Float         @default(0)
   name          String
   phone         String
   email         String?
+  address       String?       @db.Text
+  city          String?
+  pincode       String?
   message       String?       @db.Text
   status        InquiryStatus @default(new)
+  orderStatus   String        @default("PENDING") // PENDING, CONFIRMED, DISPATCHED, DELIVERED, CANCELLED
   followUpNotes String?       @db.Text
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
@@ -329,8 +366,10 @@ model ProductInquiry {
 model GalleryItem {
   id        String   @id @default(uuid())
   title     String
-  category  String   // Facility, Daycare, Diagnostics, Specialists, Patient Care
+  category  String   // Facility, Daycare, Diagnostics, Specialists, Patient Care, Social
   imageUrl  String   @db.VarChar(1000)
+  mediaType String   @default("IMAGE") // IMAGE, YOUTUBE, INSTAGRAM, FACEBOOK, VIDEO
+  embedUrl  String?  @db.VarChar(1000)
   caption   String?  @db.Text
   sortOrder Int      @default(0)
   createdAt DateTime @default(now())

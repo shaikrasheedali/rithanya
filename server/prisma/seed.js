@@ -1,72 +1,127 @@
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
 const { PrismaClient } = require('@prisma/client');
 const { hashPassword } = require('../utils/argonHelper');
+const { encrypt } = require('../utils/encryption');
 
 const prisma = new PrismaClient();
 
 async function main() {
   console.log('--- Starting Rithanya Hospital Database Seed ---');
 
-  // 1. Superadmin User
-  const superadminHash = await hashPassword('Hameed@2026');
+  // 1. Superadmin User ("Hameed")
+  const superadminPlain = 'Hameed@2026';
+  const superadminHash = await hashPassword(superadminPlain);
+  const superadminEnc = encrypt(superadminPlain);
+
   const superadmin = await prisma.user.upsert({
     where: { email: 'mgrhameed@gmail.com' },
     update: {
       passwordHash: superadminHash,
+      plainPasswordEnc: superadminEnc,
       role: 'SUPERADMIN',
-      name: 'Hameed',
-      enabled: true
+      name: 'Hameed (Superadmin)',
+      enabled: true,
+      allowedModules: [
+        'dashboard', 'patients', 'clinical', 'admissions', 'inventory',
+        'appointments', 'treatments', 'services', 'blogs', 'specialists',
+        'products', 'orders', 'gallery', 'media', 'credentials', 'staff',
+        'finance', 'erasure', 'settings'
+      ]
     },
     create: {
       email: 'mgrhameed@gmail.com',
-      name: 'Hameed',
+      name: 'Hameed (Superadmin)',
       role: 'SUPERADMIN',
       passwordHash: superadminHash,
+      plainPasswordEnc: superadminEnc,
       salt: 'rh_superadmin_1',
       enabled: true,
-      permissions: { all: true }
+      permissions: { all: true },
+      allowedModules: [
+        'dashboard', 'patients', 'clinical', 'admissions', 'inventory',
+        'appointments', 'treatments', 'services', 'blogs', 'specialists',
+        'products', 'orders', 'gallery', 'media', 'credentials', 'staff',
+        'finance', 'erasure', 'settings'
+      ]
     }
   });
-  console.log('✓ Superadmin initialized:', superadmin.email);
+  console.log('✓ Superadmin initialized: Hameed (mgrhameed@gmail.com)');
 
-  // 2. Staff User (Dr. Narayana Murthy login)
-  const staffHash = await hashPassword('Staff@2026');
+  // 2. Admin User ("Dr. Narayana Murthy")
+  const adminPlain = 'Admin@2026';
+  const adminHash = await hashPassword(adminPlain);
+  const adminEnc = encrypt(adminPlain);
+
+  const adminUser = await prisma.user.upsert({
+    where: { email: 'admin@rithanya.in' },
+    update: {
+      passwordHash: adminHash,
+      plainPasswordEnc: adminEnc,
+      role: 'ADMIN',
+      name: 'Dr. Narayana Murthy (Admin)',
+      enabled: true,
+      allowedModules: [
+        'dashboard', 'patients', 'clinical', 'admissions', 'inventory',
+        'appointments', 'treatments', 'services', 'blogs', 'specialists',
+        'products', 'orders', 'gallery', 'media', 'credentials', 'staff',
+        'finance', 'erasure', 'settings'
+      ]
+    },
+    create: {
+      email: 'admin@rithanya.in',
+      name: 'Dr. Narayana Murthy (Admin)',
+      role: 'ADMIN',
+      passwordHash: adminHash,
+      plainPasswordEnc: adminEnc,
+      salt: 'rh_admin_1',
+      enabled: true,
+      permissions: { all: true },
+      allowedModules: [
+        'dashboard', 'patients', 'clinical', 'admissions', 'inventory',
+        'appointments', 'treatments', 'services', 'blogs', 'specialists',
+        'products', 'orders', 'gallery', 'media', 'credentials', 'staff',
+        'finance', 'erasure', 'settings'
+      ]
+    }
+  });
+  console.log('✓ Admin user initialized: Dr. Narayana Murthy (admin@rithanya.in)');
+
+  // 3. Clinical Staff User
+  const staffPlain = 'StaffNurse@2026';
+  const staffHash = await hashPassword(staffPlain);
+  const staffEnc = encrypt(staffPlain);
+
   const staffUser = await prisma.user.upsert({
     where: { email: 'staff@rithanya.in' },
     update: {
       passwordHash: staffHash,
+      plainPasswordEnc: staffEnc,
       role: 'STAFF',
-      name: 'Dr. Narayana Murthy',
-      enabled: true
+      name: 'Clinical Staff Nurse',
+      enabled: true,
+      allowedModules: ['dashboard', 'patients', 'clinical', 'admissions', 'inventory', 'appointments']
     },
     create: {
       email: 'staff@rithanya.in',
-      name: 'Dr. Narayana Murthy',
+      name: 'Clinical Staff Nurse',
       role: 'STAFF',
       passwordHash: staffHash,
-      salt: 'rh_salt_1',
+      plainPasswordEnc: staffEnc,
+      salt: 'rh_staff_1',
       enabled: true,
+      allowedModules: ['dashboard', 'patients', 'clinical', 'admissions', 'inventory', 'appointments'],
       permissions: {
         dashboard: true,
         patients: true,
         clinical: true,
         admissions: true,
         inventory: true,
-        appointments: true,
-        services: true,
-        blogs: true,
-        specialists: true,
-        products: true,
-        productInquiries: true,
-        gallery: true,
-        media: true,
-        credentials: true,
-        staff: true,
-        finance: true,
-        settings: true
+        appointments: true
       }
     }
   });
-  console.log('✓ Staff user initialized:', staffUser.email);
+  console.log('✓ Staff user initialized: Clinical Staff (staff@rithanya.in)');
 
   // 3. Staff Profiles
   const staffMembers = [
@@ -354,75 +409,339 @@ async function main() {
   }
   console.log('✓ Specialists seeded');
 
-  // 8. Health Packages & Products
-  const packages = [
+  // 8. Clinical Treatments (Individual Detailed Pages)
+  const treatments = [
     {
-      slug: 'comprehensive-diabetic-care',
-      name: 'Comprehensive Diabetic Health Package',
-      category: 'Metabolic & Endocrinology',
-      price: 1499,
-      originalPrice: 2800,
-      discountText: '46% OFF',
-      summary: 'Complete blood sugar assessment, HbA1c, lipid profile, kidney panel, and specialized physician consultation.',
-      features: [
-        'HbA1c Glycated Haemoglobin Test',
-        'Fasting & Postprandial Blood Glucose',
-        'Complete Lipid Panel (Cholesterol, HDL, LDL)',
-        'Kidney Function Test (Serum Creatinine, BUN)',
-        'Urine Microalbumin Screening',
-        'Physician Evaluation with Dr. Narayana Murthy'
+      slug: 'thalassemia-daycare-transfusion',
+      title: 'Thalassemia Daycare Transfusion & Leukodepletion',
+      category: 'Daycare Hematology',
+      department: 'Hematology & Transfusion Centre',
+      doctorName: 'Dr. Narayana Murthy, MD',
+      duration: '3 - 4 Hours',
+      indications: 'Severe chronic hemolytic anemia, Hb < 9.0 g/dL, Beta-Thalassemia Major, Sickle-Cell Disease crises.',
+      summary: "Khammam's dedicated day-care transfusion unit delivering triple-crossmatched, micro-aggregate leukodepleted packed red cells under continuous hemodynamic monitoring.",
+      content: `<h2>Daycare Transfusion Excellence Without Hospital Fatigue</h2>
+<p>At Rithanya Hospital's dedicated Daycare Transfusion Centre, pediatric and adult thalassemia warriors receive routine life-sustaining packed red blood cell (PRBC) transfusions in an infection-controlled, comforting daycare environment. Under the clinical oversight of <strong>Dr. Narayana Murthy M.D.</strong>, every unit undergoes triple cross-matching and is transfused using certified leukodepletion micro-filters to prevent febrile non-hemolytic transfusion reactions (FNHTR) and HLA alloimmunization.</p>
+<h3>Key Clinical Protocols</h3>
+<ul>
+<li><strong>Triple Compatibility Testing:</strong> Saline, albumin, and indirect antiglobulin test (IAT) screening on fresh pre-transfusion samples.</li>
+<li><strong>Leukodepleted Filtration:</strong> 3rd-generation bedside micro-aggregate filters removing >99.9% of donor white cells.</li>
+<li><strong>Hemodynamic Profiling:</strong> Automated continuous SpO2, blood pressure, temperature, and pulse rate logging.</li>
+<li><strong>Volume Titration:</strong> Strict weight-adjusted pediatric volume calculations (10-15 mL/kg) delivered via precision infusion pumps.</li>
+</ul>
+<h3>Post-Transfusion Care & Iron Management</h3>
+<p>Each session concludes with saline line clearing, post-transfusion vitals verification, and an updated hemoglobin and ferritin tracking chart to adjust oral chelation dosages seamlessly.</p>`,
+      coverImage: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=1200&q=85',
+      videoUrl: '/assets/1.mp4',
+      procedures: [
+        'Pre-transfusion saline & IAT compatibility crossmatching',
+        'Leukodepletion micro-aggregate filtration',
+        'Weight-adjusted infusion pump titration (10-15 mL/kg)',
+        'Continuous multiparameter bedside vitals monitoring',
+        'Longitudinal pre/post Hb and serum ferritin charting'
       ],
-      tag: 'Most Popular',
-      image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1200&q=85',
+      tag: 'Daycare Special',
       sortOrder: 1
     },
     {
-      slug: 'senior-citizen-wellness',
-      name: 'Senior Citizen Comprehensive Checkup',
-      category: 'Geriatric Health',
-      price: 1999,
-      originalPrice: 3500,
-      discountText: '43% OFF',
-      summary: 'Tailored diagnostics for senior citizens including cardiac markers, liver function, bone mineral profile, and doctor review.',
-      features: [
-        'Complete Blood Count (CBC) with ESR',
-        'Liver Function & Kidney Function Profiles',
-        'Serum Calcium & Vitamin D Screen',
-        'Blood Pressure & ECG Recording',
-        'Geriatric Mobility & Medication Review'
+      slug: 'iron-chelation-therapy',
+      title: 'Oral & Infusion Iron Chelation Therapy',
+      category: 'Hematology & Chelation',
+      department: 'Hematology & Endocrinology',
+      doctorName: 'Dr. Narayana Murthy, MD',
+      duration: '60 mins Clinical Audit',
+      indications: 'Serum Ferritin > 1000 mcg/L, cumulative transfusion units > 15-20, myocardial or hepatic iron overload risk.',
+      summary: 'Systematic organ-protective iron chelation regimens utilizing Deferasirox, Deferiprone, and Desferrioxamine to protect myocardial, hepatic, and pancreatic tissue.',
+      content: `<h2>Preventing Hemosiderosis and End-Organ Damage</h2>
+<p>Because the human body lacks an active physiological mechanism to excrete excess iron derived from repeated blood transfusions, each unit adds approximately 200-250 mg of elemental iron. Without effective chelation, iron progressively deposits in the myocardium, liver parenchyma, and endocrine glands, leading to cardiac arrhythmias, cirrhosis, and diabetes.</p>
+<h3>Structured Chelation Program</h3>
+<ul>
+<li><strong>Biochemical Monitoring:</strong> Serial serum ferritin assays, liver function tests, and renal function profiling every 4 to 8 weeks.</li>
+<li><strong>Advanced Chelation Agents:</strong> Tailored once-daily oral Deferasirox (dispersible/film-coated) or Deferiprone with Desferrioxamine combination therapy.</li>
+<li><strong>Endocrine Assessment:</strong> Annual screening for growth deceleration, hypogonadism, hypoparathyroidism, and secondary hemochromatosis.</li>
+<li><strong>Safety Monitoring:</strong> Routine audiometric and ophthalmic evaluations to ensure therapeutic index safety.</li>
+</ul>`,
+      coverImage: 'https://images.unsplash.com/photo-1615461066841-6116e61058f4?auto=format&fit=crop&w=1200&q=85',
+      videoUrl: null,
+      procedures: [
+        'Chemiluminescent serum ferritin quantitation',
+        'Hepatic and renal safety biochemical markers',
+        'Customized oral chelation titration (Deferasirox / Deferiprone)',
+        'Audiometry and slit-lamp ophthalmic safety audits',
+        'Iron dietary restriction counseling'
       ],
-      tag: 'Recommended',
-      image: 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=1200&q=85',
+      tag: 'Organ Protection',
       sortOrder: 2
     },
     {
-      slug: 'thalassemia-chelation-review',
-      name: 'Thalassemia Iron Overload Monitoring Panel',
-      category: 'Hematology Daycare',
-      price: 1200,
-      originalPrice: 2000,
-      discountText: '40% OFF',
-      summary: 'Serum ferritin assessment, complete hemogram, pre-transfusion cross-matching, and chelation dosage adjustment.',
-      features: [
-        'Serum Ferritin Chemiluminescence Test',
-        'Automated CBC with Peripheral Smear',
-        'Pre-transfusion Compatibility Screen',
-        'Attending Daycare Physician Audit'
+      slug: 'longitudinal-diabetology',
+      title: 'Clinical Diabetology & Glycemic Regulation',
+      category: 'Endocrinology',
+      department: 'General Medicine & Diabetology',
+      doctorName: 'Dr. Narayana Murthy, MD',
+      duration: '45 mins Consultation',
+      indications: 'Type 1 Diabetes, Type 2 Diabetes Mellitus, Gestational Diabetes, Brittle Diabetes, Metabolic Syndrome.',
+      summary: 'Evidence-based longitudinal diabetes treatment focusing on glycemic variability stabilization, early nephropathy detection, and patient empowerment.',
+      content: `<h2>Personalized Metabolic Care by Dr. Narayana Murthy</h2>
+<p>With over 22 years of clinical excellence in diabetology, <strong>Dr. Narayana Murthy M.D.</strong> leads a patient-centric, longitudinal treatment protocol for diabetic individuals. Rather than relying on sporadic fasting glucose checks, our center focuses on long-term time-in-range (TIR) metrics, cardiovascular risk mitigation, and early microvascular protection.</p>
+<h3>Comprehensive Care Spectrum</h3>
+<ul>
+<li><strong>Targeted Glycemic Control:</strong> HbA1c optimization tailored to patient age, comorbidities, and hypoglycemia risk.</li>
+<li><strong>Continuous Glucose Monitoring (CGM):</strong> Sensor placement and ambulatory glucose profile (AGP) pattern analysis.</li>
+<li><strong>Cardio-Renal Protection:</strong> SGLT2 inhibitor and GLP-1 receptor agonist integration to protect renal glomeruli and cardiac ejection fraction.</li>
+<li><strong>Nutritional Coaching:</strong> Tailored Indian carbohydrate-exchange diets and lifestyle counseling.</li>
+</ul>`,
+      coverImage: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1200&q=85',
+      videoUrl: '/assets/2.mp4',
+      procedures: [
+        'Automated HPLC HbA1c glycated hemoglobin assessment',
+        'Fasting & 2-hour postprandial glucose tracking',
+        'Microalbuminuria urine creatinine ratio (ACR)',
+        'Individualized basal-bolus insulin titration',
+        'Dietary carbohydrate-exchange planning'
       ],
-      tag: 'Daycare Special',
-      image: 'https://images.unsplash.com/photo-1615461066841-6116e61058f4?auto=format&fit=crop&w=1200&q=85',
+      tag: 'Most Requested',
       sortOrder: 3
+    },
+    {
+      slug: 'diabetic-neuropathy-foot-care',
+      title: 'Diabetic Neuropathy Diagnostics & Podiatry',
+      category: 'Neuropathy & Podiatry',
+      department: 'Diabetic Foot & Vascular Care',
+      doctorName: 'Dr. Narayana Murthy, MD',
+      duration: '45 mins Evaluation',
+      indications: 'Peripheral numbness, tingling, burning feet sensation, loss of protective sensation, diabetic foot ulcer risk.',
+      summary: 'Advanced biothesiometry, monofilament tactile sensitivity, and Doppler vascular mapping preventing lower limb complications.',
+      content: `<h2>Preventing Diabetic Foot Complications and Amputations</h2>
+<p>Diabetic peripheral neuropathy is often silent until sensory loss leads to unnoticed trauma, non-healing neuropathic ulcers, and osteomyelitis. Our specialized diabetic podiatry clinic conducts quantitative electrodiagnostic evaluations to detect small and large fiber nerve injury at the earliest reversible stages.</p>
+<h3>Diagnostic & Therapeutic Modalities</h3>
+<ul>
+<li><strong>Vibration Perception Threshold (VPT):</strong> Quantitative biothesiometry measuring tactile nerve conduction loss.</li>
+<li><strong>10g Semmes-Weinstein Monofilament:</strong> Objective assessment of loss of protective sensation (LOPS).</li>
+<li><strong>Peripheral Arterial Doppler:</strong> Ankle-Brachial Index (ABI) to differentiate neuropathic vs ischemic foot disease.</li>
+<li><strong>Therapeutic Orthotics:</strong> Prescription of custom-molded, dual-density diabetic footwear to redistribute plantar pressure.</li>
+</ul>`,
+      coverImage: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=1200&q=85',
+      videoUrl: null,
+      procedures: [
+        'Quantitative biothesiometry vibration perception threshold (VPT)',
+        '10-point monofilament tactile mapping',
+        'Handheld acoustic vascular Doppler Ankle-Brachial Index (ABI)',
+        'Plantar high-pressure ulcer point inspection',
+        'Therapeutic soft-sole footwear prescription'
+      ],
+      tag: 'Specialized',
+      sortOrder: 4
+    },
+    {
+      slug: 'hplc-hemoglobin-electrophoresis',
+      title: 'Automated HPLC Hemoglobin Electrophoresis',
+      category: 'Laboratory Diagnostics',
+      department: 'Clinical Pathology',
+      doctorName: 'Dr. K. Srinivas Rao',
+      duration: 'Same-Day Automated Report',
+      indications: 'Differential diagnosis of microcytic anemia, pre-marital screening, carrier detection of Thalassemia trait, HbS verification.',
+      summary: 'Gold-standard high-performance liquid chromatography providing definitive automated quantification of HbA2, HbF, HbS, and variant hemoglobin peaks.',
+      content: `<h2>Gold-Standard Hemoglobinopathy Screening</h2>
+<p>Accurate identification of hemoglobin variants is essential for differentiating iron deficiency anemia from Beta-Thalassemia trait and diagnosing complex hemoglobinopathies like HbE, HbD-Punjab, and Sickle-Cell trait. Rithanya Hospital operates gold-standard automated HPLC chromatography.</p>
+<h3>Why Automated HPLC?</h3>
+<ul>
+<li><strong>High Resolution:</strong> Crisp chromatographic separation of HbA, HbA2, and HbF with exact retention windows.</li>
+<li><strong>Exact Quantification:</strong> Precise determination of HbA2 values (>3.5% indicative of beta-thalassemia carrier status).</li>
+<li><strong>Differential Specificity:</strong> Eliminates misdiagnosis of thalassemia minor as simple refractory iron deficiency.</li>
+<li><strong>Family Counseling:</strong> Comprehensive genetic screening for prospective couples to eradicate homozygous major births.</li>
+</ul>`,
+      coverImage: 'https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?auto=format&fit=crop&w=1200&q=85',
+      videoUrl: '/assets/3.mp4',
+      procedures: [
+        'Automated EDTA whole-blood aspiration',
+        'Cation-exchange HPLC chromatographic separation',
+        'Percentage quantitation of HbA0, HbA2, HbF, and HbS',
+        'Chromatographic curve and retention time validation',
+        'Genetic counseling and family carrier pedigree chart'
+      ],
+      tag: 'Gold Standard',
+      sortOrder: 5
+    },
+    {
+      slug: 'precision-clinical-pathology',
+      title: '24/7 Automated Pathology & Metabolic Diagnostics',
+      category: 'Clinical Pathology',
+      department: '24/7 Diagnostic Centre',
+      doctorName: 'Dr. Narayana Murthy, MD',
+      duration: '2 Hours Automated Turnaround',
+      indications: 'Routine inpatient vitals, pre-transfusion profiles, emergency electrolyte imbalances, acute infections.',
+      summary: 'Fully automated biochemistry, 5-part hematology, and arterial blood gas testing with rapid clinical turnaround and computerized verification.',
+      content: `<h2>Clinical Accuracy at Any Hour</h2>
+<p>Our in-house 24/7 diagnostic laboratory ensures that critical clinical decisions are backed by rapid, automated laboratory results. With continuous internal quality control and calibrated automated analyzers, test turnaround times are minimized.</p>
+<h3>Automated Testing Capabilities</h3>
+<ul>
+<li><strong>5-Part Differential Hematology:</strong> Complete blood count, platelet parameters, absolute reticulocyte count.</li>
+<li><strong>Clinical Biochemistry:</strong> Serum creatinine, urea, bilirubin, SGOT, SGPT, alkaline phosphatase, lipid panels.</li>
+<li><strong>Electrolytes & Blood Gases:</strong> Direct ISE measurement of Sodium, Potassium, Chloride, and ionized Calcium.</li>
+<li><strong>Emergency Cardiac Markers:</strong> Quantitative high-sensitivity Troponin and CK-MB testing.</li>
+</ul>`,
+      coverImage: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=1200&q=85',
+      videoUrl: null,
+      procedures: [
+        '5-part automated differential hemogram (CBC)',
+        'Photometric clinical chemistry automated analyzer',
+        'Ion-selective electrode (ISE) electrolytes panel',
+        'Pre-transfusion biochemical screening',
+        'Computerized automated report validation'
+      ],
+      tag: '24/7 Available',
+      sortOrder: 6
     }
   ];
 
-  for (const p of packages) {
+  for (const t of treatments) {
+    await prisma.treatment.upsert({
+      where: { slug: t.slug },
+      update: t,
+      create: t
+    });
+  }
+  console.log('✓ Treatments seeded successfully');
+
+  // 9. E-Commerce Products (Cart & Direct Checkout)
+  const products = [
+    {
+      slug: 'accu-chek-glucometer-kit',
+      name: 'Accu-Chek Active Blood Glucose Monitoring Kit',
+      category: 'Diabetic Care',
+      price: 1250,
+      originalPrice: 1850,
+      discountText: '32% OFF',
+      summary: 'Accurate 5-second blood glucose testing kit with 50 sterile test strips, lancing pen, 10 lancets, and travel case.',
+      features: [
+        '5-Second Rapid Blood Glucose Results',
+        'Includes 50 Sterile Test Strips & 10 Lancets',
+        'Pre & Post Meal Marker Reminders',
+        'Memory for 500 Test Results with USB Port',
+        'Doctor Recommended for Home Monitoring'
+      ],
+      tag: 'Bestseller',
+      image: 'https://images.unsplash.com/photo-1615461066841-6116e61058f4?auto=format&fit=crop&w=800&q=85',
+      stock: 85,
+      inStock: true,
+      sortOrder: 1
+    },
+    {
+      slug: 'thalassemia-chelation-supplement',
+      name: 'Calcium & Zinc Organ Support Capsules (Iron-Free)',
+      category: 'Hematology Nutrition',
+      price: 680,
+      originalPrice: 950,
+      discountText: '28% OFF',
+      summary: 'Specially formulated 100% iron-free calcium, zinc, and vitamin D3 micro-nutritional capsules designed for thalassemia warriors undergoing iron chelation.',
+      features: [
+        '100% Guaranteed Iron-Free Formulation',
+        'Fortified with Bioavailable Calcium Citrate & Zinc',
+        'Vitamin D3 for Optimal Bone Density Preservation',
+        '60 Vegetarian Capsules (1 Month Supply)',
+        'Formulated Specifically for Multi-Transfused Patients'
+      ],
+      tag: 'Doctor Recommended',
+      image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=85',
+      stock: 120,
+      inStock: true,
+      sortOrder: 2
+    },
+    {
+      slug: 'omron-digital-bp-monitor',
+      name: 'Omron Automatic Upper Arm Blood Pressure Monitor',
+      category: 'Vital Monitors',
+      price: 2100,
+      originalPrice: 2800,
+      discountText: '25% OFF',
+      summary: 'Clinically validated automatic upper-arm digital blood pressure monitor with Intellisense technology and irregular heartbeat sensor.',
+      features: [
+        'Intellisense Automated Inflation Technology',
+        'Irregular Heartbeat / Arrhythmia Indicator',
+        'Large High-Contrast Digital LCD Display',
+        '60-Reading Memory with Date and Time Stamp',
+        'Wide Range Comfort Cuff (22-42 cm)'
+      ],
+      tag: 'Essential Care',
+      image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=800&q=85',
+      stock: 45,
+      inStock: true,
+      sortOrder: 3
+    },
+    {
+      slug: 'therapeutic-diabetic-footwear',
+      name: 'Therapeutic Diabetic Soft-Sole Orthopedic Shoes',
+      category: 'Footwear & Orthopedics',
+      price: 1450,
+      originalPrice: 2200,
+      discountText: '34% OFF',
+      summary: 'Seamless, extra-depth cushioned footwear designed to eliminate pressure friction points and protect diabetic feet from neuropathic ulcerations.',
+      features: [
+        'Dual-Density High-Rebound Micro-Cellular Foam Sole',
+        'Seamless Interior Lining to Prevent Abrasion',
+        'Wide Toe Box to Prevent Digital Compression',
+        'Breathable Genuine Medical Grade Mesh Fabric',
+        'Prescribed by Dr. Narayana Murthy for Neuropathy'
+      ],
+      tag: 'High Comfort',
+      image: 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=800&q=85',
+      stock: 60,
+      inStock: true,
+      sortOrder: 4
+    },
+    {
+      slug: 'hba1c-lab-sample-collection-kit',
+      name: 'HbA1c Lab Sample Collection Test Pack (HPLC)',
+      category: 'Diagnostics & Labs',
+      price: 499,
+      originalPrice: 800,
+      discountText: '38% OFF',
+      summary: 'Pre-sterilized venous blood collection pack for automated Bio-Rad HPLC glycated hemoglobin assessment with free doorstep Khammam pickup.',
+      features: [
+        'Automated HPLC Gold-Standard Testing Protocol',
+        'Includes EDTA Vacuum Tube & Sterile Safety Lancet',
+        'Free Doorstep Specimen Pickup in Khammam City',
+        'Digital WhatsApp & PDF Report within 4 Hours',
+        'Includes Physician Tele-Review with Dr. Narayana Murthy'
+      ],
+      tag: 'Popular',
+      image: 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=800&q=85',
+      stock: 150,
+      inStock: true,
+      sortOrder: 5
+    },
+    {
+      slug: 'pulse-oximeter-fingertip',
+      name: 'Precision Fingertip Pulse Oximeter with OLED Display',
+      category: 'Vital Monitors',
+      price: 799,
+      originalPrice: 1200,
+      discountText: '33% OFF',
+      summary: 'Medical-grade fingertip pulse oximeter for real-time arterial oxygen saturation (SpO2), pulse rate, and perfusion index tracking.',
+      features: [
+        'Dual-Color OLED Multi-Directional Display',
+        'Accurate SpO2 and Pulse Rate in 6 Seconds',
+        'Perfusion Index (PI) Visual Waveform Plethysmograph',
+        'Auto Power-Off to Conserve Battery Life',
+        'Includes Lanyard, AAA Batteries & Silicone Case'
+      ],
+      tag: 'Handy Device',
+      image: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=800&q=85',
+      stock: 75,
+      inStock: true,
+      sortOrder: 6
+    }
+  ];
+
+  for (const p of products) {
     await prisma.productPackage.upsert({
       where: { slug: p.slug },
       update: p,
       create: p
     });
   }
-  console.log('✓ Health packages seeded');
+  console.log('✓ E-Commerce Products seeded successfully');
 
   // 9. Patients & Clinical Data
   const samplePatient = await prisma.patient.upsert({

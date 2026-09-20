@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Plus, Search, Filter, Camera, ArrowRight, ShieldCheck, UserCheck } from 'lucide-react';
+import { Plus, Search, Filter, Camera, ArrowRight, ShieldCheck, UserCheck, BedDouble } from 'lucide-react';
 import AdminTopbar from '../../components/layout/AdminTopbar';
 import { apiRequest } from '../../utils/api';
 import { useToast } from '../../components/common/Toast';
@@ -17,6 +17,16 @@ export default function PatientsPage() {
   const [search, setSearch] = useState('');
   const [bloodGroupFilter, setBloodGroupFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+
+  // Convert to In-Patient Modal
+  const [convertTarget, setConvertTarget] = useState(null);
+  const [convertData, setConvertData] = useState({
+    ward: 'Daycare Transfusion Ward',
+    bed: 'Bed-01',
+    attendingDoctor: 'Dr. Narayana Murthy, MD',
+    diagnosis: ''
+  });
+  const [converting, setConverting] = useState(false);
 
   // Register Modal State
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
@@ -94,6 +104,35 @@ export default function PatientsPage() {
       addToast(err.message || 'Failed to register patient', 'error');
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const openConvertModal = (patient) => {
+    setConvertTarget(patient);
+    setConvertData({
+      ward: 'Daycare Transfusion Ward',
+      bed: `Bed-${Math.floor(Math.random() * 10) + 1}`,
+      attendingDoctor: 'Dr. Narayana Murthy, MD',
+      diagnosis: patient.condition || 'Admitted for Daycare Observation & Treatment'
+    });
+  };
+
+  const handleConvertToInpatient = async (e) => {
+    e.preventDefault();
+    if (!convertTarget) return;
+    setConverting(true);
+    try {
+      const res = await apiRequest(`/patients/${convertTarget.id}/convert-to-inpatient`, {
+        method: 'POST',
+        body: JSON.stringify(convertData)
+      });
+      addToast(res.message || `Patient ${convertTarget.name} converted to In-Patient!`, 'success');
+      setConvertTarget(null);
+      fetchPatients();
+    } catch (err) {
+      addToast(err.message || 'Failed to convert to In-Patient', 'error');
+    } finally {
+      setConverting(false);
     }
   };
 
@@ -229,10 +268,24 @@ export default function PatientsPage() {
                       )}
                     </td>
                     <td>
-                      <Link to={`/admin/patients/${p.id}`} className="btn btn-secondary btn-sm">
-                        <span>Profile & Trends</span>
-                        <ArrowRight size={13} />
-                      </Link>
+                      <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                        {p.status !== 'admitted' && (
+                          <button
+                            type="button"
+                            className="btn btn-primary btn-sm"
+                            style={{ padding: '4px 8px', fontSize: 12 }}
+                            onClick={() => openConvertModal(p)}
+                            title="Convert Out-Patient to In-Patient Admission"
+                          >
+                            <BedDouble size={13} />
+                            <span>Admit IP</span>
+                          </button>
+                        )}
+                        <Link to={`/admin/patients/${p.id}`} className="btn btn-secondary btn-sm" style={{ padding: '4px 8px', fontSize: 12 }}>
+                          <span>Profile</span>
+                          <ArrowRight size={13} />
+                        </Link>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -365,6 +418,104 @@ export default function PatientsPage() {
               </button>
             </div>
           </form>
+        </Modal>
+
+        {/* CONVERT TO INPATIENT MODAL */}
+        <Modal
+          isOpen={!!convertTarget}
+          onClose={() => setConvertTarget(null)}
+          title={`Admit Out-Patient as In-Patient: ${convertTarget?.name} (${convertTarget?.patientCode})`}
+        >
+          {convertTarget && (
+            <form onSubmit={handleConvertToInpatient}>
+              <div
+                style={{
+                  padding: '12px 14px',
+                  background: 'var(--canvas-warm, #f8f9fa)',
+                  borderRadius: 8,
+                  marginBottom: 16
+                }}
+              >
+                <div style={{ fontSize: 13, display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+                  <span>
+                    <strong>Patient:</strong> {convertTarget.name} ({convertTarget.age} yrs)
+                  </span>
+                  <span className={`badge ${getBloodGroupBadgeClass(convertTarget.bloodGroup)}`}>
+                    {convertTarget.bloodGroup}
+                  </span>
+                </div>
+                <div style={{ fontSize: 12, color: 'var(--ink-soft)' }}>
+                  Condition: {convertTarget.condition || 'General'} · Phone: {convertTarget.phone}
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Ward / Department *</label>
+                <select
+                  className="form-control"
+                  value={convertData.ward}
+                  onChange={(e) => setConvertData({ ...convertData, ward: e.target.value })}
+                  required
+                >
+                  <option value="Daycare Transfusion Ward">Daycare Transfusion Ward (Main)</option>
+                  <option value="Pediatric Daycare Ward">Pediatric Daycare Ward</option>
+                  <option value="Diabetic Care & Observation Suite">Diabetic Care & Observation Suite</option>
+                  <option value="High Dependency Unit (HDU)">High Dependency Unit (HDU)</option>
+                  <option value="General Medical Inpatient Ward">General Medical Inpatient Ward</option>
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Bed Number / Bay *</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="e.g. Bed-04, Bay-B"
+                  value={convertData.bed}
+                  onChange={(e) => setConvertData({ ...convertData, bed: e.target.value })}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Attending Doctor *</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="e.g. Dr. Narayana Murthy, MD"
+                  value={convertData.attendingDoctor}
+                  onChange={(e) => setConvertData({ ...convertData, attendingDoctor: e.target.value })}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Admission Diagnosis / Protocol *</label>
+                <textarea
+                  className="form-control"
+                  rows={2}
+                  placeholder="e.g. Acute anemia requiring packed red blood cell transfusion"
+                  value={convertData.diagnosis}
+                  onChange={(e) => setConvertData({ ...convertData, diagnosis: e.target.value })}
+                  required
+                />
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12, marginTop: 20 }}>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => setConvertTarget(null)}
+                  disabled={converting}
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="btn btn-primary" disabled={converting}>
+                  {converting ? 'Admitting...' : 'Confirm Admission'}
+                </button>
+              </div>
+            </form>
+          )}
         </Modal>
 
         {/* DPDP CAMERA CONSENT CAPTURE MODAL */}

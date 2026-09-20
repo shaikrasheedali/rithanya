@@ -4,12 +4,13 @@ const inquiryController = require('../controllers/inquiryController');
 const { authenticate } = require('../middlewares/authMiddleware');
 const { requirePermission } = require('../middlewares/rbacMiddleware');
 
-// Public
-router.post('/', inquiryController.createInquiry);
+// Public checkout / inquiry submission
+router.post('/', inquiryController.createOrder);
+router.post('/checkout', inquiryController.createOrder);
 
-// Admin
-router.get('/', authenticate, requirePermission('productInquiries'), inquiryController.getInquiries);
-router.put('/:id/status', authenticate, requirePermission('productInquiries'), inquiryController.updateInquiryStatus);
-router.delete('/:id', authenticate, requirePermission('productInquiries'), inquiryController.deleteInquiry);
+// Admin / Staff with orders/inquiries permission
+router.get('/', authenticate, inquiryController.getInquiries);
+router.put('/:id/status', authenticate, inquiryController.updateInquiryStatus);
+router.delete('/:id', authenticate, inquiryController.deleteInquiry);
 
 module.exports = router;

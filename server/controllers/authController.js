@@ -61,6 +61,7 @@ async function login(req, res, next) {
         name: user.name,
         role: user.role,
         permissions: user.permissions || {},
+        allowedModules: user.allowedModules || [],
         staffProfile: user.staffProfile
       }
     });
@@ -88,6 +89,7 @@ async function getMe(req, res, next) {
         name: user.name,
         role: user.role,
         permissions: user.permissions || {},
+        allowedModules: user.allowedModules || [],
         staffProfile: user.staffProfile
       }
     });

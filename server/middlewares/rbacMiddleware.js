@@ -32,6 +32,10 @@ function requirePermission(moduleKey) {
       return next();
     }
 
+    if (Array.isArray(req.user.allowedModules) && (req.user.allowedModules.includes(moduleKey) || req.user.allowedModules.includes('all'))) {
+      return next();
+    }
+
     const perms = req.user.permissions || {};
     if (perms[moduleKey] === true || perms.all === true) {
       return next();

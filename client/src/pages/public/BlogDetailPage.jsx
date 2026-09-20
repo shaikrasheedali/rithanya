@@ -30,7 +30,7 @@ export default function BlogDetailPage() {
     return (
       <div className="container" style={{ padding: '80px 24px', textAlign: 'center' }}>
         <h2>Article Not Found</h2>
-        <Link to="/blogs" className="btn btn-primary" style={{ marginTop: 20 }}>Back to Health Library</Link>
+        <Link to="/insights" className="btn btn-primary" style={{ marginTop: 20 }}>Back to Health Insights</Link>
       </div>
     );
   }
@@ -38,9 +38,9 @@ export default function BlogDetailPage() {
   return (
     <div className="blog-detail-page" style={{ padding: '40px 0 80px' }}>
       <div className="container" style={{ maxWidth: 880 }}>
-        <Link to="/blogs" className="btn btn-secondary btn-sm" style={{ marginBottom: 24 }}>
+        <Link to="/insights" className="btn btn-secondary btn-sm" style={{ marginBottom: 24 }}>
           <ArrowLeft size={16} />
-          <span>Back to All Articles</span>
+          <span>Back to Health Insights</span>
         </Link>
 
         <span className="badge badge-red" style={{ marginBottom: 12 }}>{blog.category}</span>

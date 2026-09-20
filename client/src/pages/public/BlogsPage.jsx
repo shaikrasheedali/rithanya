@@ -52,7 +52,7 @@ export default function BlogsPage() {
 
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--line)', paddingTop: 14 }}>
                     <span style={{ fontSize: 12, color: 'var(--ink-soft)' }}>{blog.author}</span>
-                    <Link to={`/blogs/${blog.slug}`} className="btn btn-outline btn-sm">
+                    <Link to={`/insights/${blog.slug}`} className="btn btn-outline btn-sm">
                       <span>Read Article</span>
                       <ArrowRight size={14} />
                     </Link>

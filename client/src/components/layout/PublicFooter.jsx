@@ -34,10 +34,11 @@ export default function PublicFooter() {
               <li><Link to="/">Home Overview</Link></li>
               <li><Link to="/about">About Dr. Narayana Murthy</Link></li>
               <li><Link to="/services">Clinical Specialties</Link></li>
-              <li><Link to="/specialists">Doctor OPD Timings</Link></li>
-              <li><Link to="/products">Health Packages</Link></li>
-              <li><Link to="/gallery">Hospital Facility Tour</Link></li>
-              <li><Link to="/blogs">Health Library & News</Link></li>
+              <li><Link to="/treatments">Treatments & Daycare</Link></li>
+              <li><Link to="/doctors">Doctor OPD Timings</Link></li>
+              <li><Link to="/products">Healthcare Products</Link></li>
+              <li><Link to="/gallery">Hospital Media Gallery</Link></li>
+              <li><Link to="/insights">Health Insights & Library</Link></li>
             </ul>
           </div>
 

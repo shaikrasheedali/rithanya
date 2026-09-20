@@ -10,6 +10,8 @@ export function formatCurrency(amount) {
   }).format(amount);
 }
 
+export const formatINR = formatCurrency;
+
 export function formatDate(dateStr) {
   if (!dateStr) return 'N/A';
   try {

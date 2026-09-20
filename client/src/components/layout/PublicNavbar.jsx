@@ -50,12 +50,23 @@ export default function PublicNavbar() {
     { name: 'Home', path: '/', icon: Home },
     { name: 'About', path: '/about', icon: Info },
     { name: 'Services', path: '/services', icon: Stethoscope },
-    { name: 'Specialists', path: '/specialists', icon: Users },
-    { name: 'Packages', path: '/products', icon: Package },
-    { name: 'Facility Tour', path: '/gallery', icon: Image },
-    { name: 'Health Library', path: '/blogs', icon: BookOpen },
+    { name: 'Treatments', path: '/treatments', icon: Activity },
+    { name: 'Doctors', path: '/doctors', icon: Users },
+    { name: 'Products', path: '/products', icon: Package },
+    { name: 'Media Gallery', path: '/gallery', icon: Image },
+    { name: 'Insights', path: '/insights', icon: BookOpen },
     { name: 'Contact', path: '/contact', icon: Mail }
   ];
+
+  const checkIsActive = (path) => {
+    if (location.pathname === path) return true;
+    if (path === '/doctors' && location.pathname === '/specialists') return true;
+    if (path === '/insights' && (location.pathname.startsWith('/blogs') || location.pathname.startsWith('/insights'))) return true;
+    if (path === '/treatments' && location.pathname.startsWith('/treatments')) return true;
+    if (path === '/gallery' && (location.pathname === '/facility-tour' || location.pathname === '/gallery')) return true;
+    if (path === '/products' && (location.pathname === '/packages' || location.pathname === '/products')) return true;
+    return false;
+  };
 
   return (
     <>
@@ -75,7 +86,7 @@ export default function PublicNavbar() {
           {/* Desktop Navigation Links */}
           <ul className="island-nav-links">
             {navLinks.map((item) => {
-              const isActive = location.pathname === item.path;
+              const isActive = checkIsActive(item.path);
               return (
                 <li key={item.path}>
                   <Link
@@ -142,7 +153,7 @@ export default function PublicNavbar() {
             <ul className="drawer-links">
               {navLinks.map((item) => {
                 const Icon = item.icon;
-                const isActive = location.pathname === item.path;
+                const isActive = checkIsActive(item.path);
                 return (
                   <li key={item.path}>
                     <Link

@@ -14,6 +14,9 @@ router.put('/:id', requirePermission('patients'), patientController.updatePatien
 // DPDP Act: Digital Camera Consent Signature Upload
 router.post('/:id/consent-photo', requirePermission('patients'), patientController.captureConsentPhoto);
 
+// Outpatient to Inpatient conversion
+router.post('/:id/convert-to-inpatient', requirePermission('admissions'), patientController.convertToInpatient);
+
 // DPDP Act: Right to Erasure / Cascading Purge (Admins & Superadmin only)
 router.delete('/:id/purge', requireRoles('SUPERADMIN', 'ADMIN'), patientController.purgePatientData);
 

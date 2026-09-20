@@ -25,10 +25,10 @@ export default function SpecialistsPage() {
     <div className="specialists-page" style={{ padding: '60px 0 80px' }}>
       <div className="container">
         <div className="section-head">
-          <span className="section-tag">Medical Team</span>
-          <h1 className="section-title">Specialist Physicians & Consultants</h1>
+          <span className="section-tag">Hospital Medical Faculty</span>
+          <h1 className="section-title">Specialist Doctors & Consultants</h1>
           <p className="section-subtitle">
-            Experienced clinical practitioners committed to transparent patient communication and holistic long-term disease management.
+            Experienced clinical practitioners committed to compassionate patient communication and holistic long-term disease management.
           </p>
         </div>
 

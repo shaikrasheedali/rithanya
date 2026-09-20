@@ -35,6 +35,7 @@ async function authenticate(req, res, next) {
       name: user.name,
       role: user.role,
       permissions: user.permissions || {},
+      allowedModules: user.allowedModules || [],
       staffId: user.staffProfile ? user.staffProfile.id : null
     };
 
@@ -46,5 +47,6 @@ async function authenticate(req, res, next) {
 }
 
 module.exports = {
-  authenticate
+  authenticate,
+  verifyToken: authenticate
 };

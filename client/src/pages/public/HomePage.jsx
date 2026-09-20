@@ -248,6 +248,13 @@ export default function HomePage() {
               </div>
             ))}
           </div>
+
+          <div style={{ textAlign: 'center', marginTop: 36 }}>
+            <Link to="/doctors" className="btn btn-outline">
+              <span>View All Specialist Doctors & OPD Timings</span>
+              <ArrowRight size={15} />
+            </Link>
+          </div>
         </div>
       </section>
 

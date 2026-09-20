@@ -16,6 +16,8 @@ import ProductsPage from './pages/public/ProductsPage';
 import GalleryPage from './pages/public/GalleryPage';
 import BlogsPage from './pages/public/BlogsPage';
 import BlogDetailPage from './pages/public/BlogDetailPage';
+import TreatmentsPage from './pages/public/TreatmentsPage';
+import TreatmentDetailPage from './pages/public/TreatmentDetailPage';
 import ContactPage from './pages/public/ContactPage';
 import TermsPage from './pages/public/TermsPage';
 import PrivacyPage from './pages/public/PrivacyPage';
@@ -33,6 +35,7 @@ import AppointmentsPage from './pages/admin/AppointmentsPage';
 import ServicesAdminPage from './pages/admin/ServicesAdminPage';
 import BlogsAdminPage from './pages/admin/BlogsAdminPage';
 import SpecialistsAdminPage from './pages/admin/SpecialistsAdminPage';
+import TreatmentsAdminPage from './pages/admin/TreatmentsAdminPage';
 import ProductsAdminPage from './pages/admin/ProductsAdminPage';
 import ProductInquiriesPage from './pages/admin/ProductInquiriesPage';
 import GalleryAdminPage from './pages/admin/GalleryAdminPage';
@@ -91,9 +94,16 @@ export default function App() {
             <Route path="/about" element={<AboutPage />} />
             <Route path="/services" element={<ServicesPage />} />
             <Route path="/services/:slug" element={<ServiceDetailPage />} />
+            <Route path="/treatments" element={<TreatmentsPage />} />
+            <Route path="/treatments/:slug" element={<TreatmentDetailPage />} />
+            <Route path="/doctors" element={<SpecialistsPage />} />
             <Route path="/specialists" element={<SpecialistsPage />} />
             <Route path="/products" element={<ProductsPage />} />
+            <Route path="/packages" element={<ProductsPage />} />
             <Route path="/gallery" element={<GalleryPage />} />
+            <Route path="/facility-tour" element={<GalleryPage />} />
+            <Route path="/insights" element={<BlogsPage />} />
+            <Route path="/insights/:slug" element={<BlogDetailPage />} />
             <Route path="/blogs" element={<BlogsPage />} />
             <Route path="/blogs/:slug" element={<BlogDetailPage />} />
             <Route path="/contact" element={<ContactPage />} />
@@ -116,9 +126,12 @@ export default function App() {
             <Route path="inventory" element={<InventoryPage />} />
             <Route path="appointments" element={<AppointmentsPage />} />
             <Route path="services" element={<ServicesAdminPage />} />
+            <Route path="treatments" element={<TreatmentsAdminPage />} />
             <Route path="blogs" element={<BlogsAdminPage />} />
             <Route path="specialists" element={<SpecialistsAdminPage />} />
             <Route path="products" element={<ProductsAdminPage />} />
+            <Route path="packages" element={<ProductsAdminPage />} />
+            <Route path="orders" element={<ProductInquiriesPage />} />
             <Route path="product-inquiries" element={<ProductInquiriesPage />} />
             <Route path="gallery" element={<GalleryAdminPage />} />
             <Route path="media" element={<MediaLibraryPage />} />

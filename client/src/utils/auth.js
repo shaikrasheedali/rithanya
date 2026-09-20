@@ -31,8 +31,13 @@ export function isAuthenticated() {
 export function hasPermission(user, moduleKey) {
   if (!user) return false;
   if (user.role === 'SUPERADMIN' || user.role === 'ADMIN') return true;
-  if (!user.permissions) return false;
-  return user.permissions[moduleKey] === true || user.permissions.all === true;
+  if (Array.isArray(user.allowedModules)) {
+    return user.allowedModules.includes(moduleKey) || user.allowedModules.includes('all');
+  }
+  if (user.permissions) {
+    return user.permissions[moduleKey] === true || user.permissions.all === true;
+  }
+  return false;
 }
 
 export function isSuperAdmin(user) {

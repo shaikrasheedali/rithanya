@@ -261,11 +261,67 @@ async function purgePatientData(req, res, next) {
   }
 }
 
+async function convertToInpatient(req, res, next) {
+  try {
+    const { id } = req.params;
+    const { ward, bed, attendingDoctor, diagnosis } = req.body;
+
+    const patient = await prisma.patient.findUnique({ where: { id } });
+    if (!patient) {
+      return res.status(404).json({ success: false, message: 'Patient not found' });
+    }
+
+    const count = await prisma.admission.count();
+    const admissionCode = `ADM-${900 + count + 1}`;
+
+    const admission = await prisma.admission.create({
+      data: {
+        admissionCode,
+        patientId: id,
+        ward: ward || 'Daycare Transfusion Ward',
+        bed: bed || 'Bed-01',
+        attendingDoctor: attendingDoctor || 'Dr. Narayana Murthy, MD',
+        diagnosis: diagnosis || patient.condition || 'Admitted for Observation & Treatment',
+        status: 'admitted',
+        admittedOn: new Date()
+      }
+    });
+
+    const updatedPatient = await prisma.patient.update({
+      where: { id },
+      data: { status: 'admitted' }
+    });
+
+    recordAuditLog({
+      actorId: req.user ? req.user.id : null,
+      actorName: req.user ? req.user.name : 'Staff',
+      actorRole: req.user ? req.user.role : 'STAFF',
+      action: 'CONVERT_TO_INPATIENT',
+      module: 'PATIENTS',
+      recordId: id,
+      ipAddress: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
+      details: { patientCode: patient.patientCode, admissionCode, ward: admission.ward, bed: admission.bed }
+    });
+
+    return res.status(201).json({
+      success: true,
+      message: `Patient ${patient.name} (${patient.patientCode}) successfully converted to In-Patient.`,
+      data: {
+        patient: updatedPatient,
+        admission
+      }
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   getPatients,
   getPatientById,
   createPatient,
   updatePatient,
   captureConsentPhoto,
-  purgePatientData
+  purgePatientData,
+  convertToInpatient
 };

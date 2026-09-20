@@ -53,12 +53,13 @@ export default function AdminSidebar({ isOpen, onClose }) {
     {
       title: 'Content & Inquiries',
       items: [
+        { name: 'Treatments CMS', path: '/admin/treatments', icon: Activity, perm: 'treatments' },
         { name: 'Services CMS', path: '/admin/services', icon: FileText, perm: 'services' },
-        { name: 'Health Blogs', path: '/admin/blogs', icon: FileText, perm: 'blogs' },
-        { name: 'Specialist Doctors', path: '/admin/specialists', icon: UserRoundCheck, perm: 'specialists' },
-        { name: 'Health Packages', path: '/admin/products', icon: Package, perm: 'products' },
-        { name: 'Package Inquiries', path: '/admin/product-inquiries', icon: MessageSquare, perm: 'productInquiries' },
-        { name: 'Photo Gallery', path: '/admin/gallery', icon: Image, perm: 'gallery' },
+        { name: 'Insights CMS', path: '/admin/blogs', icon: FileText, perm: 'blogs', altPerm: 'insights' },
+        { name: 'Doctors Directory', path: '/admin/specialists', icon: UserRoundCheck, perm: 'specialists', altPerm: 'doctors' },
+        { name: 'Healthcare Products', path: '/admin/products', icon: Package, perm: 'products', altPerm: 'packages' },
+        { name: 'Product Orders', path: '/admin/orders', icon: MessageSquare, perm: 'orders', altPerm: 'productInquiries' },
+        { name: 'Media Gallery', path: '/admin/gallery', icon: Image, perm: 'gallery' },
         { name: 'Media Library', path: '/admin/media', icon: FolderOpen, perm: 'media' }
       ]
     },
@@ -102,7 +103,7 @@ export default function AdminSidebar({ isOpen, onClose }) {
         {navGroups.map((group) => {
           // Filter items based on user permissions
           const accessibleItems = group.items.filter(
-            (item) => !item.perm || hasPermission(user, item.perm) || isSuperAdmin(user)
+            (item) => !item.perm || hasPermission(user, item.perm) || (item.altPerm && hasPermission(user, item.altPerm)) || isSuperAdmin(user)
           );
 
           if (accessibleItems.length === 0) return null;
