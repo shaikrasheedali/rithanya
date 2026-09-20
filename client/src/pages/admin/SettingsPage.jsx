@@ -131,7 +131,7 @@ export default function SettingsPage() {
 
       <div className="admin-content">
         {/* Navigation Tabs */}
-        <div style={{ display: 'flex', gap: 8, marginBottom: 24, borderBottom: '1px solid var(--line)', paddingBottom: 12 }}>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 24, borderBottom: '1px solid var(--line)', paddingBottom: 12 }}>
           <button
             type="button"
             className={`btn btn-sm ${activeTab === 'profile' ? 'btn-primary' : 'btn-secondary'}`}

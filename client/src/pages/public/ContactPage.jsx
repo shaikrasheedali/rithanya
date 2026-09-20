@@ -48,7 +48,7 @@ export default function ContactPage() {
         <div className="grid-2" style={{ gap: 40, alignItems: 'start', marginBottom: 60 }}>
           {/* Contact Details Card */}
           <div>
-            <div className="card" style={{ padding: 36, marginBottom: 24 }}>
+            <div className="card card-responsive" style={{ marginBottom: 24 }}>
               <h3 style={{ fontSize: 20, marginBottom: 20 }}>Hospital Contact Details</h3>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
@@ -105,7 +105,7 @@ export default function ContactPage() {
           </div>
 
           {/* Contact Inquiry Form */}
-          <div className="card" style={{ padding: 36 }}>
+          <div className="card card-responsive">
             <h3 style={{ fontSize: 20, marginBottom: 8 }}>Send a Direct Clinical Message</h3>
             <p style={{ fontSize: 13, color: 'var(--ink-soft)', marginBottom: 24 }}>
               Have questions regarding blood transfusion daycare beds, lab diagnostics, or doctor consultation? Leave a message below.

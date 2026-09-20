@@ -47,13 +47,13 @@ export default function ServiceDetailPage() {
           <span>Back to All Specialties</span>
         </Link>
 
-        <div className="grid-2" style={{ gridTemplateColumns: '1.2fr 0.8fr', gap: 40, alignItems: 'start' }}>
+        <div className="service-detail-grid">
           {/* Main content */}
           <div>
             <span className="badge badge-red" style={{ marginBottom: 12 }}>{service.category}</span>
-            <h1 style={{ fontSize: 36, marginBottom: 16 }}>{service.title}</h1>
+            <h1 style={{ fontSize: 'clamp(24px, 4.5vw, 36px)', marginBottom: 16 }}>{service.title}</h1>
 
-            <div style={{ display: 'flex', gap: 20, color: 'var(--ink-soft)', fontSize: 13, marginBottom: 24 }}>
+            <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', color: 'var(--ink-soft)', fontSize: 13, marginBottom: 24 }}>
               <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <User size={15} style={{ color: 'var(--red-700)' }} />
                 {service.author}
@@ -79,7 +79,7 @@ export default function ServiceDetailPage() {
 
           {/* Sidebar Action card */}
           <div style={{ position: 'sticky', top: 100 }}>
-            <div className="card" style={{ padding: 32, border: '1.5px solid var(--red-100)' }}>
+            <div className="card card-responsive" style={{ border: '1.5px solid var(--red-100)' }}>
               <h3 style={{ fontSize: 20, marginBottom: 8 }}>Consult a Specialist</h3>
               <p style={{ fontSize: 13.5, color: 'var(--ink-soft)', marginBottom: 20 }}>
                 Outpatient evaluations with Dr. Narayana Murthy are available Mon - Sat (11:00 AM to 5:00 PM).

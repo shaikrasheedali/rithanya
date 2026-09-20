@@ -54,8 +54,8 @@ export default function AppointmentsPage() {
       <div className="admin-content">
         <div className="table-container">
           <div className="table-toolbar">
-            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', flexGrow: 1 }}>
-              <div style={{ position: 'relative', minWidth: 240 }}>
+            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', flexGrow: 1, width: '100%' }}>
+              <div style={{ position: 'relative', flex: '1 1 220px', minWidth: 0 }}>
                 <Search size={15} style={{ position: 'absolute', left: 12, top: 12, color: 'var(--muted)' }} />
                 <input
                   type="text"
@@ -69,7 +69,7 @@ export default function AppointmentsPage() {
 
               <select
                 className="form-control"
-                style={{ width: 'auto' }}
+                style={{ flex: '1 1 180px', minWidth: 0 }}
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
               >

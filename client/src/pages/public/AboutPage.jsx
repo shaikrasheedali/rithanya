@@ -15,7 +15,7 @@ export default function AboutPage() {
         </div>
 
         {/* Lead Physician Profile */}
-        <div className="card" style={{ padding: 48, marginBottom: 60, border: '1px solid var(--red-100)' }}>
+        <div className="card card-responsive" style={{ marginBottom: 'clamp(32px, 6vw, 60px)', border: '1px solid var(--red-100)' }}>
           <div className="grid-2" style={{ alignItems: 'center' }}>
             <div className="hero-main-img" style={{ aspectRatio: '1/1', maxHeight: 420 }}>
               <img
@@ -26,7 +26,7 @@ export default function AboutPage() {
 
             <div>
               <span className="badge badge-red" style={{ marginBottom: 12 }}>Medical Director & Chief Physician</span>
-              <h2 style={{ fontSize: 32, marginBottom: 8 }}>Dr. Narayana Murthy, M.D.</h2>
+              <h2 style={{ fontSize: 'clamp(24px, 4.5vw, 32px)', marginBottom: 8 }}>Dr. Narayana Murthy, M.D.</h2>
               <p style={{ color: 'var(--red-700)', fontWeight: 700, fontSize: 16, marginBottom: 16 }}>
                 Senior Consultant Physician & Diabetic Specialist
               </p>
@@ -39,16 +39,16 @@ export default function AboutPage() {
                 Recognizing the critical shortage of dedicated, peaceful transfusion spaces for young children and adolescents battling Beta Thalassemia Major and Sickle Cell Disease in Khammam, Dr. Murthy established Rithanya’s specialized Daycare Transfusion Centre.
               </p>
 
-              <div style={{ display: 'flex', gap: 24, borderTop: '1px solid var(--line)', paddingTop: 20 }}>
-                <div>
+              <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', borderTop: '1px solid var(--line)', paddingTop: 20 }}>
+                <div style={{ flex: '1 1 90px' }}>
                   <h4 style={{ color: 'var(--red-700)', fontSize: 20 }}>MBBS, MD</h4>
                   <p style={{ fontSize: 12, color: 'var(--ink-soft)' }}>General Medicine</p>
                 </div>
-                <div>
+                <div style={{ flex: '1 1 90px' }}>
                   <h4 style={{ color: 'var(--red-700)', fontSize: 20 }}>22+ Yrs</h4>
                   <p style={{ fontSize: 12, color: 'var(--ink-soft)' }}>Clinical Practice</p>
                 </div>
-                <div>
+                <div style={{ flex: '1 1 90px' }}>
                   <h4 style={{ color: 'var(--red-700)', fontSize: 20 }}>Khammam</h4>
                   <p style={{ fontSize: 12, color: 'var(--ink-soft)' }}>Telangana Center</p>
                 </div>

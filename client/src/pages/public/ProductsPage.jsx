@@ -253,8 +253,8 @@ export default function ProductsPage() {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-              gap: 28
+              gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))',
+              gap: 'clamp(16px, 3.5vw, 28px)'
             }}
           >
             {filteredProducts.map((p) => {
@@ -402,14 +402,14 @@ export default function ProductsPage() {
         {/* Trust Badges Bar */}
         <div
           style={{
-            marginTop: 60,
+            marginTop: 'clamp(36px, 6vw, 60px)',
             background: 'var(--canvas)',
             border: '1.5px solid var(--line)',
             borderRadius: 20,
-            padding: '28px 36px',
+            padding: 'clamp(18px, 4vw, 28px) clamp(16px, 4vw, 36px)',
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-            gap: 24
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))',
+            gap: 20
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>

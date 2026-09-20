@@ -144,8 +144,8 @@ export default function MediaLibraryPage() {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
-              gap: 20,
+              gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 220px), 1fr))',
+              gap: 'clamp(14px, 3vw, 20px)',
               width: '100%',
               minWidth: 0
             }}

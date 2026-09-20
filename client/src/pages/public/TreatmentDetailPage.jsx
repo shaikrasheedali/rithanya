@@ -186,7 +186,7 @@ export default function TreatmentDetailPage() {
         </div>
 
         {/* Content Layout Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 40, alignItems: 'start' }} className="treatment-content-grid">
+        <div className="treatment-content-grid">
           {/* Main Article Content */}
           <div>
             {/* Clinical Indications Box */}
@@ -222,7 +222,7 @@ export default function TreatmentDetailPage() {
                   background: '#fff',
                   border: '1.5px solid var(--line)',
                   borderRadius: 18,
-                  padding: '24px 28px',
+                  padding: 'clamp(18px, 4vw, 28px)',
                   marginBottom: 36,
                   boxShadow: '0 4px 18px rgba(0, 0, 0, 0.03)'
                 }}
@@ -231,7 +231,7 @@ export default function TreatmentDetailPage() {
                   <Sparkles size={18} style={{ color: 'var(--red-700)' }} />
                   <span>Clinical Procedures & Safety Protocol</span>
                 </h3>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 14 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: 14 }}>
                   {treatment.procedures.map((proc, idx) => (
                     <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 13.5, color: 'var(--ink)' }}>
                       <CheckCircle2 size={16} style={{ color: 'var(--green)', flexShrink: 0, marginTop: 2 }} />
@@ -249,7 +249,7 @@ export default function TreatmentDetailPage() {
                 background: '#fff',
                 border: '1.5px solid var(--line)',
                 borderRadius: 20,
-                padding: '36px 40px',
+                padding: 'clamp(20px, 4vw, 40px)',
                 fontSize: 15.5,
                 lineHeight: 1.75,
                 color: 'var(--ink)'

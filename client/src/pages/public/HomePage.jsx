@@ -388,14 +388,7 @@ export default function HomePage() {
           </div>
 
           {/* 8 BLOOD STOCK CARDS (MATCHING ADMIN INVENTORY PAGE CARDS) */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-              gap: 16,
-              marginBottom: 24
-            }}
-          >
+          <div className="home-blood-grid">
             {loading ? (
               Array.from({ length: 8 }).map((_, i) => (
                 <div key={i} className="home-blood-card" style={{ padding: 20, minHeight: 140, opacity: 0.6, animation: 'pulse 1.5s infinite ease-in-out' }}>
@@ -658,7 +651,7 @@ export default function HomePage() {
 
           <div className="grid-2" style={{ gap: 32, alignItems: 'start' }}>
             {/* BOOKING FORM CARD */}
-            <div className="card" style={{ padding: 32, border: '1.5px solid var(--red-100)' }}>
+            <div className="card card-responsive" style={{ border: '1.5px solid var(--red-100)' }}>
               <h3 style={{ fontSize: 20, marginBottom: 6 }}>Book an OPD Token</h3>
               <p style={{ fontSize: 13, color: 'var(--ink-soft)', marginBottom: 20 }}>
                 Submit your details to reserve a direct doctor consultation token.
@@ -760,7 +753,7 @@ export default function HomePage() {
             </div>
 
             {/* LOCATION & CONTACT DETAILS CARD */}
-            <div className="card" style={{ padding: 32 }}>
+            <div className="card card-responsive">
               <h3 style={{ fontSize: 20, marginBottom: 14 }}>Hospital Information</h3>
 
               <div style={{ display: 'flex', gap: 14, marginBottom: 18 }}>

@@ -125,8 +125,8 @@ export default function TreatmentsPage() {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
-              gap: 28
+              gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))',
+              gap: 'clamp(16px, 3.5vw, 28px)'
             }}
           >
             {filtered.map((item) => (

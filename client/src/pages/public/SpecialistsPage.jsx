@@ -37,20 +37,20 @@ export default function SpecialistsPage() {
         ) : (
           <div className="grid-2">
             {specialists.map((doc) => (
-              <div key={doc.id} className="card" style={{ display: 'flex', gap: 24, padding: 24 }}>
-                <div style={{ width: 140, height: 160, borderRadius: 14, overflow: 'hidden', flexShrink: 0 }}>
+              <div key={doc.id} className="card specialist-card-horizontal">
+                <div className="specialist-img-container" style={{ width: 140, height: 160, borderRadius: 14, overflow: 'hidden', flexShrink: 0 }}>
                   <img src={doc.image} alt={doc.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1, minWidth: 0 }}>
                   <span className="badge badge-red" style={{ alignSelf: 'flex-start', marginBottom: 8 }}>{doc.department}</span>
-                  <h3 style={{ fontSize: 20, marginBottom: 4 }}>{doc.name}</h3>
+                  <h3 style={{ fontSize: 'clamp(18px, 4vw, 20px)', marginBottom: 4 }}>{doc.name}</h3>
                   <p style={{ color: 'var(--red-700)', fontWeight: 600, fontSize: 13, marginBottom: 8 }}>{doc.designation}</p>
                   <p style={{ fontSize: 12.5, color: 'var(--ink-soft)', marginBottom: 12 }}>{doc.qualifications}</p>
                   <p style={{ fontSize: 13, color: 'var(--ink)', marginBottom: 16, lineHeight: 1.6 }}>{doc.bio}</p>
 
-                  <div style={{ marginTop: 'auto', borderTop: '1px solid var(--line)', paddingTop: 12, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div className="specialist-footer-row" style={{ marginTop: 'auto', borderTop: '1px solid var(--line)', paddingTop: 12, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap' }}>
                     <div style={{ fontSize: 12, color: 'var(--ink-soft)', display: 'flex', alignItems: 'center', gap: 6 }}>
-                      <Clock size={14} style={{ color: 'var(--red-700)' }} />
+                      <Clock size={14} style={{ color: 'var(--red-700)', flexShrink: 0 }} />
                       <span>{doc.opdTimings}</span>
                     </div>
 

@@ -173,7 +173,7 @@ export default function ProductInquiriesPage() {
             ))}
           </div>
 
-          <div style={{ position: 'relative', minWidth: 260 }}>
+          <div style={{ position: 'relative', flex: '1 1 240px', minWidth: 0, width: '100%' }}>
             <Search
               size={15}
               style={{
@@ -387,7 +387,7 @@ export default function ProductInquiriesPage() {
               </div>
 
               {/* 2-Column Grid: Customer Info & Shipping Address */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: 16, marginBottom: 20 }}>
                 <div
                   style={{
                     padding: 16,

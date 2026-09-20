@@ -248,8 +248,11 @@
   background: #fff;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  overflow: hidden;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   box-shadow: var(--shadow-sm);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .table-toolbar {
@@ -465,11 +468,15 @@
 
   .admin-main {
     width: 100%;
-    padding: 20px 16px;
+    min-width: 0;
+  }
+
+  .admin-content {
+    padding: 20px 18px;
   }
 
   .kpi-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .patient-profile-header {
@@ -480,34 +487,83 @@
 /* Mobile Breakpoint (<= 768px) */
 @media (max-width: 768px) {
   .admin-topbar {
-    padding: 12px 14px;
-    flex-wrap: wrap;
+    height: auto;
+    min-height: 58px;
+    padding: 10px 14px;
+    flex-direction: column;
+    align-items: stretch;
     gap: 10px;
+  }
+
+  .topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .topbar-left h2 {
+    font-size: 17px;
+    line-height: 1.25;
   }
 
   .topbar-right {
     width: 100%;
+    display: flex;
+    align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .topbar-right .btn {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .admin-content {
+    padding: 14px 10px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .kpi-grid {
     grid-template-columns: 1fr;
-    gap: 14px;
+    gap: 12px;
+  }
+
+  .table-toolbar {
+    padding: 12px 14px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .table-toolbar > div {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .table-toolbar input,
+  .table-toolbar select {
+    width: 100% !important;
   }
 
   .patient-profile-header {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+    padding: 16px;
+    gap: 14px;
   }
 
   .patient-vital-summary {
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     width: 100%;
     gap: 8px;
   }
 
   .vital-metric {
-    flex: 1 1 calc(50% - 8px);
     padding: 8px 12px;
   }
 
@@ -518,6 +574,22 @@
   .modal-container {
     max-width: 95vw !important;
     margin: 10px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .kpi-card {
+    padding: 16px;
+  }
+  .kpi-card-info h3 {
+    font-size: 22px;
+  }
+  .kpi-icon-wrap {
+    width: 42px;
+    height: 42px;
+  }
+  .patient-vital-summary {
+    grid-template-columns: 1fr !important;
   }
 }
 

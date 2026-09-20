@@ -50,6 +50,8 @@ html {
   -webkit-text-size-adjust: 100%;
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 body {
@@ -60,6 +62,13 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.6;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+img, video, iframe {
+  max-width: 100%;
+  height: auto;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -288,9 +297,11 @@ button, input, select, textarea {
 }
 
 .container {
-  max-width: 1240px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 clamp(14px, 3.5vw, 28px);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Form inputs */
@@ -314,6 +325,7 @@ button, input, select, textarea {
   background: #fff;
   color: var(--ink);
   transition: var(--transition);
+  box-sizing: border-box;
 }
 
 .form-control:focus {
@@ -321,43 +333,90 @@ button, input, select, textarea {
   box-shadow: 0 0 0 3px rgba(169, 17, 41, 0.1);
 }
 
-/* Grid systems */
+/* Prevent auto-zoom on iOS Safari while maintaining sleek design */
+@media (max-width: 640px) {
+  .form-control {
+    font-size: 16px;
+    padding: 10px 13px;
+  }
+}
+
+/* Fluid Card Utilities */
+.card-responsive {
+  padding: clamp(18px, 4vw, 36px) !important;
+}
+
+/* Grid systems with zero-overflow minmax */
 .grid-2 {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 24px;
 }
 
 .grid-3 {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 24px;
 }
 
 .grid-4 {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 20px;
+}
+
+/* Two-column responsive layout for detail pages & sidebars */
+.responsive-two-col {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: 40px;
+  align-items: start;
+}
+
+.responsive-detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 40px;
+  align-items: start;
+}
+
+.responsive-grid-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+  gap: 24px;
 }
 
 @media (max-width: 980px) {
   .grid-4 {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .grid-3 {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .responsive-two-col,
+  .responsive-detail-grid {
+    grid-template-columns: 1fr !important;
+    gap: 28px !important;
   }
 }
 
 @media (max-width: 640px) {
   .grid-4, .grid-3, .grid-2 {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
     gap: 16px;
-  }
-  .container {
-    padding: 0 14px;
   }
   .card-body {
     padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .btn:not(.btn-icon) {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+  .btn-mobile-block {
+    width: 100% !important;
+    justify-content: center !important;
   }
 }

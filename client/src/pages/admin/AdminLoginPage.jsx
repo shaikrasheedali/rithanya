@@ -44,18 +44,29 @@ export default function AdminLoginPage() {
         alignItems: 'center',
         justifyContent: 'center',
         background: 'radial-gradient(circle at 50% 30%, #fff3f4 0%, var(--canvas) 90%)',
-        padding: 24
+        padding: 'clamp(16px, 4vw, 32px)',
+        boxSizing: 'border-box',
+        width: '100%'
       }}
     >
-      <div className="card" style={{ maxWidth: 440, width: '100%', padding: 40, border: '1px solid var(--line)' }}>
-        <div style={{ textAlign: 'center', marginBottom: 28 }}>
+      <div
+        className="card"
+        style={{
+          maxWidth: 440,
+          width: '100%',
+          padding: 'clamp(22px, 5vw, 38px)',
+          border: '1px solid var(--line)',
+          boxSizing: 'border-box'
+        }}
+      >
+        <div style={{ textAlign: 'center', marginBottom: 26 }}>
           <div
             className="brand-icon"
-            style={{ width: 54, height: 54, margin: '0 auto 16px', borderRadius: 16 }}
+            style={{ width: 52, height: 52, margin: '0 auto 14px', borderRadius: 16 }}
           >
-            <Activity size={28} />
+            <Activity size={26} />
           </div>
-          <h2 style={{ fontSize: 24, fontWeight: 800 }}>Rithanya Hospital</h2>
+          <h2 style={{ fontSize: 'clamp(20px, 4.5vw, 24px)', fontWeight: 800 }}>Rithanya Hospital</h2>
           <p style={{ color: 'var(--ink-soft)', fontSize: 13, marginTop: 4 }}>
             Clinical ERP & Administrative Portal Login
           </p>
@@ -107,7 +118,13 @@ export default function AdminLoginPage() {
           </button>
         </form>
 
-        <div style={{ textAlign: 'center', marginTop: 24 }}>
+        <div style={{ textAlign: 'center', marginTop: 22, display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <a
+            href="/"
+            style={{ fontSize: 12.5, color: 'var(--red-700)', fontWeight: 600 }}
+          >
+            ← Return to Hospital Public Website
+          </a>
           <span style={{ fontSize: 11, color: 'var(--muted)' }}>
             Hospital Intranet · DPDP Act 2023 Digital Healthcare Standards
           </span>
