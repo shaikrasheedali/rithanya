@@ -63,13 +63,13 @@ export default function TreatmentsPage() {
             }}
           >
             <Sparkles size={15} />
-            <span>Clinical Treatments & Daycare Procedures</span>
+            <span>Treatments & Conditions Managed</span>
           </div>
           <h1 className="section-title" style={{ fontSize: 'clamp(28px, 4vw, 44px)', marginBottom: 14 }}>
-            Evidence-Based Specialized Treatments
+            Treatments & Conditions Managed
           </h1>
-          <p className="section-subtitle" style={{ maxWidth: 740, margin: '0 auto', fontSize: 16, color: 'var(--ink-soft)' }}>
-            Under the guidance of <strong>Dr. Narayana Murthy M.D.</strong>, Rithanya Hospital offers comprehensive clinical protocols for Thalassemia daycare transfusions, longitudinal diabetology, HPLC diagnostics, and chronic care.
+          <p className="section-subtitle" style={{ maxWidth: 780, margin: '0 auto', fontSize: 16, color: 'var(--ink-soft)' }}>
+            Under the clinical leadership of <strong>Dr. D. Narayana Murthy</strong> (MD SVIMS, Diabetologist) and <strong>Dr. A. Lakshmi Deepa</strong> (MBBS, Gynecologist), Rithanya Hospital provides structured, evidence-based care for 40 major medical conditions, emergency medicine, and chronic disease regulation.
           </p>
         </div>
 

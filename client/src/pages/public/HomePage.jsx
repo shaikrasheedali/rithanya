@@ -287,10 +287,10 @@ export default function HomePage() {
       <section className="home-viewport-section bg-white" id="treatments" aria-label="Clinical Treatments">
         <div className="container">
           <div className="section-head">
-            <span className="section-tag">Clinical Protocols</span>
-            <h2 className="section-title">Specialized Treatment Pathways</h2>
+            <span className="section-tag">Clinical Care • చికిత్సలు</span>
+            <h2 className="section-title">Treatments & Conditions Managed</h2>
             <p className="section-subtitle">
-              Stringent protocol-driven treatments emphasizing patient comfort, adverse reaction prevention, and organ protection.
+              Comprehensive evidence-based care for 40 major acute and chronic conditions, emergency triage, and specialized diabetology.
             </p>
           </div>
 
@@ -382,7 +382,7 @@ export default function HomePage() {
 
           <div style={{ textAlign: 'center' }}>
             <Link to="/treatments" className="btn btn-secondary">
-              <span>View All Treatment Protocols</span>
+              <span>View All 40 Treatments & Conditions</span>
               <ArrowRight size={15} />
             </Link>
           </div>
