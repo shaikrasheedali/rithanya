@@ -37,7 +37,7 @@ export default function BlogDetailPage() {
 
   return (
     <div className="blog-detail-page" style={{ padding: '40px 0 80px' }}>
-      <div className="container" style={{ maxWidth: 880 }}>
+      <div className="container" style={{ maxWidth: 1140 }}>
         <Link to="/insights" className="btn btn-secondary btn-sm" style={{ marginBottom: 24 }}>
           <ArrowLeft size={16} />
           <span>Back to Health Insights</span>
@@ -46,7 +46,7 @@ export default function BlogDetailPage() {
         <span className="badge badge-red" style={{ marginBottom: 12 }}>{blog.category}</span>
         <h1 style={{ fontSize: 38, lineHeight: 1.25, marginBottom: 16 }}>{blog.title}</h1>
 
-        <div style={{ display: 'flex', gap: 20, color: 'var(--ink-soft)', fontSize: 13.5, marginBottom: 30, borderBottom: '1px solid var(--line)', paddingBottom: 16 }}>
+        <div style={{ display: 'flex', gap: 20, color: 'var(--ink-soft)', fontSize: 13.5, marginBottom: 30, borderBottom: '1px solid var(--line)', paddingBottom: 16, flexWrap: 'wrap' }}>
           <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <User size={16} style={{ color: 'var(--red-700)' }} />
             {blog.author}
@@ -61,13 +61,13 @@ export default function BlogDetailPage() {
           </span>
         </div>
 
-        <div className="article-cover-wrap" style={{ aspectRatio: '16/9', borderRadius: 16, marginBottom: 32 }}>
-          <img src={blog.coverImage} alt={blog.title} />
+        <div className="article-cover-wrap" style={{ aspectRatio: '21/9', maxHeight: 480, borderRadius: 16, marginBottom: 32, overflow: 'hidden' }}>
+          <img src={blog.coverImage} alt={blog.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         </div>
 
         <div
-          className="article-body-content"
-          style={{ lineHeight: 1.85, fontSize: 16, color: '#2b2729' }}
+          className="article-body-content ql-editor"
+          style={{ lineHeight: 1.85, fontSize: 16.5, color: '#2b2729' }}
           dangerouslySetInnerHTML={{ __html: blog.content }}
         />
 

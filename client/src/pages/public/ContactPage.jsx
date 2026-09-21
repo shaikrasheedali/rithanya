@@ -41,7 +41,7 @@ export default function ContactPage() {
           <span className="section-tag">Hospital Location & Helpdesk</span>
           <h1 className="section-title">Get in Touch with Our Clinical Team</h1>
           <p className="section-subtitle">
-            Located conveniently on Wyra Road, Khammam. We are open for daily OPD consultations, routine diagnostic collection, and round-the-clock transfusion daycare support.
+            Located conveniently on Nehru Road, Khammam. We are open for daily OPD consultations, routine diagnostic collection, 24/7 emergency response, and 24-hour in-house blood bank support.
           </p>
         </div>
 
@@ -59,7 +59,7 @@ export default function ContactPage() {
                   <div>
                     <h4 style={{ fontSize: 14, fontWeight: 700 }}>Hospital Address</h4>
                     <p style={{ fontSize: 13, color: 'var(--ink-soft)', marginTop: 2 }}>
-                      Wyra Road, opposite Old LIC Office, Nehru Nagar, Khammam, Telangana - 507001
+                      Nehru Road, Opposite Old L.I.C. Office, Khammam (నెహ్రూరోడ్, పాత ఎల్.ఐ.సి. ఆఫీస్ ఎదురుగా, ఖమ్మం)
                     </p>
                   </div>
                 </div>
@@ -71,7 +71,7 @@ export default function ContactPage() {
                   <div>
                     <h4 style={{ fontSize: 14, fontWeight: 700 }}>Phone / Emergency Support</h4>
                     <p style={{ fontSize: 13, color: 'var(--ink-soft)', marginTop: 2 }}>
-                      +91 83285 81019 &nbsp;|&nbsp; +91 98480 11223
+                      8328581019 &nbsp;|&nbsp; 9948713504
                     </p>
                   </div>
                 </div>
@@ -93,10 +93,12 @@ export default function ContactPage() {
                     <Clock size={20} />
                   </div>
                   <div>
-                    <h4 style={{ fontSize: 14, fontWeight: 700 }}>Operating Hours</h4>
+                    <h4 style={{ fontSize: 14, fontWeight: 700 }}>Operating Hours & Facilities</h4>
                     <p style={{ fontSize: 13, color: 'var(--ink-soft)', marginTop: 2 }}>
-                      OPD Consultations: Mon–Sat: 11:00 AM – 5:00 PM<br />
-                      Thalassemia Daycare Transfusions: 24/7 Monitored Support
+                      • 24/7 Emergency Medical Response<br />
+                      • Rithanya Blood Bank 24 Hours Available<br />
+                      • Aarogyasri Facility for Sickle Cell & Thalassemia Children<br />
+                      • OPD Timings: 10:00 AM – 02:00 PM & 06:00 PM – 09:00 PM
                     </p>
                   </div>
                 </div>

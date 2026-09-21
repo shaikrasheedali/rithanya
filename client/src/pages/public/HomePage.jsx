@@ -139,123 +139,89 @@ export default function HomePage() {
       {/* 1. HERO SECTION: FULL VIEWPORT HEIGHT */}
       <HeroVideoSlider />
 
-      {/* 2. SECTION: [ABOUT] - VIEWPORT HEIGHT MINUS NAVBAR */}
+      {/* 2. SECTION: [ABOUT US / HOSPITAL ENTRANCE] */}
       <section className="home-viewport-section bg-white" id="about" aria-label="About Rithanya Hospital">
         <div className="container">
-          <div className="section-head">
-            <span className="section-tag">Clinical Legacy & Accreditation</span>
-            <h2 className="section-title">Compassionate Medicine, Advanced Diagnostics</h2>
-            <p className="section-subtitle">
-              Founded under the leadership of Dr. Narayana Murthy M.D., Rithanya Hospital combines specialized Diabetology with a dedicated Daycare Transfusion Centre in Khammam.
+          <div className="section-head" style={{ textAlign: 'center', marginBottom: 36 }}>
+            <span className="section-tag">Rithanya Hospital • రితన్య హాస్పిటల్</span>
+            <h2 className="section-title">Nehru Road, Opposite Old L.I.C. Office, Khammam</h2>
+            <p className="section-subtitle" style={{ maxWidth: 840, margin: '0 auto' }}>
+              నెహ్రూరోడ్, పాత ఎల్.ఐ.సి. ఆఫీస్ ఎదురుగా, ఖమ్మం • 24/7 Emergency Services & Specialized Daycare Transfusion Centre
             </p>
           </div>
 
-          <div className="grid-2" style={{ gap: 36, alignItems: 'center', marginBottom: 32 }}>
-            {/* Hospital Campus Building Visual Feature */}
-            <div style={{ position: 'relative', borderRadius: 20, overflow: 'hidden', boxShadow: '0 16px 40px rgba(0,0,0,0.08)', border: '1px solid var(--line)', minHeight: 340, height: '100%', display: 'flex', flexDirection: 'column' }}>
-              <div style={{ position: 'relative', flex: 1, minHeight: 320 }}>
-                <img
-                  src="/assets/hospital-building.jpg"
-                  alt="Rithanya Hospital Building & Daycare Transfusion Centre"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', minHeight: 320 }}
-                />
-                <div style={{
-                  position: 'absolute',
-                  top: 16,
-                  left: 16,
-                  background: 'rgba(255, 255, 255, 0.95)',
-                  backdropFilter: 'blur(8px)',
-                  padding: '6px 14px',
-                  borderRadius: 20,
-                  fontSize: 12,
-                  fontWeight: 700,
-                  color: 'var(--red-800)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 6,
-                  boxShadow: '0 4px 14px rgba(0,0,0,0.12)'
-                }}>
-                  <Award size={15} style={{ color: 'var(--red-700)' }} />
-                  <span>Clinical Excellence Center</span>
-                </div>
-                <div style={{
-                  position: 'absolute',
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  background: 'linear-gradient(to top, rgba(10, 20, 40, 0.92) 0%, rgba(10, 20, 40, 0.6) 60%, transparent 100%)',
-                  padding: '24px 20px 16px',
-                  color: '#fff'
-                }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                    <Building size={16} style={{ color: '#00a5e5' }} />
-                    <span style={{ fontSize: 15, fontWeight: 800, letterSpacing: 0.3 }}>Rithanya Hospital Campus</span>
-                  </div>
-                  <p style={{ fontSize: 12.5, color: 'rgba(255, 255, 255, 0.88)', margin: 0, lineHeight: 1.4 }}>
-                    Daycare Transfusion Centre & Diabetology Institute • Khammam, Telangana
-                  </p>
-                </div>
+          {/* Official Hospital Storefront Feature Showcase */}
+          <div
+            style={{
+              position: 'relative',
+              borderRadius: 24,
+              overflow: 'hidden',
+              boxShadow: '0 20px 50px rgba(169, 17, 41, 0.12), 0 4px 16px rgba(0, 0, 0, 0.06)',
+              border: '1.5px solid var(--line)',
+              marginBottom: 32,
+              background: '#0d0a0b'
+            }}
+          >
+            <img
+              src="/image.png"
+              alt="Rithanya Hospital Khammam Front Entrance and Diagnostic Center"
+              style={{
+                width: '100%',
+                maxHeight: 'min(70vh, 580px)',
+                objectFit: 'contain',
+                display: 'block',
+                margin: '0 auto',
+                background: '#0f0a0c'
+              }}
+            />
+          </div>
+
+          {/* Institutional Highlights Grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, marginBottom: 28 }}>
+            <div className="card" style={{ padding: 20, border: '1px solid var(--line)', background: 'var(--canvas)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+                <Clock size={20} style={{ color: 'var(--red-700)' }} />
+                <h4 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>24/7 Emergency Services</h4>
               </div>
+              <p style={{ fontSize: 13, color: 'var(--ink-soft)', margin: 0 }}>
+                Round-the-clock emergency medical attention, acute poisoning resuscitation, snake/scorpion bite protocols, and immediate triage.
+              </p>
             </div>
 
-            {/* Narrative & Metrics */}
-            <div>
-              <h3 style={{ fontSize: 22, color: 'var(--red-950)', marginBottom: 14 }}>
-                Transforming Chronic Care with Dignity & Safety
-              </h3>
-              <p style={{ fontSize: 14.5, color: 'var(--ink-soft)', lineHeight: 1.7, marginBottom: 16 }}>
-                For regular blood recipients and chronic diabetic patients, hospital visits can often feel intimidating. At Rithanya Hospital, our center is architected to make every daycare transfusion and endocrine evaluation tranquil, fast, and clinically superior.
-              </p>
-              <p style={{ fontSize: 14.5, color: 'var(--ink-soft)', lineHeight: 1.7, marginBottom: 20 }}>
-                With fully automated HPLC hemoglobin electrophoresis, triple pre-crossmatching protocols, and micro-aggregate leukodepletion filters, we eliminate febrile transfusion risks and deliver precise glycemic outcomes.
-              </p>
-
-              {/* 4 Pillars Stats Grid */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, marginBottom: 24 }}>
-                <div className="card" style={{ padding: 14, background: 'var(--canvas)', border: '1px solid var(--line)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-                    <Stethoscope size={18} style={{ color: 'var(--red-700)' }} />
-                    <h3 style={{ fontSize: 20, fontWeight: 800, color: 'var(--red-900)', margin: 0 }}>22+</h3>
-                  </div>
-                  <p style={{ fontSize: 11.5, fontWeight: 600, color: 'var(--ink-soft)', margin: 0 }}>Years Clinical Experience</p>
-                </div>
-
-                <div className="card" style={{ padding: 14, background: 'var(--canvas)', border: '1px solid var(--line)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-                    <Activity size={18} style={{ color: 'var(--red-700)' }} />
-                    <h3 style={{ fontSize: 20, fontWeight: 800, color: 'var(--red-900)', margin: 0 }}>8,500+</h3>
-                  </div>
-                  <p style={{ fontSize: 11.5, fontWeight: 600, color: 'var(--ink-soft)', margin: 0 }}>Diabetic Patients Managed</p>
-                </div>
-
-                <div className="card" style={{ padding: 14, background: 'var(--canvas)', border: '1px solid var(--line)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-                    <Droplet size={18} style={{ color: 'var(--red-700)' }} />
-                    <h3 style={{ fontSize: 20, fontWeight: 800, color: 'var(--red-900)', margin: 0 }}>100%</h3>
-                  </div>
-                  <p style={{ fontSize: 11.5, fontWeight: 600, color: 'var(--ink-soft)', margin: 0 }}>Leukodepleted Blood Safety</p>
-                </div>
-
-                <div className="card" style={{ padding: 14, background: 'var(--canvas)', border: '1px solid var(--line)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-                    <ShieldCheck size={18} style={{ color: 'var(--red-700)' }} />
-                    <h3 style={{ fontSize: 20, fontWeight: 800, color: 'var(--red-900)', margin: 0 }}>DPDP</h3>
-                  </div>
-                  <p style={{ fontSize: 11.5, fontWeight: 600, color: 'var(--ink-soft)', margin: 0 }}>Act 2023 Digital Privacy</p>
-                </div>
+            <div className="card" style={{ padding: 20, border: '1px solid var(--line)', background: 'var(--canvas)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+                <Droplet size={20} style={{ color: 'var(--red-700)' }} />
+                <h4 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Rithanya Blood Bank 24 Hours</h4>
               </div>
-
-              <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
-                <Link to="/about" className="btn btn-primary">
-                  <span>Learn More About Our Legacy</span>
-                  <ArrowRight size={15} />
-                </Link>
-                <a href="tel:+918328581019" className="btn btn-secondary">
-                  <Phone size={14} className="text-red" />
-                  <span>Call Emergency Helpline</span>
-                </a>
-              </div>
+              <p style={{ fontSize: 13, color: 'var(--ink-soft)', margin: 0 }}>
+                రితన్య బ్లడ్ బ్యాంక్ 24 గం॥ అందుబాటులో కలదు. Triple-crossmatched, leukodepleted PRBC units and standby platelets.
+              </p>
             </div>
+
+            <div className="card" style={{ padding: 20, border: '1px solid var(--line)', background: 'var(--canvas)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+                <ShieldCheck size={20} style={{ color: 'var(--red-700)' }} />
+                <h4 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Aarogyasri Facility Available</h4>
+              </div>
+              <p style={{ fontSize: 13, color: 'var(--ink-soft)', margin: 0 }}>
+                సికిల్ సెల్ అనీమియా, తలసేమియా పిల్లలకు ఆరోగ్యశ్రీ సదుపాయం కలదు. Cashless daycare transfusions for affected children.
+              </p>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Link to="/about" className="btn btn-primary">
+              <span>About Hospital & Leadership</span>
+              <ArrowRight size={15} />
+            </Link>
+            <a href="tel:+918328581019" className="btn btn-secondary">
+              <Phone size={14} className="text-red" />
+              <span>Call +91 83285 81019</span>
+            </a>
+            <a href="tel:+919948713504" className="btn btn-secondary">
+              <Phone size={14} className="text-red" />
+              <span>Call +91 99487 13504</span>
+            </a>
           </div>
         </div>
       </section>

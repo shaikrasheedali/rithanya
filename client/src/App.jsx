@@ -12,7 +12,9 @@ import AboutPage from './pages/public/AboutPage';
 import ServicesPage from './pages/public/ServicesPage';
 import ServiceDetailPage from './pages/public/ServiceDetailPage';
 import SpecialistsPage from './pages/public/SpecialistsPage';
+import SpecialistDetailPage from './pages/public/SpecialistDetailPage';
 import ProductsPage from './pages/public/ProductsPage';
+import ProductDetailPage from './pages/public/ProductDetailPage';
 import GalleryPage from './pages/public/GalleryPage';
 import BlogsPage from './pages/public/BlogsPage';
 import BlogDetailPage from './pages/public/BlogDetailPage';
@@ -99,9 +101,13 @@ export default function App() {
             <Route path="/treatments" element={<TreatmentsPage />} />
             <Route path="/treatments/:slug" element={<TreatmentDetailPage />} />
             <Route path="/doctors" element={<SpecialistsPage />} />
+            <Route path="/doctors/:slug" element={<SpecialistDetailPage />} />
             <Route path="/specialists" element={<SpecialistsPage />} />
+            <Route path="/specialists/:slug" element={<SpecialistDetailPage />} />
             <Route path="/products" element={<ProductsPage />} />
+            <Route path="/products/:slug" element={<ProductDetailPage />} />
             <Route path="/packages" element={<ProductsPage />} />
+            <Route path="/packages/:slug" element={<ProductDetailPage />} />
             <Route path="/gallery" element={<GalleryPage />} />
             <Route path="/facility-tour" element={<GalleryPage />} />
             <Route path="/insights" element={<BlogsPage />} />

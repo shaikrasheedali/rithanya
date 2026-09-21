@@ -272,21 +272,25 @@ model Blog {
 }
 
 model Specialist {
-  id             String   @id @default(uuid())
-  name           String
-  designation    String
-  department     String
-  qualifications String
-  experience     String   @default("15+ Years")
-  opdTimings     String   @default("Mon - Sat: 11:00 AM - 5:00 PM")
-  image          String   @db.VarChar(1000)
-  bio            String   @db.Text
-  availableDays  Json?    // ["Monday", "Tuesday", ...]
-  status         String   @default("active")
-  sortOrder      Int      @default(0)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id                 String   @id @default(uuid())
+  slug               String?  @unique
+  name               String
+  designation        String
+  department         String
+  qualifications     String   @db.Text
+  registrationNumber String?
+  experience         String   @default("15+ Years")
+  opdTimings         String   @default("Mon - Sat: 11:00 AM - 5:00 PM")
+  image              String   @db.VarChar(1000)
+  bio                String   @db.Text
+  content            String?  @db.LongText
+  availableDays      Json?    // ["Monday", "Tuesday", ...]
+  status             String   @default("active")
+  sortOrder          Int      @default(0)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 
+  @@index([slug])
   @@index([department])
   @@index([status])
 }
@@ -328,6 +332,8 @@ model ProductPackage {
   features      Json?    // Array of feature strings
   tag           String?  // Popular, Recommended, Essential
   image         String   @db.VarChar(1000)
+  videoUrl      String?  @db.VarChar(1000)
+  content       String?  @db.LongText
   stock         Int      @default(50)
   inStock       Boolean  @default(true)
   status        String   @default("active")

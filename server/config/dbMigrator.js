@@ -194,14 +194,25 @@ async function autoMigrate() {
 
   // 5. Ensure legacy domain emails are migrated to rithanyahospital.com
   try {
-    await prisma.user.updateMany({
-      where: { email: 'admin@rithanya.in' },
-      data: { email: 'admin@rithanyahospital.com' }
-    });
-    await prisma.user.updateMany({
-      where: { email: 'staff@rithanya.in' },
-      data: { email: 'staff@rithanyahospital.com' }
-    });
+    const existingNewAdmin = await prisma.user.findUnique({ where: { email: 'admin@rithanyahospital.com' } });
+    if (existingNewAdmin) {
+      await prisma.user.deleteMany({ where: { email: 'admin@rithanya.in' } });
+    } else {
+      await prisma.user.updateMany({
+        where: { email: 'admin@rithanya.in' },
+        data: { email: 'admin@rithanyahospital.com' }
+      });
+    }
+
+    const existingNewStaff = await prisma.user.findUnique({ where: { email: 'staff@rithanyahospital.com' } });
+    if (existingNewStaff) {
+      await prisma.user.deleteMany({ where: { email: 'staff@rithanya.in' } });
+    } else {
+      await prisma.user.updateMany({
+        where: { email: 'staff@rithanya.in' },
+        data: { email: 'staff@rithanyahospital.com' }
+      });
+    }
   } catch {
     // Ignore migration error if schema not initialized
   }

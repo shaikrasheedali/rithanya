@@ -1,14 +1,23 @@
 const prisma = require('../config/db');
+const { getPublicCache, setPublicCache, invalidatePublicCache } = require('../utils/publicDataCache');
 
 async function getServices(req, res, next) {
   try {
     const { status } = req.query;
+    const cacheKey = `services:list:${status || 'all'}`;
+    const cached = getPublicCache(cacheKey);
+    if (cached) {
+      return res.json({ success: true, data: cached });
+    }
+
     const services = await prisma.service.findMany({
       where: {
         ...(status && { status })
       },
       orderBy: { sortOrder: 'asc' }
     });
+
+    setPublicCache(cacheKey, services);
     return res.json({ success: true, data: services });
   } catch (err) {
     next(err);
@@ -18,6 +27,12 @@ async function getServices(req, res, next) {
 async function getServiceBySlug(req, res, next) {
   try {
     const { slug } = req.params;
+    const cacheKey = `services:item:${slug}`;
+    const cached = getPublicCache(cacheKey);
+    if (cached) {
+      return res.json({ success: true, data: cached });
+    }
+
     const service = await prisma.service.findFirst({
       where: {
         OR: [{ slug }, { id: slug }]
@@ -27,6 +42,8 @@ async function getServiceBySlug(req, res, next) {
     if (!service) {
       return res.status(404).json({ success: false, message: 'Service not found' });
     }
+
+    setPublicCache(cacheKey, service);
     return res.json({ success: true, data: service });
   } catch (err) {
     next(err);
@@ -59,6 +76,7 @@ async function createService(req, res, next) {
       }
     });
 
+    invalidatePublicCache('services');
     return res.status(201).json({ success: true, data: service });
   } catch (err) {
     next(err);
@@ -68,7 +86,7 @@ async function createService(req, res, next) {
 async function updateService(req, res, next) {
   try {
     const { id } = req.params;
-    const allowed = ['slug', 'title', 'category', 'description', 'icon', 'coverImage', 'highlights', 'sortOrder'];
+    const allowed = ['slug', 'title', 'category', 'description', 'icon', 'coverImage', 'highlights', 'sortOrder', 'summary', 'content', 'status'];
     const updateData = {};
     for (const key of allowed) {
       if (req.body[key] !== undefined) updateData[key] = req.body[key];
@@ -82,6 +100,7 @@ async function updateService(req, res, next) {
       data: updateData
     });
 
+    invalidatePublicCache('services');
     return res.json({ success: true, data: service });
   } catch (err) {
     next(err);
@@ -92,6 +111,7 @@ async function deleteService(req, res, next) {
   try {
     const { id } = req.params;
     await prisma.service.delete({ where: { id } });
+    invalidatePublicCache('services');
     return res.json({ success: true, message: 'Service deleted' });
   } catch (err) {
     next(err);

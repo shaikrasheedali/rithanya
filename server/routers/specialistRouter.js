@@ -6,6 +6,7 @@ const { requirePermission } = require('../middlewares/rbacMiddleware');
 
 // Public
 router.get('/', specialistController.getSpecialists);
+router.get('/:slugOrId', specialistController.getSpecialistBySlugOrId);
 
 // Admin CMS
 router.post('/', authenticate, requirePermission('specialists'), specialistController.createSpecialist);

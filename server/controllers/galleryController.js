@@ -1,14 +1,23 @@
 const prisma = require('../config/db');
+const { getPublicCache, setPublicCache, invalidatePublicCache } = require('../utils/publicDataCache');
 
 async function getGallery(req, res, next) {
   try {
     const { category } = req.query;
+    const cacheKey = `gallery:list:${category || 'all'}`;
+    const cached = getPublicCache(cacheKey);
+    if (cached) {
+      return res.json({ success: true, data: cached });
+    }
+
     const items = await prisma.galleryItem.findMany({
       where: {
         ...(category && category !== 'All' && { category })
       },
       orderBy: { sortOrder: 'asc' }
     });
+
+    setPublicCache(cacheKey, items);
     return res.json({ success: true, data: items });
   } catch (err) {
     next(err);
@@ -35,6 +44,7 @@ async function createGalleryItem(req, res, next) {
       }
     });
 
+    invalidatePublicCache('gallery');
     return res.status(201).json({ success: true, data: item });
   } catch (err) {
     next(err);
@@ -44,7 +54,7 @@ async function createGalleryItem(req, res, next) {
 async function updateGalleryItem(req, res, next) {
   try {
     const { id } = req.params;
-    const allowed = ['title', 'category', 'url', 'mediaType', 'description', 'sortOrder'];
+    const allowed = ['title', 'category', 'url', 'imageUrl', 'mediaType', 'embedUrl', 'description', 'caption', 'sortOrder'];
     const updateData = {};
     for (const key of allowed) {
       if (req.body[key] !== undefined) updateData[key] = req.body[key];
@@ -58,6 +68,7 @@ async function updateGalleryItem(req, res, next) {
       data: updateData
     });
 
+    invalidatePublicCache('gallery');
     return res.json({ success: true, data: item });
   } catch (err) {
     next(err);
@@ -68,6 +79,7 @@ async function deleteGalleryItem(req, res, next) {
   try {
     const { id } = req.params;
     await prisma.galleryItem.delete({ where: { id } });
+    invalidatePublicCache('gallery');
     return res.json({ success: true, message: 'Gallery item deleted' });
   } catch (err) {
     next(err);

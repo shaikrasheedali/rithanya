@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
   ShoppingCart,
   Plus,
@@ -250,38 +251,22 @@ export default function ProductsPage() {
             <p>Loading clinical products catalog...</p>
           </div>
         ) : (
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))',
-              gap: 'clamp(16px, 3.5vw, 28px)'
-            }}
-          >
+          <div className="grid-3">
             {filteredProducts.map((p) => {
               const inCartItem = cart.find((i) => i.id === p.id);
+              const productUrl = `/products/${p.slug || p.id}`;
 
               return (
-                <div
-                  key={p.id}
-                  className="product-card"
-                  style={{
-                    background: '#fff',
-                    borderRadius: 20,
-                    overflow: 'hidden',
-                    border: '1.5px solid var(--line)',
-                    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.04)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    transition: 'all 0.25s ease'
-                  }}
-                >
-                  {/* Product Thumbnail */}
-                  <div style={{ position: 'relative', width: '100%', height: 210, background: '#fcfbfa', overflow: 'hidden' }}>
-                    <img
-                      src={p.image}
-                      alt={p.name}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    />
+                <div key={p.id} className="service-card product-service-card">
+                  {/* Product Card Image Wrap */}
+                  <div className="card-image-wrap" style={{ position: 'relative' }}>
+                    <Link to={productUrl} style={{ display: 'block', width: '100%', height: '100%' }}>
+                      <img
+                        src={p.image || '/image.png'}
+                        alt={p.name}
+                        loading="lazy"
+                      />
+                    </Link>
                     {p.tag && (
                       <div
                         style={{
@@ -292,10 +277,11 @@ export default function ProductsPage() {
                           color: '#fff',
                           padding: '4px 10px',
                           borderRadius: 12,
-                          fontSize: 11.5,
+                          fontSize: 11,
                           fontWeight: 700,
                           textTransform: 'uppercase',
-                          letterSpacing: 0.5
+                          letterSpacing: 0.5,
+                          zIndex: 2
                         }}
                       >
                         {p.tag}
@@ -311,8 +297,9 @@ export default function ProductsPage() {
                           color: '#fff',
                           padding: '4px 10px',
                           borderRadius: 12,
-                          fontSize: 11.5,
-                          fontWeight: 700
+                          fontSize: 11,
+                          fontWeight: 700,
+                          zIndex: 2
                         }}
                       >
                         {p.discountText}
@@ -320,77 +307,72 @@ export default function ProductsPage() {
                     )}
                   </div>
 
-                  {/* Body Content */}
-                  <div style={{ padding: '22px 24px', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-                    <div style={{ fontSize: 12, color: 'var(--ink-soft)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 6 }}>
-                      {p.category}
-                    </div>
-
-                    <h3 style={{ fontSize: 18, fontWeight: 800, color: 'var(--ink)', lineHeight: 1.3, marginBottom: 8 }}>
-                      {p.name}
+                  {/* Service Card Body */}
+                  <div className="service-card-body">
+                    <span className="service-category">{p.category}</span>
+                    <h3 className="service-card-title">
+                      <Link to={productUrl} style={{ color: 'inherit', textDecoration: 'none' }}>
+                        {p.name}
+                      </Link>
                     </h3>
+                    <p className="service-card-desc">{p.summary}</p>
 
-                    <p style={{ fontSize: 13, color: 'var(--ink-soft)', lineHeight: 1.6, marginBottom: 16, flexGrow: 1 }}>
-                      {p.summary}
-                    </p>
-
-                    {/* Features Preview */}
-                    {Array.isArray(p.features) && p.features.length > 0 && (
-                      <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 18px', display: 'flex', flexDirection: 'column', gap: 6, borderTop: '1px solid var(--line)', paddingTop: 14 }}>
-                        {p.features.slice(0, 3).map((feat, idx) => (
-                          <li key={idx} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12.5, color: 'var(--ink)' }}>
-                            <CheckCircle2 size={14} style={{ color: 'var(--green)', flexShrink: 0 }} />
-                            <span>{feat}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-
-                    {/* Price & Add to Cart */}
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--line)', paddingTop: 16, marginTop: 'auto' }}>
+                    {/* Price and Cart Action */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--line)', paddingTop: 14, marginTop: 'auto', gap: 10, flexWrap: 'wrap' }}>
                       <div>
-                        <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-                          <span style={{ fontSize: 22, fontWeight: 800, color: 'var(--red-900)' }}>
+                        <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
+                          <span style={{ fontSize: 20, fontWeight: 800, color: 'var(--red-900)' }}>
                             {formatCurrency(p.price)}
                           </span>
                           {p.originalPrice && (
-                            <span style={{ fontSize: 13, color: 'var(--ink-soft)', textDecoration: 'line-through' }}>
+                            <span style={{ fontSize: 12.5, color: 'var(--ink-soft)', textDecoration: 'line-through' }}>
                               {formatCurrency(p.originalPrice)}
                             </span>
                           )}
                         </div>
-                        <span style={{ fontSize: 11.5, color: 'var(--green)', fontWeight: 600 }}>In Stock — Express Delivery</span>
+                        <span style={{ fontSize: 11, color: 'var(--green)', fontWeight: 600 }}>In Stock — Dispatch</span>
                       </div>
 
-                      {inCartItem ? (
-                        <div style={{ display: 'inline-flex', alignItems: 'center', background: 'var(--canvas)', border: '1px solid var(--line)', borderRadius: 20, padding: '3px 6px' }}>
-                          <button
-                            type="button"
-                            onClick={() => updateQuantity(p.id, -1)}
-                            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, display: 'flex', alignItems: 'center' }}
-                          >
-                            <Minus size={14} />
-                          </button>
-                          <span style={{ fontWeight: 800, fontSize: 13, padding: '0 8px' }}>{inCartItem.quantity}</span>
-                          <button
-                            type="button"
-                            onClick={() => updateQuantity(p.id, 1)}
-                            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, display: 'flex', alignItems: 'center' }}
-                          >
-                            <Plus size={14} />
-                          </button>
-                        </div>
-                      ) : (
-                        <button
-                          type="button"
-                          className="btn btn-primary"
-                          onClick={() => addToCart(p)}
-                          style={{ borderRadius: 12, padding: '8px 16px', fontSize: 13, fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: 6 }}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <Link
+                          to={productUrl}
+                          className="btn btn-outline btn-sm"
+                          style={{ padding: '6px 12px', fontSize: 12 }}
+                          title="View clinical specifications"
                         >
-                          <ShoppingCart size={15} />
-                          <span>Add to Cart</span>
-                        </button>
-                      )}
+                          Details
+                        </Link>
+
+                        {inCartItem ? (
+                          <div style={{ display: 'inline-flex', alignItems: 'center', background: 'var(--canvas)', border: '1px solid var(--line)', borderRadius: 16, padding: '2px 5px' }}>
+                            <button
+                              type="button"
+                              onClick={() => updateQuantity(p.id, -1)}
+                              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '3px 4px', display: 'flex' }}
+                            >
+                              <Minus size={13} />
+                            </button>
+                            <span style={{ fontWeight: 800, fontSize: 12.5, padding: '0 6px' }}>{inCartItem.quantity}</span>
+                            <button
+                              type="button"
+                              onClick={() => updateQuantity(p.id, 1)}
+                              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '3px 4px', display: 'flex' }}
+                            >
+                              <Plus size={13} />
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            type="button"
+                            className="btn btn-primary btn-sm"
+                            onClick={() => addToCart(p)}
+                            style={{ padding: '6px 14px', fontSize: 12, borderRadius: 10, display: 'inline-flex', alignItems: 'center', gap: 5 }}
+                          >
+                            <ShoppingCart size={13} />
+                            <span>Add</span>
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>

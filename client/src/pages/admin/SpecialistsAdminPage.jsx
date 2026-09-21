@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit2, Trash2 } from 'lucide-react';
+import { Plus, Edit2, Trash2, UserCheck, Award, ExternalLink } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import AdminTopbar from '../../components/layout/AdminTopbar';
 import { apiRequest } from '../../utils/api';
 import { useToast } from '../../components/common/Toast';
 import Modal from '../../components/common/Modal';
 import ImageUploadField from '../../components/common/ImageUploadField';
+import RichTextEditor from '../../components/common/RichTextEditor';
 
 export default function SpecialistsAdminPage() {
   const { addToast } = useToast();
@@ -13,12 +15,16 @@ export default function SpecialistsAdminPage() {
   const [editItem, setEditItem] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
+    slug: '',
     designation: '',
     department: '',
     qualifications: '',
-    opdTimings: 'Mon - Sat: 11:00 AM - 5:00 PM',
-    image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=1200&q=85',
-    bio: ''
+    experience: '',
+    registrationNumber: '',
+    opdTimings: 'Morning: 10:00 AM – 02:00 PM | Evening: 06:00 PM – 09:00 PM',
+    image: '/image.png',
+    bio: '',
+    content: ''
   });
   const [submitting, setSubmitting] = useState(false);
 
@@ -39,24 +45,32 @@ export default function SpecialistsAdminPage() {
     if (item) {
       setEditItem(item);
       setFormData({
-        name: item.name,
-        designation: item.designation,
-        department: item.department,
-        qualifications: item.qualifications,
-        opdTimings: item.opdTimings,
-        image: item.image,
-        bio: item.bio
+        name: item.name || '',
+        slug: item.slug || '',
+        designation: item.designation || '',
+        department: item.department || '',
+        qualifications: item.qualifications || '',
+        experience: item.experience || '',
+        registrationNumber: item.registrationNumber || '',
+        opdTimings: item.opdTimings || 'Morning: 10:00 AM – 02:00 PM | Evening: 06:00 PM – 09:00 PM',
+        image: item.image || '/image.png',
+        bio: item.bio || '',
+        content: item.content || ''
       });
     } else {
       setEditItem(null);
       setFormData({
         name: '',
+        slug: '',
         designation: '',
         department: '',
         qualifications: '',
-        opdTimings: 'Mon - Sat: 11:00 AM - 5:00 PM',
-        image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=1200&q=85',
-        bio: ''
+        experience: '',
+        registrationNumber: '',
+        opdTimings: 'Morning: 10:00 AM – 02:00 PM | Evening: 06:00 PM – 09:00 PM',
+        image: '/image.png',
+        bio: '',
+        content: ''
       });
     }
     setIsOpen(true);
@@ -68,10 +82,10 @@ export default function SpecialistsAdminPage() {
     try {
       if (editItem) {
         await apiRequest(`/specialists/${editItem.id}`, { method: 'PUT', body: JSON.stringify(formData) });
-        addToast('Doctor profile updated', 'success');
+        addToast('Doctor profile updated successfully', 'success');
       } else {
         await apiRequest('/specialists', { method: 'POST', body: JSON.stringify(formData) });
-        addToast('Doctor profile added', 'success');
+        addToast('Doctor profile added successfully', 'success');
       }
       setIsOpen(false);
       fetchSpecialists();
@@ -83,7 +97,7 @@ export default function SpecialistsAdminPage() {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Delete this specialist?')) return;
+    if (!window.confirm('Delete this specialist profile?')) return;
     try {
       await apiRequest(`/specialists/${id}`, { method: 'DELETE' });
       addToast('Specialist removed', 'success');
@@ -96,8 +110,8 @@ export default function SpecialistsAdminPage() {
   return (
     <div className="admin-page">
       <AdminTopbar
-        title="Specialist Doctors & Clinical Consultants"
-        subtitle="Manage Physician Credentials, Specializations & OPD Timings"
+        title="Specialist Doctors & Medical Faculty"
+        subtitle="Manage Physician Credentials, Registration Numbers, Rich Clinical Profiles & OPD Schedules"
         actions={
           <button type="button" className="btn btn-primary btn-sm" onClick={() => openModal()}>
             <Plus size={16} />
@@ -112,8 +126,8 @@ export default function SpecialistsAdminPage() {
             <thead>
               <tr>
                 <th>Photo</th>
-                <th>Doctor Name</th>
-                <th>Designation & Department</th>
+                <th>Doctor Name & Reg. No.</th>
+                <th>Designation & Dept</th>
                 <th>Qualifications</th>
                 <th>OPD Timings</th>
                 <th>Actions</th>
@@ -122,24 +136,45 @@ export default function SpecialistsAdminPage() {
             <tbody>
               {specialists.map((doc) => (
                 <tr key={doc.id}>
-                  <td style={{ width: 60 }}>
-                    <div style={{ width: 44, height: 44, borderRadius: '50%', overflow: 'hidden' }}>
-                      <img src={doc.image} alt={doc.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <td style={{ width: 64 }}>
+                    <div style={{ width: 48, height: 48, borderRadius: 10, overflow: 'hidden', background: '#f5f5f5', border: '1px solid var(--line)' }}>
+                      <img src={doc.image} alt={doc.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                     </div>
                   </td>
-                  <td><strong>{doc.name}</strong></td>
+                  <td>
+                    <strong>{doc.name}</strong>
+                    {doc.registrationNumber && (
+                      <span className="badge badge-red" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 4, fontSize: 11 }}>
+                        <UserCheck size={11} />
+                        Reg: {doc.registrationNumber}
+                      </span>
+                    )}
+                  </td>
                   <td>
                     {doc.designation}
                     <small style={{ display: 'block', color: 'var(--ink-soft)' }}>{doc.department}</small>
                   </td>
-                  <td>{doc.qualifications}</td>
-                  <td>{doc.opdTimings}</td>
+                  <td style={{ maxWidth: 280, fontSize: 12.5 }}>
+                    <div style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                      {doc.qualifications}
+                    </div>
+                  </td>
+                  <td style={{ fontSize: 12 }}>{doc.opdTimings}</td>
                   <td>
-                    <div style={{ display: 'flex', gap: 8 }}>
-                      <button type="button" className="btn btn-secondary btn-sm" onClick={() => openModal(doc)}>
+                    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                      <Link
+                        to={`/doctors/${doc.slug || doc.id}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="btn btn-secondary btn-sm"
+                        title="View Live Public Profile"
+                      >
+                        <ExternalLink size={13} />
+                      </Link>
+                      <button type="button" className="btn btn-secondary btn-sm" onClick={() => openModal(doc)} title="Edit Profile">
                         <Edit2 size={13} />
                       </button>
-                      <button type="button" className="btn btn-secondary btn-sm" style={{ color: '#d32f2f' }} onClick={() => handleDelete(doc.id)}>
+                      <button type="button" className="btn btn-secondary btn-sm" style={{ color: '#d32f2f' }} onClick={() => handleDelete(doc.id)} title="Delete Profile">
                         <Trash2 size={13} />
                       </button>
                     </div>
@@ -150,31 +185,46 @@ export default function SpecialistsAdminPage() {
           </table>
         </div>
 
-        {/* MODAL */}
+        {/* CMS EDIT MODAL (XL size - 90% Viewport on Desktop) */}
         <Modal
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
-          title={editItem ? 'Edit Doctor Profile' : 'Add New Specialist'}
+          title={editItem ? `Edit Doctor Profile: ${editItem.name}` : 'Add New Specialist Doctor'}
+          size="xl"
         >
           <form onSubmit={handleSave}>
-            <div className="form-group">
-              <label className="form-label">Doctor Name *</label>
-              <input
-                type="text"
-                className="form-control"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                required
-              />
+            <div className="grid-2">
+              <div className="form-group">
+                <label className="form-label">Doctor Name (Bilingual supported) *</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="e.g. Dr. D. Narayana Murthy (డా. డి. నారాయణ మూర్తి)"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">URL Slug (e.g. dr-narayana-murthy)</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="dr-narayana-murthy"
+                  value={formData.slug}
+                  onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                />
+              </div>
             </div>
 
-            <div className="grid-2">
+            <div className="grid-3">
               <div className="form-group">
                 <label className="form-label">Designation *</label>
                 <input
                   type="text"
                   className="form-control"
-                  placeholder="e.g. Chief Physician & Diabetologist"
+                  placeholder="Senior Consultant Physician & Diabetologist"
                   value={formData.designation}
                   onChange={(e) => setFormData({ ...formData, designation: e.target.value })}
                   required
@@ -186,53 +236,88 @@ export default function SpecialistsAdminPage() {
                 <input
                   type="text"
                   className="form-control"
-                  placeholder="e.g. General Medicine & Diabetology"
+                  placeholder="General Medicine & Diabetology"
                   value={formData.department}
                   onChange={(e) => setFormData({ ...formData, department: e.target.value })}
                   required
                 />
               </div>
+
+              <div className="form-group">
+                <label className="form-label">Registration Number</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="e.g. 81187"
+                  value={formData.registrationNumber}
+                  onChange={(e) => setFormData({ ...formData, registrationNumber: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <div className="grid-2">
+              <div className="form-group">
+                <label className="form-label">Clinical Experience</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="e.g. 18+ Years"
+                  value={formData.experience}
+                  onChange={(e) => setFormData({ ...formData, experience: e.target.value })}
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">OPD Timings</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={formData.opdTimings}
+                  onChange={(e) => setFormData({ ...formData, opdTimings: e.target.value })}
+                />
+              </div>
             </div>
 
             <div className="form-group">
-              <label className="form-label">Qualifications</label>
-              <input
-                type="text"
+              <label className="form-label">Complete Medical Qualifications & Fellowships</label>
+              <textarea
                 className="form-control"
-                placeholder="e.g. MBBS, MD (General Medicine)"
+                rows="2"
+                placeholder="e.g. M.D. (SVIMS), PG Dip in Diabetology (Boston), Fellow in Diabetology (Royal College of Physicians, London)..."
                 value={formData.qualifications}
                 onChange={(e) => setFormData({ ...formData, qualifications: e.target.value })}
               />
             </div>
 
-            <div className="form-group">
-              <label className="form-label">OPD Timings</label>
-              <input
-                type="text"
-                className="form-control"
-                value={formData.opdTimings}
-                onChange={(e) => setFormData({ ...formData, opdTimings: e.target.value })}
-              />
-            </div>
-
             <ImageUploadField
-              label="Specialist Portrait Photo"
+              label="Doctor High-Res Portrait Photo"
               value={formData.image}
               onChange={(url) => setFormData({ ...formData, image: url })}
-              helperText="Uploads to /assets/uploads and synchronizes with Media Assets"
+              helperText="Recommended: Clean white or transparent background portrait"
             />
 
             <div className="form-group">
-              <label className="form-label">Short Clinical Biography</label>
+              <label className="form-label">Short Clinical Summary / Bio</label>
               <textarea
                 className="form-control"
                 rows="3"
+                placeholder="Brief summary displayed on listings and card previews..."
                 value={formData.bio}
                 onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
               />
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12, marginTop: 20 }}>
+            {/* WYSIWYG Quill Rich Text Editor */}
+            <RichTextEditor
+              label="Comprehensive Doctor Profile & Clinical Details"
+              value={formData.content}
+              onChange={(content) => setFormData({ ...formData, content })}
+              placeholder="Compose detailed clinical background, specializations, procedural expertise, awards, and patient consultation guidelines..."
+              minHeight={320}
+              helperText="Full rich formatting with headings, alignments, lists, images and videos. Changes reflect instantly on doctor detail page."
+            />
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12, marginTop: 24, paddingTop: 16, borderTop: '1px solid var(--line)' }}>
               <button type="button" className="btn btn-secondary" onClick={() => setIsOpen(false)} disabled={submitting}>
                 Cancel
               </button>

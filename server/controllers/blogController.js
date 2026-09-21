@@ -1,14 +1,23 @@
 const prisma = require('../config/db');
+const { getPublicCache, setPublicCache, invalidatePublicCache } = require('../utils/publicDataCache');
 
 async function getBlogs(req, res, next) {
   try {
     const { status } = req.query;
+    const cacheKey = `blogs:list:${status || 'all'}`;
+    const cached = getPublicCache(cacheKey);
+    if (cached) {
+      return res.json({ success: true, data: cached });
+    }
+
     const blogs = await prisma.blog.findMany({
       where: {
         ...(status && { status })
       },
       orderBy: { sortOrder: 'asc' }
     });
+
+    setPublicCache(cacheKey, blogs);
     return res.json({ success: true, data: blogs });
   } catch (err) {
     next(err);
@@ -18,6 +27,12 @@ async function getBlogs(req, res, next) {
 async function getBlogBySlug(req, res, next) {
   try {
     const { slug } = req.params;
+    const cacheKey = `blogs:item:${slug}`;
+    const cached = getPublicCache(cacheKey);
+    if (cached) {
+      return res.json({ success: true, data: cached });
+    }
+
     const blog = await prisma.blog.findFirst({
       where: {
         OR: [{ slug }, { id: slug }]
@@ -27,6 +42,8 @@ async function getBlogBySlug(req, res, next) {
     if (!blog) {
       return res.status(404).json({ success: false, message: 'Article not found' });
     }
+
+    setPublicCache(cacheKey, blog);
     return res.json({ success: true, data: blog });
   } catch (err) {
     next(err);
@@ -60,6 +77,7 @@ async function createBlog(req, res, next) {
       }
     });
 
+    invalidatePublicCache('blogs');
     return res.status(201).json({ success: true, data: blog });
   } catch (err) {
     next(err);
@@ -83,6 +101,7 @@ async function updateBlog(req, res, next) {
       data: updateData
     });
 
+    invalidatePublicCache('blogs');
     return res.json({ success: true, data: blog });
   } catch (err) {
     next(err);
@@ -93,6 +112,7 @@ async function deleteBlog(req, res, next) {
   try {
     const { id } = req.params;
     await prisma.blog.delete({ where: { id } });
+    invalidatePublicCache('blogs');
     return res.json({ success: true, message: 'Blog deleted' });
   } catch (err) {
     next(err);

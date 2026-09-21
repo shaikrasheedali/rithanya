@@ -174,7 +174,7 @@ export default function ServicesAdminPage() {
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
           title={editItem ? 'Edit Specialty' : 'Add New Clinical Specialty'}
-          size="lg"
+          size="xl"
         >
           <form onSubmit={handleSave}>
             <div className="grid-2">

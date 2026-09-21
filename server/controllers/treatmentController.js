@@ -1,10 +1,16 @@
 const prisma = require('../config/db');
 const { recordAuditLog } = require('../middlewares/auditMiddleware');
+const { getPublicCache, setPublicCache, invalidatePublicCache } = require('../utils/publicDataCache');
 
-// Public: List all treatments
+// Public: List all treatments with ultra-fast unencrypted in-memory cache
 async function getTreatments(req, res, next) {
   try {
     const { category, search, all } = req.query;
+    const cacheKey = `treatments:list:${category || 'all'}:${search || ''}:${all || false}`;
+    const cached = getPublicCache(cacheKey);
+    if (cached) {
+      return res.json({ success: true, data: cached });
+    }
 
     const where = {};
     if (!all) {
@@ -26,6 +32,7 @@ async function getTreatments(req, res, next) {
       orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }]
     });
 
+    setPublicCache(cacheKey, treatments);
     return res.json({ success: true, data: treatments });
   } catch (err) {
     next(err);
@@ -36,6 +43,11 @@ async function getTreatments(req, res, next) {
 async function getTreatmentBySlug(req, res, next) {
   try {
     const { slug } = req.params;
+    const cacheKey = `treatments:item:${slug}`;
+    const cached = getPublicCache(cacheKey);
+    if (cached) {
+      return res.json({ success: true, data: cached });
+    }
 
     const treatment = await prisma.treatment.findFirst({
       where: {
@@ -47,6 +59,7 @@ async function getTreatmentBySlug(req, res, next) {
       return res.status(404).json({ success: false, message: 'Treatment procedure not found' });
     }
 
+    setPublicCache(cacheKey, treatment);
     return res.json({ success: true, data: treatment });
   } catch (err) {
     next(err);
@@ -112,6 +125,8 @@ async function createTreatment(req, res, next) {
         sortOrder: sortOrder ? parseInt(sortOrder, 10) : 0
       }
     });
+
+    invalidatePublicCache('treatments');
 
     recordAuditLog({
       actorId: req.user ? req.user.id : null,
@@ -180,6 +195,8 @@ async function updateTreatment(req, res, next) {
       data: updateData
     });
 
+    invalidatePublicCache('treatments');
+
     recordAuditLog({
       actorId: req.user ? req.user.id : null,
       actorName: req.user ? req.user.name : 'Admin',
@@ -202,6 +219,8 @@ async function deleteTreatment(req, res, next) {
     const { id } = req.params;
 
     await prisma.treatment.delete({ where: { id } });
+
+    invalidatePublicCache('treatments');
 
     recordAuditLog({
       actorId: req.user ? req.user.id : null,

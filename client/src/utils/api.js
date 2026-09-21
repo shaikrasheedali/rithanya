@@ -1,10 +1,33 @@
 const API_BASE_URL = '/api';
 
+// Fast in-memory cache for public GET requests to eliminate latency
+const clientCache = new Map();
+const CACHE_TTL_MS = 60 * 1000; // 1 minute client-side cache
+
+export function clearClientCache() {
+  clientCache.clear();
+}
+
 /**
  * Universal API Request Handler
  */
 export async function apiRequest(endpoint, options = {}) {
+  const method = (options.method || 'GET').toUpperCase();
   const token = localStorage.getItem('rh_token');
+
+  // Clear client cache on any modifying mutation (POST, PUT, DELETE)
+  if (method !== 'GET') {
+    clientCache.clear();
+  }
+
+  // Check client cache for GET requests
+  const isPublicGet = method === 'GET' && !options.bypassCache;
+  if (isPublicGet) {
+    const cached = clientCache.get(endpoint);
+    if (cached && Date.now() < cached.expiresAt) {
+      return cached.data;
+    }
+  }
 
   const headers = {
     'Content-Type': 'application/json',
@@ -37,6 +60,14 @@ export async function apiRequest(endpoint, options = {}) {
     const data = await response.json();
     if (!response.ok) {
       throw new Error(data.message || `Request failed with status ${response.status}`);
+    }
+
+    // Save to client cache
+    if (isPublicGet) {
+      clientCache.set(endpoint, {
+        data,
+        expiresAt: Date.now() + CACHE_TTL_MS
+      });
     }
 
     return data;

@@ -131,138 +131,101 @@ export default function TreatmentsPage() {
           </div>
         ) : (
           /* Treatments Grid */
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))',
-              gap: 'clamp(16px, 3.5vw, 28px)'
-            }}
-          >
+          <div className="grid-3">
             {filtered.map((item, idx) => {
               const fallbackImg = DEFAULT_TREATMENT_IMAGES[idx % DEFAULT_TREATMENT_IMAGES.length];
               const imgSrc = item.coverImage && item.coverImage.trim() !== '' ? item.coverImage : fallbackImg;
+              const treatmentUrl = `/treatments/${item.slug}`;
+
               return (
-              <div
-                key={item.id}
-                className="treatment-card"
-                style={{
-                  background: '#fff',
-                  borderRadius: 20,
-                  overflow: 'hidden',
-                  border: '1.5px solid var(--line)',
-                  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.04)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  transition: 'all 0.3s ease'
-                }}
-              >
-                {/* Media Container */}
-                <div style={{ position: 'relative', width: '100%', height: 210, overflow: 'hidden', background: '#000' }}>
-                  <img
-                    src={imgSrc}
-                    alt={item.title}
-                    onError={(e) => {
-                      e.currentTarget.onerror = null;
-                      e.currentTarget.src = fallbackImg;
-                    }}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                      transition: 'transform 0.4s ease'
-                    }}
-                  />
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: 12,
-                      left: 12,
-                      background: 'rgba(169, 17, 41, 0.92)',
-                      backdropFilter: 'blur(8px)',
-                      color: '#fff',
-                      padding: '4px 12px',
-                      borderRadius: 14,
-                      fontSize: 11.5,
-                      fontWeight: 700,
-                      textTransform: 'uppercase',
-                      letterSpacing: 0.5
-                    }}
-                  >
-                    {item.category}
-                  </div>
-
-                  <div
-                    style={{
-                      position: 'absolute',
-                      bottom: 12,
-                      right: 12,
-                      background: 'rgba(17, 12, 14, 0.85)',
-                      backdropFilter: 'blur(8px)',
-                      color: '#fff',
-                      padding: '4px 10px',
-                      borderRadius: 10,
-                      fontSize: 12,
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 5
-                    }}
-                  >
-                    <Clock size={13} />
-                    <span>{item.duration || '45-90 mins'}</span>
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div style={{ padding: '22px 24px', flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--red-700)', fontSize: 12.5, fontWeight: 600, marginBottom: 8 }}>
-                    <Stethoscope size={14} />
-                    <span>{item.doctorName || 'Dr. Narayana Murthy, MD'}</span>
-                  </div>
-
-                  <h3 style={{ fontSize: 19, fontWeight: 800, color: 'var(--ink)', marginBottom: 10, lineHeight: 1.3 }}>
-                    {item.title}
-                  </h3>
-
-                  <p style={{ fontSize: 13.5, color: 'var(--ink-soft)', lineHeight: 1.6, marginBottom: 16, flexGrow: 1 }}>
-                    {item.summary}
-                  </p>
-
-                  {/* Procedures Bullets */}
-                  {Array.isArray(item.procedures) && item.procedures.length > 0 && (
-                    <div style={{ borderTop: '1px solid var(--line)', paddingTop: 14, marginBottom: 18 }}>
-                      <p style={{ fontSize: 11.5, fontWeight: 700, textTransform: 'uppercase', color: 'var(--ink-soft)', letterSpacing: 0.5, marginBottom: 8 }}>
-                        Key Procedures & Safety:
-                      </p>
-                      <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 6 }}>
-                        {item.procedures.slice(0, 3).map((proc, idx) => (
-                          <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 12.5, color: 'var(--ink)' }}>
-                            <CheckCircle2 size={14} style={{ color: 'var(--green)', flexShrink: 0, marginTop: 2 }} />
-                            <span>{proc}</span>
-                          </li>
-                        ))}
-                      </ul>
+                <div key={item.id} className="service-card treatment-service-card">
+                  {/* Media Image Wrap */}
+                  <div className="card-image-wrap" style={{ position: 'relative' }}>
+                    <Link to={treatmentUrl} style={{ display: 'block', width: '100%', height: '100%' }}>
+                      <img
+                        src={imgSrc}
+                        alt={item.title}
+                        loading="lazy"
+                        onError={(e) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = fallbackImg;
+                        }}
+                      />
+                    </Link>
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: 12,
+                        left: 12,
+                        background: 'rgba(169, 17, 41, 0.92)',
+                        backdropFilter: 'blur(8px)',
+                        color: '#fff',
+                        padding: '4px 10px',
+                        borderRadius: 12,
+                        fontSize: 11,
+                        fontWeight: 700,
+                        textTransform: 'uppercase',
+                        letterSpacing: 0.5,
+                        zIndex: 2
+                      }}
+                    >
+                      {item.category}
                     </div>
-                  )}
 
-                  {/* CTA Footer */}
-                  <Link
-                    to={`/treatments/${item.slug}`}
-                    className="btn btn-primary"
-                    style={{
-                      width: '100%',
-                      justifyContent: 'center',
-                      borderRadius: 12,
-                      padding: '10px 18px',
-                      fontSize: 13.5,
-                      fontWeight: 700
-                    }}
-                  >
-                    <span>View Treatment Details</span>
-                    <ArrowRight size={16} />
-                  </Link>
+                    {item.duration && (
+                      <div
+                        style={{
+                          position: 'absolute',
+                          bottom: 12,
+                          right: 12,
+                          background: 'rgba(17, 12, 14, 0.85)',
+                          backdropFilter: 'blur(8px)',
+                          color: '#fff',
+                          padding: '4px 10px',
+                          borderRadius: 10,
+                          fontSize: 11.5,
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 5,
+                          zIndex: 2
+                        }}
+                      >
+                        <Clock size={12} />
+                        <span>{item.duration}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Service Card Body */}
+                  <div className="service-card-body">
+                    <span className="service-category">{item.department || item.category}</span>
+                    <h3 className="service-card-title">
+                      <Link to={treatmentUrl} style={{ color: 'inherit', textDecoration: 'none' }}>
+                        {item.title}
+                      </Link>
+                    </h3>
+                    <p className="service-card-desc">{item.summary}</p>
+
+                    {/* Footer Row */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--line)', paddingTop: 14, marginTop: 'auto', gap: 10 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 5, color: 'var(--red-700)', fontSize: 12, fontWeight: 600 }}>
+                        <Stethoscope size={14} />
+                        <span>{item.doctorName ? item.doctorName.split('(')[0].trim() : 'Dr. Narayana Murthy'}</span>
+                      </div>
+
+                      <Link
+                        to={treatmentUrl}
+                        className="btn btn-outline btn-sm"
+                        style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
+                      >
+                        <span>View Protocol</span>
+                        <ArrowRight size={14} />
+                      </Link>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            );})}
+              );
+            })}
           </div>
         )}
       </div>

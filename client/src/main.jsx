@@ -5,6 +5,7 @@ import './styles/index.css';
 import './styles/public.css';
 import './styles/admin.css';
 import './styles/components.css';
+import 'quill/dist/quill.snow.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

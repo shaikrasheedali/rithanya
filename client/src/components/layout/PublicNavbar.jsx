@@ -61,11 +61,12 @@ export default function PublicNavbar() {
 
   const checkIsActive = (path) => {
     if (location.pathname === path) return true;
-    if (path === '/doctors' && location.pathname === '/specialists') return true;
+    if (path === '/doctors' && (location.pathname.startsWith('/doctors') || location.pathname.startsWith('/specialists'))) return true;
     if (path === '/insights' && (location.pathname.startsWith('/blogs') || location.pathname.startsWith('/insights'))) return true;
     if (path === '/treatments' && location.pathname.startsWith('/treatments')) return true;
+    if (path === '/services' && location.pathname.startsWith('/services')) return true;
     if (path === '/gallery' && (location.pathname === '/facility-tour' || location.pathname === '/gallery')) return true;
-    if (path === '/products' && (location.pathname === '/packages' || location.pathname === '/products')) return true;
+    if (path === '/products' && (location.pathname.startsWith('/packages') || location.pathname.startsWith('/products'))) return true;
     return false;
   };
 

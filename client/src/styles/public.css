@@ -28,7 +28,7 @@
   border: 1px solid rgba(169, 17, 41, 0.16);
   border-radius: 9999px;
   box-shadow: 0 12px 36px -6px rgba(24, 18, 20, 0.09), 0 4px 14px rgba(169, 17, 41, 0.05);
-  padding: 10px 16px 10px 20px;
+  padding: 12px 18px 12px 22px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -39,24 +39,24 @@
 .floating-island-container.scrolled .floating-island {
   background: rgba(255, 255, 255, 0.97);
   box-shadow: 0 16px 42px -6px rgba(24, 18, 20, 0.14), 0 6px 18px rgba(169, 17, 41, 0.08);
-  padding: 8px 14px 8px 18px;
+  padding: 10px 16px 10px 20px;
 }
 
 /* Island Brand */
 .island-brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   text-decoration: none;
   flex-shrink: 0;
 }
 
 .island-brand-icon {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   background: #ffffff;
   border: 1px solid rgba(0, 75, 154, 0.12);
-  border-radius: 10px;
+  border-radius: 11px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -72,7 +72,7 @@
 }
 
 .brand-title {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 800;
   color: var(--red-950);
   line-height: 1.2;
@@ -81,7 +81,7 @@
 }
 
 .brand-subtitle {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--ink-soft);
   white-space: nowrap !important;
@@ -99,11 +99,11 @@
 }
 
 .island-nav-link {
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 600;
   color: var(--ink-soft);
   text-decoration: none;
-  padding: 7px 11px;
+  padding: 8px 12px;
   border-radius: 9999px;
   transition: all 0.2s ease;
   white-space: nowrap !important;
@@ -125,7 +125,7 @@
 .island-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   flex-shrink: 0;
 }
 
@@ -133,9 +133,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 8px 16px;
-  font-size: 13px;
+  gap: 7px;
+  padding: 9px 18px;
+  font-size: 13.5px;
   font-weight: 600;
   border-radius: 9999px;
   text-decoration: none;
@@ -192,8 +192,8 @@
 
 /* Small Circular Right Arrow Login Button */
 .island-circle-login-btn {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: var(--canvas);
   border: 1px solid var(--line);
@@ -219,8 +219,8 @@
 /* Mobile Hamburger Toggle Button */
 .island-menu-toggle {
   display: none;
-  width: 38px;
-  height: 38px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   background: var(--canvas);
   border: 1px solid var(--line);
@@ -1551,21 +1551,194 @@
   }
 }
 
-/* Responsive Two-Column Layout for Detail Pages */
+/* Responsive Two-Column Layout for Detail Pages - Eliminates awkward right empty gap */
 .treatment-content-grid,
-.service-detail-grid {
+.service-detail-grid,
+.product-detail-grid,
+.doctor-detail-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
-  gap: 40px;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 36px;
   align-items: start;
 }
 
 @media (max-width: 980px) {
   .treatment-content-grid,
-  .service-detail-grid {
+  .service-detail-grid,
+  .product-detail-grid,
+  .doctor-detail-grid {
     grid-template-columns: 1fr !important;
     gap: 28px !important;
   }
+}
+
+/* Doctor Block Element Card - Covers 80-90% Section Width & 100vh - Navbar Height */
+.specialist-block-card {
+  width: min(88%, 1240px);
+  margin: 0 auto 40px;
+  min-height: calc(100vh - 84px);
+  min-height: calc(100dvh - 84px);
+  background: var(--paper);
+  border: 1.5px solid var(--line);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.specialist-block-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 50px rgba(169, 17, 41, 0.12);
+  border-color: var(--red-200);
+}
+
+.specialist-block-content {
+  display: grid;
+  grid-template-columns: minmax(320px, 460px) 1fr;
+  flex: 1;
+  min-height: 0;
+}
+
+.specialist-block-media {
+  background: linear-gradient(180deg, #fdfbfb 0%, #f4eff1 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 36px 28px;
+  position: relative;
+  overflow: hidden;
+  border-right: 1.5px solid var(--line);
+}
+
+.specialist-block-media img {
+  width: 100%;
+  height: 100%;
+  max-height: 560px;
+  object-fit: contain;
+  object-position: bottom center;
+  filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.16));
+  transition: transform 0.4s ease;
+}
+
+.specialist-block-card:hover .specialist-block-media img {
+  transform: scale(1.02);
+}
+
+.specialist-block-body {
+  padding: clamp(24px, 4vw, 44px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+  background: #ffffff;
+}
+
+@media (max-width: 900px) {
+  .specialist-block-card {
+    width: 100%;
+    min-height: auto;
+  }
+  .specialist-block-content {
+    grid-template-columns: 1fr;
+  }
+  .specialist-block-media {
+    padding: 24px;
+    height: 380px;
+    border-right: none;
+    border-bottom: 1.5px solid var(--line);
+  }
+}
+
+/* Quill / WYSIWYG Formatted Content Support across all public article views */
+.article-content-body,
+.article-body-content,
+.treatment-rich-content,
+.product-rich-content,
+.doctor-rich-content {
+  line-height: 1.85;
+  color: var(--ink);
+}
+
+.article-content-body p,
+.article-body-content p,
+.treatment-rich-content p,
+.product-rich-content p,
+.doctor-rich-content p {
+  margin-bottom: 1.2em;
+}
+
+.article-content-body h1, .article-body-content h1, .treatment-rich-content h1, .product-rich-content h1, .doctor-rich-content h1,
+.article-content-body h2, .article-body-content h2, .treatment-rich-content h2, .product-rich-content h2, .doctor-rich-content h2,
+.article-content-body h3, .article-body-content h3, .treatment-rich-content h3, .product-rich-content h3, .doctor-rich-content h3 {
+  color: var(--ink);
+  margin-top: 1.4em;
+  margin-bottom: 0.6em;
+  font-weight: 800;
+}
+
+.article-content-body strong, .article-body-content strong, .treatment-rich-content strong, .product-rich-content strong, .doctor-rich-content strong,
+.article-content-body b, .article-body-content b, .treatment-rich-content b, .product-rich-content b, .doctor-rich-content b {
+  font-weight: 700;
+  color: #110d10;
+}
+
+.article-content-body em, .article-body-content em, .treatment-rich-content em, .product-rich-content em, .doctor-rich-content em,
+.article-content-body i, .article-body-content i, .treatment-rich-content i, .product-rich-content i, .doctor-rich-content i {
+  font-style: italic;
+}
+
+.article-content-body u, .article-body-content u, .treatment-rich-content u, .product-rich-content u, .doctor-rich-content u {
+  text-decoration: underline;
+}
+
+.article-content-body s, .article-body-content s, .treatment-rich-content s, .product-rich-content s, .doctor-rich-content s {
+  text-decoration: line-through;
+}
+
+/* Quill Alignment Classes */
+.ql-align-center { text-align: center !important; }
+.ql-align-right { text-align: right !important; }
+.ql-align-justify { text-align: justify !important; }
+
+/* Quill Font Size Classes */
+.ql-size-small { font-size: 0.85em !important; }
+.ql-size-large { font-size: 1.35em !important; }
+.ql-size-huge { font-size: 1.85em !important; }
+
+/* Quill Lists & Quotes */
+.article-content-body ul, .article-body-content ul, .treatment-rich-content ul, .product-rich-content ul, .doctor-rich-content ul {
+  padding-left: 24px;
+  margin-bottom: 1.2em;
+  list-style: disc;
+}
+
+.article-content-body ol, .article-body-content ol, .treatment-rich-content ol, .product-rich-content ol, .doctor-rich-content ol {
+  padding-left: 24px;
+  margin-bottom: 1.2em;
+  list-style: decimal;
+}
+
+.article-content-body li, .article-body-content li, .treatment-rich-content li, .product-rich-content li, .doctor-rich-content li {
+  margin-bottom: 0.5em;
+}
+
+.article-content-body blockquote, .article-body-content blockquote, .treatment-rich-content blockquote, .product-rich-content blockquote, .doctor-rich-content blockquote {
+  border-left: 4px solid var(--red-600);
+  background: var(--canvas);
+  padding: 14px 20px;
+  margin: 1.4em 0;
+  border-radius: 0 10px 10px 0;
+  font-style: italic;
+  color: var(--ink-soft);
+}
+
+.article-content-body img, .article-body-content img, .treatment-rich-content img, .product-rich-content img, .doctor-rich-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  margin: 1.2em 0;
 }
 
 /* Mobile Hero & Navigation Refinements */

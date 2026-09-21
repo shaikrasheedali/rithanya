@@ -46,6 +46,22 @@ if (!fs.existsSync(uploadsDir)) {
 }
 app.use('/assets/uploads', express.static(uploadsDir));
 
+// Intelligent Caching: Allow fast HTTP caching for public catalog GET requests; keep no-store for auth & admin
+const PUBLIC_CATALOG_ROUTES = ['/services', '/treatments', '/specialists', '/products', '/gallery', '/blogs', '/settings'];
+
+app.use('/api', (req, res, next) => {
+  const isPublicCatalogGet = req.method === 'GET' && PUBLIC_CATALOG_ROUTES.some((r) => req.path.startsWith(r));
+
+  if (isPublicCatalogGet) {
+    res.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
+  } else {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+  }
+  next();
+});
+
 // Mount Master API Router
 app.use('/api', apiRouter);
 

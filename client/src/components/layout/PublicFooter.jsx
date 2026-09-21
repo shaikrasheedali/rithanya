@@ -47,11 +47,11 @@ export default function PublicFooter() {
             <h4>Quick Navigation</h4>
             <ul className="footer-links">
               <li><Link to="/">Home Overview</Link></li>
-              <li><Link to="/about">About Dr. Narayana Murthy</Link></li>
+              <li><Link to="/about">About Rithanya Hospital</Link></li>
               <li><Link to="/services">Clinical Specialties</Link></li>
-              <li><Link to="/treatments">Treatments & Daycare</Link></li>
-              <li><Link to="/doctors">Doctor OPD Timings</Link></li>
-              <li><Link to="/products">Healthcare Products</Link></li>
+              <li><Link to="/treatments">Treatments & 40 Conditions</Link></li>
+              <li><Link to="/doctors">Specialist Doctors & Faculty</Link></li>
+              <li><Link to="/products">Healthcare Products & Pharmacy</Link></li>
               <li><Link to="/gallery">Hospital Media Gallery</Link></li>
               <li><Link to="/insights">Health Insights & Library</Link></li>
             </ul>
@@ -59,14 +59,17 @@ export default function PublicFooter() {
 
           {/* Col 3: Legal & DPDP Compliance */}
           <div className="footer-col">
-            <h4>Patient Rights & DPDP</h4>
+            <h4>Patient Rights & Facilities</h4>
             <ul className="footer-links">
-              <li><Link to="/privacy">Privacy Notice</Link></li>
+              <li style={{ color: '#fff', fontSize: 13, fontWeight: 600 }}>• 24/7 Emergency Services</li>
+              <li style={{ color: '#fff', fontSize: 13, fontWeight: 600 }}>• Rithanya Blood Bank 24 Hours</li>
+              <li style={{ color: '#fff', fontSize: 13, fontWeight: 600 }}>• Aarogyasri Facility (Sickle Cell & Thalassemia)</li>
+              <li style={{ marginTop: 8 }}><Link to="/privacy">Privacy Notice</Link></li>
               <li><Link to="/terms">Terms of Clinical Service</Link></li>
               <li>
                 <Link to="/request-erasure" style={{ color: '#df3850', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
                   <Lock size={14} />
-                  <span>Request Erasure (Right to be Forgotten)</span>
+                  <span>Request Erasure (DPDP Act)</span>
                 </Link>
               </li>
               <li><Link to="/admin/login">Hospital Staff Login</Link></li>
@@ -75,15 +78,15 @@ export default function PublicFooter() {
 
           {/* Col 4: Contact info */}
           <div className="footer-col">
-            <h4>Contact & Emergency</h4>
+            <h4>Contact & Location</h4>
             <ul className="footer-links" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               <li style={{ display: 'flex', gap: 10, fontSize: 13, color: '#aaa' }}>
                 <MapPin size={18} style={{ color: '#df3850', flexShrink: 0 }} />
-                <span>Wyra Road, opposite Old LIC Office, Nehru Nagar, Khammam, Telangana 507001</span>
+                <span>Nehru Road, Opposite Old L.I.C. Office, Khammam (నెహ్రూరోడ్, పాత ఎల్.ఐ.సి. ఆఫీస్ ఎదురుగా, ఖమ్మం)</span>
               </li>
               <li style={{ display: 'flex', gap: 10, fontSize: 13, color: '#aaa' }}>
                 <Phone size={18} style={{ color: '#df3850', flexShrink: 0 }} />
-                <span>+91 83285 81019 / +91 98480 11223</span>
+                <span>8328581019 / 9948713504</span>
               </li>
               <li style={{ display: 'flex', gap: 10, fontSize: 13, color: '#aaa' }}>
                 <Mail size={18} style={{ color: '#df3850', flexShrink: 0 }} />

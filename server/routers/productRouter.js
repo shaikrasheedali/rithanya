@@ -6,6 +6,7 @@ const { requirePermission } = require('../middlewares/rbacMiddleware');
 
 // Public
 router.get('/', productController.getPackages);
+router.get('/:slugOrId', productController.getPackageBySlugOrId);
 
 // Admin CMS
 router.post('/', authenticate, requirePermission('products'), productController.createPackage);

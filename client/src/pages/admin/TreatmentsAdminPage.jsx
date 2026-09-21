@@ -227,7 +227,7 @@ export default function TreatmentsAdminPage() {
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
           title={editItem ? 'Edit Treatment Protocol' : 'Create New Treatment Protocol'}
-          size="lg"
+          size="xl"
         >
           <form onSubmit={handleSave}>
             <div className="grid-2">

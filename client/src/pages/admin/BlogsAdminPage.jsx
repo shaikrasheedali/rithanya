@@ -162,7 +162,7 @@ export default function BlogsAdminPage() {
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
           title={editItem ? 'Edit Health Article' : 'Compose New Health Article'}
-          size="lg"
+          size="xl"
         >
           <form onSubmit={handleSave}>
             <div className="grid-2">

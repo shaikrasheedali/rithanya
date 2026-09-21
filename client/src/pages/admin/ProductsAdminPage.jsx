@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit2, Trash2 } from 'lucide-react';
+import { Plus, Edit2, Trash2, ExternalLink } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import AdminTopbar from '../../components/layout/AdminTopbar';
 import { apiRequest } from '../../utils/api';
 import { useToast } from '../../components/common/Toast';
 import { formatCurrency } from '../../utils/formatters';
 import Modal from '../../components/common/Modal';
 import ImageUploadField from '../../components/common/ImageUploadField';
+import RichTextEditor from '../../components/common/RichTextEditor';
 
 export default function ProductsAdminPage() {
   const { addToast } = useToast();
@@ -14,14 +16,17 @@ export default function ProductsAdminPage() {
   const [editItem, setEditItem] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
-    category: 'Metabolic & Endocrinology',
+    slug: '',
+    category: 'Diagnostic Kits & Monitoring',
     price: '',
     originalPrice: '',
     discountText: '',
     summary: '',
-    features: 'Blood Sugar Fasting, HbA1c, Complete Lipid Panel, Doctor Consultation',
-    tag: 'Popular',
-    image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1200&q=85'
+    features: 'Accurate Digital Sensors, Memory Storage, Clinical Grade Calibration',
+    tag: 'Hospital Certified',
+    image: '/image.png',
+    videoUrl: '',
+    content: ''
   });
   const [submitting, setSubmitting] = useState(false);
 
@@ -42,28 +47,34 @@ export default function ProductsAdminPage() {
     if (item) {
       setEditItem(item);
       setFormData({
-        name: item.name,
-        category: item.category,
-        price: item.price,
+        name: item.name || '',
+        slug: item.slug || '',
+        category: item.category || 'Diagnostic Kits & Monitoring',
+        price: item.price || '',
         originalPrice: item.originalPrice || '',
         discountText: item.discountText || '',
         summary: item.summary || '',
-        features: Array.isArray(item.features) ? item.features.join(', ') : '',
+        features: Array.isArray(item.features) ? item.features.join(', ') : (item.features || ''),
         tag: item.tag || '',
-        image: item.image || ''
+        image: item.image || '/image.png',
+        videoUrl: item.videoUrl || '',
+        content: item.content || ''
       });
     } else {
       setEditItem(null);
       setFormData({
         name: '',
-        category: 'Metabolic & Endocrinology',
+        slug: '',
+        category: 'Diagnostic Kits & Monitoring',
         price: '',
         originalPrice: '',
         discountText: '',
         summary: '',
-        features: 'Blood Sugar Fasting, HbA1c, Complete Lipid Panel, Doctor Consultation',
-        tag: 'Popular',
-        image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1200&q=85'
+        features: 'Accurate Digital Sensors, Memory Storage, Clinical Grade Calibration',
+        tag: 'Hospital Certified',
+        image: '/image.png',
+        videoUrl: '',
+        content: ''
       });
     }
     setIsOpen(true);
@@ -74,29 +85,34 @@ export default function ProductsAdminPage() {
     setSubmitting(true);
     try {
       const featuresArray = formData.features.split(',').map((f) => f.trim()).filter(Boolean);
-      const payload = { ...formData, features: featuresArray };
+      const payload = {
+        ...formData,
+        price: Number(formData.price),
+        originalPrice: formData.originalPrice ? Number(formData.originalPrice) : null,
+        features: featuresArray
+      };
 
       if (editItem) {
         await apiRequest(`/products/${editItem.id}`, { method: 'PUT', body: JSON.stringify(payload) });
-        addToast('Package updated', 'success');
+        addToast('Product package updated successfully', 'success');
       } else {
         await apiRequest('/products', { method: 'POST', body: JSON.stringify(payload) });
-        addToast('New health package published', 'success');
+        addToast('New healthcare product published successfully', 'success');
       }
       setIsOpen(false);
       fetchPackages();
     } catch (err) {
-      addToast(err.message || 'Failed to save package', 'error');
+      addToast(err.message || 'Failed to save product', 'error');
     } finally {
       setSubmitting(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Delete this package?')) return;
+    if (!window.confirm('Delete this health product?')) return;
     try {
       await apiRequest(`/products/${id}`, { method: 'DELETE' });
-      addToast('Package removed', 'success');
+      addToast('Product removed', 'success');
       fetchPackages();
     } catch (err) {
       addToast(err.message || 'Failed to delete', 'error');
@@ -106,12 +122,12 @@ export default function ProductsAdminPage() {
   return (
     <div className="admin-page">
       <AdminTopbar
-        title="Diagnostic Packages & Healthcare Products"
-        subtitle="Manage Pricing, Diagnostic Inclusions & Promotional Badges"
+        title="Healthcare Products & Clinical Pharmacy"
+        subtitle="Manage Product Catalog, Pricing, WYSIWYG Content, Media Uploads & Order Inventory"
         actions={
           <button type="button" className="btn btn-primary btn-sm" onClick={() => openModal()}>
             <Plus size={16} />
-            <span>Add Package</span>
+            <span>Add Healthcare Product</span>
           </button>
         }
       />
@@ -122,7 +138,7 @@ export default function ProductsAdminPage() {
             <thead>
               <tr>
                 <th>Image</th>
-                <th>Package Name</th>
+                <th>Product Name & Slug</th>
                 <th>Category</th>
                 <th>Price</th>
                 <th>Discount / Tag</th>
@@ -133,8 +149,8 @@ export default function ProductsAdminPage() {
               {packages.map((pkg) => (
                 <tr key={pkg.id}>
                   <td style={{ width: 80 }}>
-                    <div style={{ width: 60, height: 40, borderRadius: 8, overflow: 'hidden' }}>
-                      <img src={pkg.image} alt={pkg.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <div style={{ width: 60, height: 48, borderRadius: 8, overflow: 'hidden', background: '#f5f5f5', border: '1px solid var(--line)' }}>
+                      <img src={pkg.image} alt={pkg.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                     </div>
                   </td>
                   <td>
@@ -151,11 +167,20 @@ export default function ProductsAdminPage() {
                     {pkg.discountText && <small style={{ display: 'block', color: 'var(--green)', fontWeight: 600 }}>{pkg.discountText}</small>}
                   </td>
                   <td>
-                    <div style={{ display: 'flex', gap: 8 }}>
-                      <button type="button" className="btn btn-secondary btn-sm" onClick={() => openModal(pkg)}>
+                    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                      <Link
+                        to={`/products/${pkg.slug || pkg.id}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="btn btn-secondary btn-sm"
+                        title="View Live Public Product Page"
+                      >
+                        <ExternalLink size={13} />
+                      </Link>
+                      <button type="button" className="btn btn-secondary btn-sm" onClick={() => openModal(pkg)} title="Edit Product">
                         <Edit2 size={13} />
                       </button>
-                      <button type="button" className="btn btn-secondary btn-sm" style={{ color: '#d32f2f' }} onClick={() => handleDelete(pkg.id)}>
+                      <button type="button" className="btn btn-secondary btn-sm" style={{ color: '#d32f2f' }} onClick={() => handleDelete(pkg.id)} title="Delete Product">
                         <Trash2 size={13} />
                       </button>
                     </div>
@@ -166,17 +191,17 @@ export default function ProductsAdminPage() {
           </table>
         </div>
 
-        {/* MODAL */}
+        {/* CMS EDIT MODAL (XL size - 90% Viewport on Desktop) */}
         <Modal
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
-          title={editItem ? 'Edit Health Package' : 'Create New Health Package'}
-          size="lg"
+          title={editItem ? `Edit Product: ${editItem.name}` : 'Create New Healthcare Product'}
+          size="xl"
         >
           <form onSubmit={handleSave}>
             <div className="grid-2">
               <div className="form-group">
-                <label className="form-label">Package Name *</label>
+                <label className="form-label">Product Name *</label>
                 <input
                   type="text"
                   className="form-control"
@@ -196,9 +221,11 @@ export default function ProductsAdminPage() {
                   required
                 />
               </div>
+            </div>
 
+            <div className="grid-3">
               <div className="form-group">
-                <label className="form-label">Package Price (INR) *</label>
+                <label className="form-label">Product Price (INR) *</label>
                 <input
                   type="number"
                   className="form-control"
@@ -217,11 +244,9 @@ export default function ProductsAdminPage() {
                   onChange={(e) => setFormData({ ...formData, originalPrice: e.target.value })}
                 />
               </div>
-            </div>
 
-            <div className="grid-2">
               <div className="form-group">
-                <label className="form-label">Discount Text (e.g. 40% OFF)</label>
+                <label className="form-label">Discount Text (e.g. Save 20%)</label>
                 <input
                   type="text"
                   className="form-control"
@@ -229,9 +254,11 @@ export default function ProductsAdminPage() {
                   onChange={(e) => setFormData({ ...formData, discountText: e.target.value })}
                 />
               </div>
+            </div>
 
+            <div className="grid-2">
               <div className="form-group">
-                <label className="form-label">Tag Badge (e.g. Most Popular)</label>
+                <label className="form-label">Tag Badge (e.g. DIABETIC CARE / POPULAR)</label>
                 <input
                   type="text"
                   className="form-control"
@@ -239,41 +266,64 @@ export default function ProductsAdminPage() {
                   onChange={(e) => setFormData({ ...formData, tag: e.target.value })}
                 />
               </div>
+
+              <div className="form-group">
+                <label className="form-label">Video Demonstration URL (Optional YouTube / Embed)</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="https://www.youtube.com/watch?v=..."
+                  value={formData.videoUrl}
+                  onChange={(e) => setFormData({ ...formData, videoUrl: e.target.value })}
+                />
+              </div>
             </div>
 
             <ImageUploadField
-              label="Package Banner / Cover Image"
+              label="Product Showcase Image"
               value={formData.image}
               onChange={(url) => setFormData({ ...formData, image: url })}
               helperText="Uploads to /assets/uploads and synchronizes with Media Assets"
             />
 
             <div className="form-group">
-              <label className="form-label">Summary</label>
+              <label className="form-label">Product Summary</label>
               <textarea
                 className="form-control"
                 rows="2"
+                placeholder="Short summary displayed on store grid cards..."
                 value={formData.summary}
                 onChange={(e) => setFormData({ ...formData, summary: e.target.value })}
               />
             </div>
 
             <div className="form-group">
-              <label className="form-label">Included Features / Tests (comma separated)</label>
+              <label className="form-label">Included Features / Specifications (comma separated)</label>
               <textarea
                 className="form-control"
-                rows="3"
+                rows="2"
+                placeholder="e.g. Fast 5-sec readings, 500 test memory, Pre/post meal markers..."
                 value={formData.features}
                 onChange={(e) => setFormData({ ...formData, features: e.target.value })}
               />
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12, marginTop: 20 }}>
+            {/* WYSIWYG Quill Rich Text Editor */}
+            <RichTextEditor
+              label="Comprehensive Product Clinical Documentation & Usage Guide"
+              value={formData.content}
+              onChange={(content) => setFormData({ ...formData, content })}
+              placeholder="Compose detailed product description, indications, how to use step-by-step, clinical calibration details, and safety notes..."
+              minHeight={300}
+              helperText="Full rich formatting with headings, alignments, lists, images and videos. Changes reflect instantly on product detail page."
+            />
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12, marginTop: 24, paddingTop: 16, borderTop: '1px solid var(--line)' }}>
               <button type="button" className="btn btn-secondary" onClick={() => setIsOpen(false)} disabled={submitting}>
                 Cancel
               </button>
               <button type="submit" className="btn btn-primary" disabled={submitting}>
-                {submitting ? 'Saving...' : 'Save Package'}
+                {submitting ? 'Saving...' : 'Save Product'}
               </button>
             </div>
           </form>
