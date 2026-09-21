@@ -48,6 +48,7 @@ import FinancePage from './pages/admin/FinancePage';
 import ErasureRequestsAdminPage from './pages/admin/ErasureRequestsAdminPage';
 import SettingsPage from './pages/admin/SettingsPage';
 import { useDynamicSEO } from './utils/useSEO';
+import FloatingContactButtons from './components/common/FloatingContactButtons';
 
 // Layout wrappers
 function PublicLayout() {
@@ -58,6 +59,7 @@ function PublicLayout() {
         <Outlet />
       </main>
       <PublicFooter />
+      <FloatingContactButtons />
     </div>
   );
 }

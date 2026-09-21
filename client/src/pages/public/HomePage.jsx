@@ -139,89 +139,90 @@ export default function HomePage() {
       {/* 1. HERO SECTION: FULL VIEWPORT HEIGHT */}
       <HeroVideoSlider />
 
-      {/* 2. SECTION: [ABOUT US / HOSPITAL ENTRANCE] */}
+      {/* 2. SECTION: [ABOUT US / HOSPITAL ENTRANCE - 50/50 TWO-ASIDE SPLIT] */}
       <section className="home-viewport-section bg-white" id="about" aria-label="About Rithanya Hospital">
         <div className="container">
-          <div className="section-head" style={{ textAlign: 'center', marginBottom: 36 }}>
-            <span className="section-tag">Rithanya Hospital • రితన్య హాస్పిటల్</span>
-            <h2 className="section-title">Nehru Road, Opposite Old L.I.C. Office, Khammam</h2>
-            <p className="section-subtitle" style={{ maxWidth: 840, margin: '0 auto' }}>
-              నెహ్రూరోడ్, పాత ఎల్.ఐ.సి. ఆఫీస్ ఎదురుగా, ఖమ్మం • 24/7 Emergency Services & Specialized Daycare Transfusion Centre
-            </p>
-          </div>
-
-          {/* Official Hospital Storefront Feature Showcase */}
-          <div
-            style={{
-              position: 'relative',
-              borderRadius: 24,
-              overflow: 'hidden',
-              boxShadow: '0 20px 50px rgba(169, 17, 41, 0.12), 0 4px 16px rgba(0, 0, 0, 0.06)',
-              border: '1.5px solid var(--line)',
-              marginBottom: 32,
-              background: '#0d0a0b'
-            }}
-          >
-            <img
-              src="/image.png"
-              alt="Rithanya Hospital Khammam Front Entrance and Diagnostic Center"
-              style={{
-                width: '100%',
-                maxHeight: 'min(70vh, 580px)',
-                objectFit: 'contain',
-                display: 'block',
-                margin: '0 auto',
-                background: '#0f0a0c'
-              }}
-            />
-          </div>
-
-          {/* Institutional Highlights Grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, marginBottom: 28 }}>
-            <div className="card" style={{ padding: 20, border: '1px solid var(--line)', background: 'var(--canvas)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-                <Clock size={20} style={{ color: 'var(--red-700)' }} />
-                <h4 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>24/7 Emergency Services</h4>
+          <div className="home-about-split-grid">
+            {/* Left Aside: Official Hospital Storefront Image */}
+            <aside className="home-about-split-media" aria-label="Hospital Building Entrance">
+              <div className="home-about-img-frame">
+                <img
+                  src="/image.png"
+                  alt="Rithanya Hospital Khammam Front Entrance and 24/7 Diagnostic Center"
+                  className="home-about-img"
+                />
+                <div className="home-about-badge">
+                  <MapPin size={15} style={{ color: 'var(--red-400)', flexShrink: 0 }} />
+                  <span>Nehru Road, Opp. Old L.I.C. Office, Khammam</span>
+                </div>
               </div>
-              <p style={{ fontSize: 13, color: 'var(--ink-soft)', margin: 0 }}>
-                Round-the-clock emergency medical attention, acute poisoning resuscitation, snake/scorpion bite protocols, and immediate triage.
-              </p>
-            </div>
+            </aside>
 
-            <div className="card" style={{ padding: 20, border: '1px solid var(--line)', background: 'var(--canvas)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-                <Droplet size={20} style={{ color: 'var(--red-700)' }} />
-                <h4 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Rithanya Blood Bank 24 Hours</h4>
+            {/* Right Aside: Institutional Text Contents & Highlights */}
+            <aside className="home-about-split-text" aria-label="Hospital Institutional Overview">
+              <div style={{ marginBottom: 18 }}>
+                <span className="section-tag" style={{ marginBottom: 10, display: 'inline-block' }}>
+                  Rithanya Hospital • రితన్య హాస్పిటల్
+                </span>
+                <h2 className="section-title" style={{ fontSize: 'clamp(24px, 3.2vw, 34px)', marginBottom: 8, lineHeight: 1.25, textAlign: 'left' }}>
+                  Nehru Road, Opposite Old L.I.C. Office, Khammam
+                </h2>
+                <div style={{ color: 'var(--red-700)', fontWeight: 700, fontSize: 14.5, marginBottom: 12 }}>
+                  నెహ్రూరోడ్, పాత ఎల్.ఐ.సి. ఆఫీస్ ఎదురుగా, ఖమ్మం • 24/7 Emergency Services
+                </div>
+                <p style={{ color: 'var(--ink-soft)', fontSize: 14.5, lineHeight: 1.6, margin: 0 }}>
+                  Founded by <strong>Dr. D. Narayana Murthy</strong> (MD SVIMS, Diabetologist & General Physician) and <strong>Dr. A. Lakshmi Deepa</strong> (MBBS, Gynecologist & Women's Health Specialist), Rithanya Hospital combines tertiary clinical expertise, round-the-clock emergency care, automated HPLC diagnostics, and dedicated daycare blood transfusions.
+                </p>
               </div>
-              <p style={{ fontSize: 13, color: 'var(--ink-soft)', margin: 0 }}>
-                రితన్య బ్లడ్ బ్యాంక్ 24 గం॥ అందుబాటులో కలదు. Triple-crossmatched, leukodepleted PRBC units and standby platelets.
-              </p>
-            </div>
 
-            <div className="card" style={{ padding: 20, border: '1px solid var(--line)', background: 'var(--canvas)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-                <ShieldCheck size={20} style={{ color: 'var(--red-700)' }} />
-                <h4 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Aarogyasri Facility Available</h4>
+              {/* Highlights Feature Cards */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 11, marginBottom: 22 }}>
+                <div className="card" style={{ padding: '12px 16px', border: '1px solid var(--line)', background: 'var(--canvas)', borderRadius: 14 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 3 }}>
+                    <Clock size={17} style={{ color: 'var(--red-700)', flexShrink: 0 }} />
+                    <h4 style={{ fontSize: 14.5, fontWeight: 700, margin: 0 }}>24/7 Emergency Services</h4>
+                  </div>
+                  <p style={{ fontSize: 12.5, color: 'var(--ink-soft)', margin: 0, lineHeight: 1.45 }}>
+                    Round-the-clock emergency medical attention, acute poisoning resuscitation, snake/scorpion bite protocols, and immediate triage.
+                  </p>
+                </div>
+
+                <div className="card" style={{ padding: '12px 16px', border: '1px solid var(--line)', background: 'var(--canvas)', borderRadius: 14 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 3 }}>
+                    <Droplet size={17} style={{ color: 'var(--red-700)', flexShrink: 0 }} />
+                    <h4 style={{ fontSize: 14.5, fontWeight: 700, margin: 0 }}>Rithanya Blood Bank 24 Hours</h4>
+                  </div>
+                  <p style={{ fontSize: 12.5, color: 'var(--ink-soft)', margin: 0, lineHeight: 1.45 }}>
+                    రితన్య బ్లడ్ బ్యాంక్ 24 గం॥ అందుబాటులో కలదు. Triple-crossmatched, leukodepleted PRBC units and standby platelets.
+                  </p>
+                </div>
+
+                <div className="card" style={{ padding: '12px 16px', border: '1px solid var(--line)', background: 'var(--canvas)', borderRadius: 14 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 3 }}>
+                    <ShieldCheck size={17} style={{ color: 'var(--red-700)', flexShrink: 0 }} />
+                    <h4 style={{ fontSize: 14.5, fontWeight: 700, margin: 0 }}>Aarogyasri Facility Available</h4>
+                  </div>
+                  <p style={{ fontSize: 12.5, color: 'var(--ink-soft)', margin: 0, lineHeight: 1.45 }}>
+                    సికిల్ సెల్ అనీమియా, తలసేమియా పిల్లలకు ఆరోగ్యశ్రీ సదుపాయం కలదు. Cashless daycare transfusions for affected children.
+                  </p>
+                </div>
               </div>
-              <p style={{ fontSize: 13, color: 'var(--ink-soft)', margin: 0 }}>
-                సికిల్ సెల్ అనీమియా, తలసేమియా పిల్లలకు ఆరోగ్యశ్రీ సదుపాయం కలదు. Cashless daycare transfusions for affected children.
-              </p>
-            </div>
-          </div>
 
-          <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link to="/about" className="btn btn-primary">
-              <span>About Hospital & Leadership</span>
-              <ArrowRight size={15} />
-            </Link>
-            <a href="tel:+918328581019" className="btn btn-secondary">
-              <Phone size={14} className="text-red" />
-              <span>Call +91 83285 81019</span>
-            </a>
-            <a href="tel:+919948713504" className="btn btn-secondary">
-              <Phone size={14} className="text-red" />
-              <span>Call +91 99487 13504</span>
-            </a>
+              {/* Action Buttons */}
+              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                <Link to="/about" className="btn btn-primary btn-sm" style={{ padding: '9px 18px', fontSize: 13 }}>
+                  <span>About Hospital & Doctors</span>
+                  <ArrowRight size={14} />
+                </Link>
+                <Link to="/treatments" className="btn btn-secondary btn-sm" style={{ padding: '9px 18px', fontSize: 13 }}>
+                  <span>View Treatments</span>
+                </Link>
+                <a href="tel:+918328581019" className="btn btn-outline btn-sm" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '9px 18px', fontSize: 13 }}>
+                  <Phone size={13} className="text-red" />
+                  <span>Call 8328581019</span>
+                </a>
+              </div>
+            </aside>
           </div>
         </div>
       </section>

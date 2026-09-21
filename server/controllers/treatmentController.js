@@ -5,15 +5,17 @@ const { getPublicCache, setPublicCache, invalidatePublicCache } = require('../ut
 // Public: List all treatments with ultra-fast unencrypted in-memory cache
 async function getTreatments(req, res, next) {
   try {
-    const { category, search, all } = req.query;
-    const cacheKey = `treatments:list:${category || 'all'}:${search || ''}:${all || false}`;
+    const { category, search, all, status, publishedOnly } = req.query;
+    const cacheKey = `treatments:list:${category || 'all'}:${search || ''}:${all || false}:${status || ''}:${publishedOnly || ''}`;
     const cached = getPublicCache(cacheKey);
     if (cached) {
       return res.json({ success: true, data: cached });
     }
 
     const where = {};
-    if (!all) {
+    if (status) {
+      where.status = status;
+    } else if (publishedOnly === 'true') {
       where.status = 'published';
     }
     if (category) {

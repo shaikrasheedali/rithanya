@@ -172,6 +172,29 @@ export default function TreatmentsPage() {
                       {item.category}
                     </div>
 
+                    {item.status === 'draft' && (
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: 12,
+                          right: 12,
+                          background: 'rgba(234, 179, 8, 0.95)',
+                          backdropFilter: 'blur(8px)',
+                          color: '#713f12',
+                          padding: '4px 9px',
+                          borderRadius: 10,
+                          fontSize: 10.5,
+                          fontWeight: 700,
+                          textTransform: 'uppercase',
+                          letterSpacing: 0.5,
+                          zIndex: 2,
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.12)'
+                        }}
+                      >
+                        Draft
+                      </div>
+                    )}
+
                     {item.duration && (
                       <div
                         style={{

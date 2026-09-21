@@ -907,6 +907,10 @@ async function main() {
   }
   console.log('✓ Gallery seeded');
 
+  // Synchronize master treatments and doctors
+  const { syncProductionMasterData } = require('../config/masterCatalogSeeder');
+  await syncProductionMasterData(prisma);
+
   console.log('🎉 Rithanya Hospital Database Seed Complete!');
 }
 

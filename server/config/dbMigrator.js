@@ -5,6 +5,7 @@ const mysql = require('mysql2/promise');
 require('../utils/dbEnv');
 const prisma = require('./db');
 const { seedDatabase } = require('../prisma/seed');
+const { syncProductionMasterData } = require('./masterCatalogSeeder');
 
 /**
  * Parses MySQL connection configuration from GoDaddy environment variables or DATABASE_URL
@@ -215,6 +216,13 @@ async function autoMigrate() {
     }
   } catch {
     // Ignore migration error if schema not initialized
+  }
+
+  // 6. Synchronize production master catalog: exact 6 treatments & faculty doctors
+  try {
+    await syncProductionMasterData(prisma);
+  } catch (syncErr) {
+    console.warn('[AutoMigrate] Notice during master catalog sync:', syncErr.message);
   }
 }
 
