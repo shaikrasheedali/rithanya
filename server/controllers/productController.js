@@ -172,10 +172,19 @@ async function updatePackage(req, res, next) {
 async function deletePackage(req, res, next) {
   try {
     const { id } = req.params;
-    await prisma.productPackage.delete({ where: { id } });
+    const existing = await prisma.productPackage.findFirst({
+      where: { OR: [{ id }, { slug: id }] }
+    });
+    if (!existing) {
+      return res.status(404).json({ success: false, message: 'Healthcare product or package not found or already removed' });
+    }
+    await prisma.productPackage.delete({ where: { id: existing.id } });
     invalidatePublicCache('products');
     return res.json({ success: true, message: 'Package deleted' });
   } catch (err) {
+    if (err.code === 'P2025') {
+      return res.status(404).json({ success: false, message: 'Healthcare product or package not found or already removed' });
+    }
     next(err);
   }
 }

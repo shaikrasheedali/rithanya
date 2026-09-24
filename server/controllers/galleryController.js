@@ -78,10 +78,17 @@ async function updateGalleryItem(req, res, next) {
 async function deleteGalleryItem(req, res, next) {
   try {
     const { id } = req.params;
+    const existing = await prisma.galleryItem.findUnique({ where: { id } });
+    if (!existing) {
+      return res.status(404).json({ success: false, message: 'Gallery item not found or already removed' });
+    }
     await prisma.galleryItem.delete({ where: { id } });
     invalidatePublicCache('gallery');
     return res.json({ success: true, message: 'Gallery item deleted' });
   } catch (err) {
+    if (err.code === 'P2025') {
+      return res.status(404).json({ success: false, message: 'Gallery item not found or already removed' });
+    }
     next(err);
   }
 }

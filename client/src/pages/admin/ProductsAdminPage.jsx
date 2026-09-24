@@ -8,6 +8,7 @@ import { formatCurrency } from '../../utils/formatters';
 import Modal from '../../components/common/Modal';
 import ImageUploadField from '../../components/common/ImageUploadField';
 import RichTextEditor from '../../components/common/RichTextEditor';
+import { getSafeImageUrl, onImageError } from '../../utils/imageUtils';
 
 export default function ProductsAdminPage() {
   const { addToast } = useToast();
@@ -150,7 +151,12 @@ export default function ProductsAdminPage() {
                 <tr key={pkg.id}>
                   <td style={{ width: 80 }}>
                     <div style={{ width: 60, height: 48, borderRadius: 8, overflow: 'hidden', background: '#f5f5f5', border: '1px solid var(--line)' }}>
-                      <img src={pkg.image} alt={pkg.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                      <img
+                        src={getSafeImageUrl(pkg.image)}
+                        alt={pkg.name}
+                        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                        onError={(e) => onImageError(e)}
+                      />
                     </div>
                   </td>
                   <td>
@@ -230,7 +236,7 @@ export default function ProductsAdminPage() {
                   type="number"
                   className="form-control"
                   value={formData.price}
-                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, price: e.target.value }))}
                   required
                 />
               </div>
@@ -241,7 +247,7 @@ export default function ProductsAdminPage() {
                   type="number"
                   className="form-control"
                   value={formData.originalPrice}
-                  onChange={(e) => setFormData({ ...formData, originalPrice: e.target.value })}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, originalPrice: e.target.value }))}
                 />
               </div>
 
@@ -251,7 +257,7 @@ export default function ProductsAdminPage() {
                   type="text"
                   className="form-control"
                   value={formData.discountText}
-                  onChange={(e) => setFormData({ ...formData, discountText: e.target.value })}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, discountText: e.target.value }))}
                 />
               </div>
             </div>
@@ -263,7 +269,7 @@ export default function ProductsAdminPage() {
                   type="text"
                   className="form-control"
                   value={formData.tag}
-                  onChange={(e) => setFormData({ ...formData, tag: e.target.value })}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, tag: e.target.value }))}
                 />
               </div>
 
@@ -274,7 +280,7 @@ export default function ProductsAdminPage() {
                   className="form-control"
                   placeholder="https://www.youtube.com/watch?v=..."
                   value={formData.videoUrl}
-                  onChange={(e) => setFormData({ ...formData, videoUrl: e.target.value })}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, videoUrl: e.target.value }))}
                 />
               </div>
             </div>
@@ -282,7 +288,7 @@ export default function ProductsAdminPage() {
             <ImageUploadField
               label="Product Showcase Image"
               value={formData.image}
-              onChange={(url) => setFormData({ ...formData, image: url })}
+              onChange={(url) => setFormData((prev) => ({ ...prev, image: url }))}
               helperText="Uploads to /assets/uploads and synchronizes with Media Assets"
             />
 
@@ -293,7 +299,7 @@ export default function ProductsAdminPage() {
                 rows="2"
                 placeholder="Short summary displayed on store grid cards..."
                 value={formData.summary}
-                onChange={(e) => setFormData({ ...formData, summary: e.target.value })}
+                onChange={(e) => setFormData((prev) => ({ ...prev, summary: e.target.value }))}
               />
             </div>
 
@@ -304,7 +310,7 @@ export default function ProductsAdminPage() {
                 rows="2"
                 placeholder="e.g. Fast 5-sec readings, 500 test memory, Pre/post meal markers..."
                 value={formData.features}
-                onChange={(e) => setFormData({ ...formData, features: e.target.value })}
+                onChange={(e) => setFormData((prev) => ({ ...prev, features: e.target.value }))}
               />
             </div>
 
@@ -312,7 +318,7 @@ export default function ProductsAdminPage() {
             <RichTextEditor
               label="Comprehensive Product Clinical Documentation & Usage Guide"
               value={formData.content}
-              onChange={(content) => setFormData({ ...formData, content })}
+              onChange={(content) => setFormData((prev) => ({ ...prev, content }))}
               placeholder="Compose detailed product description, indications, how to use step-by-step, clinical calibration details, and safety notes..."
               minHeight={300}
               helperText="Full rich formatting with headings, alignments, lists, images and videos. Changes reflect instantly on product detail page."

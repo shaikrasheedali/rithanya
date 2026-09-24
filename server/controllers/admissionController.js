@@ -36,30 +36,38 @@ async function createAdmission(req, res, next) {
       return res.status(400).json({ success: false, message: 'patientId and diagnosis are required' });
     }
 
-    const count = await prisma.admission.count();
-    const admissionCode = `ADM-${900 + count + 1}`;
-
-    const admission = await prisma.admission.create({
-      data: {
-        admissionCode,
-        patientId,
-        ward: ward || 'Daycare Transfusion Ward',
-        bed: bed || 'Bed-01',
-        attendingDoctor: attendingDoctor || 'Dr. Narayana Murthy, MD',
-        diagnosis: diagnosis.trim(),
-        status: 'admitted',
-        admittedOn: new Date()
-      },
-      include: {
-        patient: { select: { patientCode: true, name: true } }
+    const admission = await prisma.$transaction(async (tx) => {
+      const count = await tx.admission.count();
+      let admissionCode = `ADM-${900 + count + 1}`;
+      const existingAdm = await tx.admission.findUnique({ where: { admissionCode } });
+      if (existingAdm) {
+        admissionCode = `ADM-${900 + count + 1}-${Math.floor(1000 + Math.random() * 9000)}`;
       }
-    });
 
-    // Also update patient status to 'admitted'
-    await prisma.patient.update({
-      where: { id: patientId },
-      data: { status: 'admitted' }
-    });
+      const created = await tx.admission.create({
+        data: {
+          admissionCode,
+          patientId,
+          ward: ward || 'Daycare Transfusion Ward',
+          bed: bed || 'Bed-01',
+          attendingDoctor: attendingDoctor || 'Dr. Narayana Murthy, MD',
+          diagnosis: diagnosis.trim(),
+          status: 'admitted',
+          admittedOn: new Date()
+        },
+        include: {
+          patient: { select: { patientCode: true, name: true } }
+        }
+      });
+
+      // Atomically update patient status to 'admitted'
+      await tx.patient.update({
+        where: { id: patientId },
+        data: { status: 'admitted' }
+      });
+
+      return created;
+    }, { maxWait: 10000, timeout: 30000 });
 
     recordAuditLog({
       actorId: req.user ? req.user.id : null,

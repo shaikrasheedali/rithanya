@@ -14,6 +14,13 @@ function errorHandler(err, req, res, next) {
   } else if (err.code === 'P1000') {
     statusCode = 503;
     message = 'Database authentication failed. Please check DB_USER and DB_PASSWORD credentials.';
+  } else if (err.code === 'P2025') {
+    statusCode = 404;
+    message = err.meta?.cause || 'The requested record was not found or has already been removed.';
+  } else if (err.code === 'P2002') {
+    statusCode = 409;
+    const target = Array.isArray(err.meta?.target) ? err.meta.target.join(', ') : err.meta?.target || 'field';
+    message = `A record with this unique ${target} already exists. Please choose a different identifier or slug.`;
   } else if (err.name === 'PrismaClientInitializationError') {
     statusCode = 503;
     message = 'Database initialization failed: ' + (err.message || 'Check database environment variables.');

@@ -6,6 +6,7 @@ import { useToast } from '../../components/common/Toast';
 import Modal from '../../components/common/Modal';
 import ImageUploadField from '../../components/common/ImageUploadField';
 import { parseEmbedSource } from '../../utils/mediaEmbed';
+import { getSafeImageUrl, onImageError } from '../../utils/imageUtils';
 
 export default function GalleryAdminPage() {
   const { addToast } = useToast();
@@ -150,9 +151,10 @@ export default function GalleryAdminPage() {
                     <td style={{ width: 90 }}>
                       <div style={{ width: 70, height: 46, borderRadius: 8, overflow: 'hidden' }}>
                         <img
-                          src={item.imageUrl}
+                          src={getSafeImageUrl(item.imageUrl)}
                           alt={item.title}
                           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          onError={(e) => onImageError(e)}
                         />
                       </div>
                     </td>

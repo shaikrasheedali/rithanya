@@ -56,6 +56,43 @@ async function createClinicalReading(req, res, next) {
       return res.status(400).json({ success: false, message: 'patientId is required' });
     }
 
+    const safeFloat = (v) => {
+      if (v === null || v === undefined || v === '') return null;
+      const num = parseFloat(v);
+      return isNaN(num) ? null : num;
+    };
+
+    const safeInt = (v) => {
+      if (v === null || v === undefined || v === '') return null;
+      const num = parseInt(v, 10);
+      return isNaN(num) ? null : num;
+    };
+
+    const hbVal = safeFloat(haemoglobin);
+    if (hbVal !== null && (hbVal < 0 || hbVal > 30)) {
+      return res.status(400).json({ success: false, message: 'Haemoglobin value must be between 0 and 30 g/dL' });
+    }
+
+    const spo2Val = safeInt(spo2);
+    if (spo2Val !== null && (spo2Val < 20 || spo2Val > 100)) {
+      return res.status(400).json({ success: false, message: 'SpO2 oxygen saturation must be between 20% and 100%' });
+    }
+
+    const pulseVal = safeInt(pulse);
+    if (pulseVal !== null && (pulseVal < 20 || pulseVal > 300)) {
+      return res.status(400).json({ success: false, message: 'Pulse rate must be between 20 and 300 bpm' });
+    }
+
+    const sysVal = safeInt(bpSystolic);
+    if (sysVal !== null && (sysVal < 40 || sysVal > 350)) {
+      return res.status(400).json({ success: false, message: 'Systolic blood pressure must be between 40 and 350 mmHg' });
+    }
+
+    const diaVal = safeInt(bpDiastolic);
+    if (diaVal !== null && (diaVal < 20 || diaVal > 250)) {
+      return res.status(400).json({ success: false, message: 'Diastolic blood pressure must be between 20 and 250 mmHg' });
+    }
+
     const reading = await prisma.clinicalReading.create({
       data: {
         patientId,
@@ -63,17 +100,17 @@ async function createClinicalReading(req, res, next) {
         date: date ? new Date(date) : new Date(),
         time: time || '11:00 AM',
         timeSlot: timeSlot || 'Morning',
-        bloodSugarFasting: bloodSugarFasting ? parseFloat(bloodSugarFasting) : null,
-        bloodSugarPP: bloodSugarPP ? parseFloat(bloodSugarPP) : null,
-        bloodSugarRandom: bloodSugarRandom ? parseFloat(bloodSugarRandom) : null,
-        hba1c: hba1c ? parseFloat(hba1c) : null,
-        bpSystolic: bpSystolic ? parseInt(bpSystolic, 10) : null,
-        bpDiastolic: bpDiastolic ? parseInt(bpDiastolic, 10) : null,
-        haemoglobin: haemoglobin ? parseFloat(haemoglobin) : null,
-        ferritin: ferritin ? parseFloat(ferritin) : null,
-        spo2: spo2 ? parseInt(spo2, 10) : null,
-        temperature: temperature ? parseFloat(temperature) : null,
-        pulse: pulse ? parseInt(pulse, 10) : null,
+        bloodSugarFasting: safeFloat(bloodSugarFasting),
+        bloodSugarPP: safeFloat(bloodSugarPP),
+        bloodSugarRandom: safeFloat(bloodSugarRandom),
+        hba1c: safeFloat(hba1c),
+        bpSystolic: sysVal,
+        bpDiastolic: diaVal,
+        haemoglobin: hbVal,
+        ferritin: safeFloat(ferritin),
+        spo2: spo2Val,
+        temperature: safeFloat(temperature),
+        pulse: pulseVal,
         notes: notes || null,
         recordedBy: req.user ? req.user.name : 'Dr. Narayana Murthy'
       },
@@ -134,9 +171,16 @@ async function updateClinicalReading(req, res, next) {
 async function deleteClinicalReading(req, res, next) {
   try {
     const { id } = req.params;
+    const existing = await prisma.clinicalReading.findUnique({ where: { id } });
+    if (!existing) {
+      return res.status(404).json({ success: false, message: 'Clinical reading not found or already removed' });
+    }
     await prisma.clinicalReading.delete({ where: { id } });
     return res.json({ success: true, message: 'Clinical reading deleted' });
   } catch (err) {
+    if (err.code === 'P2025') {
+      return res.status(404).json({ success: false, message: 'Clinical reading not found or already removed' });
+    }
     next(err);
   }
 }

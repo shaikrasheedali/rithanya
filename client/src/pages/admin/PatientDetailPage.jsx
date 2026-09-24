@@ -29,6 +29,7 @@ import AdminTopbar from '../../components/layout/AdminTopbar';
 import { apiRequest } from '../../utils/api';
 import { useToast } from '../../components/common/Toast';
 import { formatDate, formatDateTime, getBloodGroupBadgeClass } from '../../utils/formatters';
+import { validateClinicalVitals, calculateAdaptiveScale } from '../../utils/vitalsHelper';
 import CameraConsentModal from '../../components/dpdp/CameraConsentModal';
 import Modal from '../../components/common/Modal';
 
@@ -102,6 +103,12 @@ export default function PatientDetailPage() {
   // Add Vitals
   const handleAddVitals = async (e) => {
     e.preventDefault();
+    const validation = validateClinicalVitals(vitalsData);
+    if (!validation.isValid) {
+      const firstError = Object.values(validation.errors)[0];
+      addToast(firstError, 'error');
+      return;
+    }
     setSavingVitals(true);
     try {
       await apiRequest('/clinical', {
@@ -136,13 +143,38 @@ export default function PatientDetailPage() {
     );
   }
 
-  // Prepare chart data for Blood Sugar & HbA1c
+  // Prepare chart data for Blood Sugar & Hematology
   const readings = patient.clinicalReadings || [];
   const chartLabels = readings.map((r) => formatDate(r.date));
-  const fastingData = readings.map((r) => r.bloodSugarFasting || null);
-  const ppData = readings.map((r) => r.bloodSugarPP || null);
-  const hba1cData = readings.map((r) => r.hba1c || null);
-  const hbData = readings.map((r) => r.haemoglobin || null);
+  const fastingData = readings.map((r) => (r.bloodSugarFasting !== null && r.bloodSugarFasting !== undefined && r.bloodSugarFasting !== '' ? Number(r.bloodSugarFasting) : null));
+  const ppData = readings.map((r) => (r.bloodSugarPP !== null && r.bloodSugarPP !== undefined && r.bloodSugarPP !== '' ? Number(r.bloodSugarPP) : null));
+  const hba1cData = readings.map((r) => (r.hba1c !== null && r.hba1c !== undefined && r.hba1c !== '' ? Number(r.hba1c) : null));
+  const hbData = readings.map((r) => (r.haemoglobin !== null && r.haemoglobin !== undefined && r.haemoglobin !== '' ? Number(r.haemoglobin) : null));
+
+  // Dynamic adaptive scale calculations (prevents flatline squashing or clipping)
+  const glucoseScale = calculateAdaptiveScale([fastingData, ppData], {
+    bufferRatio: 0.15,
+    minRangeSpread: 25,
+    defaultMin: 60,
+    defaultMax: 180,
+    allowZeroFloor: false
+  });
+
+  const hbScale = calculateAdaptiveScale([hbData], {
+    bufferRatio: 0.18,
+    minRangeSpread: 2,
+    defaultMin: 6,
+    defaultMax: 16,
+    allowZeroFloor: false
+  });
+
+  const hba1cScale = calculateAdaptiveScale([hba1cData], {
+    bufferRatio: 0.18,
+    minRangeSpread: 2,
+    defaultMin: 4,
+    defaultMax: 12,
+    allowZeroFloor: false
+  });
 
   const bloodSugarChartData = {
     labels: chartLabels,
@@ -152,16 +184,48 @@ export default function PatientDetailPage() {
         data: fastingData,
         borderColor: '#396bc5',
         backgroundColor: 'rgba(57, 107, 197, 0.1)',
-        tension: 0.3
+        tension: 0.3,
+        pointRadius: 4,
+        pointHoverRadius: 6
       },
       {
         label: 'Postprandial Glucose (mg/dL)',
         data: ppData,
         borderColor: '#c51d36',
         backgroundColor: 'rgba(197, 29, 54, 0.1)',
-        tension: 0.3
+        tension: 0.3,
+        pointRadius: 4,
+        pointHoverRadius: 6
       }
     ]
+  };
+
+  const bloodSugarChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'top' },
+      tooltip: {
+        callbacks: {
+          label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.y} mg/dL`
+        }
+      }
+    },
+    scales: {
+      y: {
+        suggestedMin: glucoseScale.suggestedMin,
+        suggestedMax: glucoseScale.suggestedMax,
+        grid: { color: 'rgba(0, 0, 0, 0.05)' },
+        title: {
+          display: true,
+          text: 'Blood Glucose (mg/dL)',
+          font: { size: 11, weight: 600 }
+        }
+      },
+      x: {
+        grid: { display: false }
+      }
+    }
   };
 
   const hematologyChartData = {
@@ -172,16 +236,71 @@ export default function PatientDetailPage() {
         data: hbData,
         borderColor: '#14825f',
         backgroundColor: 'rgba(20, 130, 95, 0.1)',
-        tension: 0.3
+        yAxisID: 'y',
+        tension: 0.3,
+        pointRadius: 4,
+        pointHoverRadius: 6
       },
       {
         label: 'HbA1c (%)',
         data: hba1cData,
         borderColor: '#c27319',
         backgroundColor: 'rgba(194, 115, 25, 0.1)',
-        tension: 0.3
+        yAxisID: 'y1',
+        tension: 0.3,
+        pointRadius: 4,
+        pointHoverRadius: 6
       }
     ]
+  };
+
+  const hematologyChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'top' },
+      tooltip: {
+        callbacks: {
+          label: (ctx) => {
+            const unit = ctx.dataset.yAxisID === 'y' ? 'g/dL' : '%';
+            return `${ctx.dataset.label}: ${ctx.parsed.y} ${unit}`;
+          }
+        }
+      }
+    },
+    scales: {
+      y: {
+        type: 'linear',
+        display: true,
+        position: 'left',
+        suggestedMin: hbScale.suggestedMin,
+        suggestedMax: hbScale.suggestedMax,
+        grid: { color: 'rgba(0, 0, 0, 0.05)' },
+        title: {
+          display: true,
+          text: 'Haemoglobin (g/dL)',
+          color: '#14825f',
+          font: { size: 11, weight: 600 }
+        }
+      },
+      y1: {
+        type: 'linear',
+        display: true,
+        position: 'right',
+        suggestedMin: hba1cScale.suggestedMin,
+        suggestedMax: hba1cScale.suggestedMax,
+        grid: { drawOnChartArea: false },
+        title: {
+          display: true,
+          text: 'HbA1c (%)',
+          color: '#c27319',
+          font: { size: 11, weight: 600 }
+        }
+      },
+      x: {
+        grid: { display: false }
+      }
+    }
   };
 
   return (
@@ -304,11 +423,7 @@ export default function PatientDetailPage() {
               <div style={{ height: 260 }}>
                 <Line
                   data={bloodSugarChartData}
-                  options={{
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { position: 'top' } }
-                  }}
+                  options={bloodSugarChartOptions}
                 />
               </div>
             ) : (
@@ -321,17 +436,13 @@ export default function PatientDetailPage() {
           <div className="chart-card">
             <div className="chart-header">
               <h3>Haemoglobin & Glycated Trajectory</h3>
-              <span className="badge badge-green">Hb & HbA1c</span>
+              <span className="badge badge-green">Adaptive Dual-Axis Scale</span>
             </div>
             {readings.length > 0 ? (
               <div style={{ height: 260 }}>
                 <Line
                   data={hematologyChartData}
-                  options={{
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { position: 'top' } }
-                  }}
+                  options={hematologyChartOptions}
                 />
               </div>
             ) : (
@@ -460,33 +571,37 @@ export default function PatientDetailPage() {
         >
           <form onSubmit={handleAddVitals}>
             <div className="grid-3">
+              {/* 1. Date */}
               <div className="form-group">
-                <label className="form-label">Date</label>
+                <label className="form-label">Date *</label>
                 <input
                   type="date"
                   className="form-control"
                   value={vitalsData.date}
-                  onChange={(e) => setVitalsData({ ...vitalsData, date: e.target.value })}
+                  onChange={(e) => setVitalsData((prev) => ({ ...prev, date: e.target.value }))}
                   required
                 />
               </div>
 
+              {/* 2. Time */}
               <div className="form-group">
                 <label className="form-label">Time</label>
                 <input
                   type="text"
                   className="form-control"
+                  placeholder="e.g. 11:30 AM"
                   value={vitalsData.time}
-                  onChange={(e) => setVitalsData({ ...vitalsData, time: e.target.value })}
+                  onChange={(e) => setVitalsData((prev) => ({ ...prev, time: e.target.value }))}
                 />
               </div>
 
+              {/* 3. Time Slot */}
               <div className="form-group">
                 <label className="form-label">Time Slot</label>
                 <select
                   className="form-control"
                   value={vitalsData.timeSlot}
-                  onChange={(e) => setVitalsData({ ...vitalsData, timeSlot: e.target.value })}
+                  onChange={(e) => setVitalsData((prev) => ({ ...prev, timeSlot: e.target.value }))}
                 >
                   <option value="Morning">Morning</option>
                   <option value="Afternoon">Afternoon</option>
@@ -495,105 +610,140 @@ export default function PatientDetailPage() {
                 </select>
               </div>
 
+              {/* 4. Haemoglobin (g/dL) - IMMEDIATE VITAL */}
+              <div className="form-group">
+                <label className="form-label" style={{ color: 'var(--red-700)', fontWeight: 700 }}>
+                  Haemoglobin (g/dL)
+                </label>
+                <input
+                  type="number"
+                  step="0.1"
+                  min="1"
+                  max="25"
+                  className="form-control"
+                  placeholder="e.g. 8.5 (Ref: 11.5-17.5)"
+                  value={vitalsData.haemoglobin}
+                  onChange={(e) => setVitalsData((prev) => ({ ...prev, haemoglobin: e.target.value }))}
+                />
+              </div>
+
+              {/* 5. SpO2 (%) - IMMEDIATE VITAL */}
+              <div className="form-group">
+                <label className="form-label" style={{ color: 'var(--primary)', fontWeight: 700 }}>
+                  SpO2 (%)
+                </label>
+                <input
+                  type="number"
+                  min="40"
+                  max="100"
+                  className="form-control"
+                  placeholder="e.g. 99 (Ref: 95-100)"
+                  value={vitalsData.spo2}
+                  onChange={(e) => setVitalsData((prev) => ({ ...prev, spo2: e.target.value }))}
+                />
+              </div>
+
+              {/* 6. Pulse (bpm) - IMMEDIATE VITAL */}
+              <div className="form-group">
+                <label className="form-label" style={{ color: 'var(--primary)', fontWeight: 700 }}>
+                  Pulse (bpm)
+                </label>
+                <input
+                  type="number"
+                  min="20"
+                  max="300"
+                  className="form-control"
+                  placeholder="e.g. 76 (Ref: 60-100)"
+                  value={vitalsData.pulse}
+                  onChange={(e) => setVitalsData((prev) => ({ ...prev, pulse: e.target.value }))}
+                />
+              </div>
+
+              {/* 7. Fasting Glucose (mg/dL) */}
               <div className="form-group">
                 <label className="form-label">Fasting Glucose (mg/dL)</label>
                 <input
                   type="number"
                   step="0.1"
+                  min="20"
+                  max="1000"
                   className="form-control"
-                  placeholder="e.g. 95"
+                  placeholder="e.g. 95 (Ref: 70-100)"
                   value={vitalsData.bloodSugarFasting}
-                  onChange={(e) => setVitalsData({ ...vitalsData, bloodSugarFasting: e.target.value })}
+                  onChange={(e) => setVitalsData((prev) => ({ ...prev, bloodSugarFasting: e.target.value }))}
                 />
               </div>
 
+              {/* 8. Postprandial Glucose (mg/dL) */}
               <div className="form-group">
                 <label className="form-label">Postprandial (PP) Glucose</label>
                 <input
                   type="number"
                   step="0.1"
+                  min="20"
+                  max="1000"
                   className="form-control"
-                  placeholder="e.g. 140"
+                  placeholder="e.g. 140 (Ref: <140)"
                   value={vitalsData.bloodSugarPP}
-                  onChange={(e) => setVitalsData({ ...vitalsData, bloodSugarPP: e.target.value })}
+                  onChange={(e) => setVitalsData((prev) => ({ ...prev, bloodSugarPP: e.target.value }))}
                 />
               </div>
 
+              {/* 9. HbA1c (%) */}
               <div className="form-group">
                 <label className="form-label">HbA1c (%)</label>
                 <input
                   type="number"
                   step="0.1"
+                  min="2"
+                  max="25"
                   className="form-control"
-                  placeholder="e.g. 6.5"
+                  placeholder="e.g. 6.5 (Ref: 4.0-5.6)"
                   value={vitalsData.hba1c}
-                  onChange={(e) => setVitalsData({ ...vitalsData, hba1c: e.target.value })}
+                  onChange={(e) => setVitalsData((prev) => ({ ...prev, hba1c: e.target.value }))}
                 />
               </div>
 
+              {/* 10. BP Systolic */}
               <div className="form-group">
                 <label className="form-label">BP Systolic (mmHg)</label>
                 <input
                   type="number"
+                  min="40"
+                  max="350"
                   className="form-control"
                   placeholder="e.g. 120"
                   value={vitalsData.bpSystolic}
-                  onChange={(e) => setVitalsData({ ...vitalsData, bpSystolic: e.target.value })}
+                  onChange={(e) => setVitalsData((prev) => ({ ...prev, bpSystolic: e.target.value }))}
                 />
               </div>
 
+              {/* 11. BP Diastolic */}
               <div className="form-group">
                 <label className="form-label">BP Diastolic (mmHg)</label>
                 <input
                   type="number"
+                  min="20"
+                  max="250"
                   className="form-control"
                   placeholder="e.g. 80"
                   value={vitalsData.bpDiastolic}
-                  onChange={(e) => setVitalsData({ ...vitalsData, bpDiastolic: e.target.value })}
+                  onChange={(e) => setVitalsData((prev) => ({ ...prev, bpDiastolic: e.target.value }))}
                 />
               </div>
 
-              <div className="form-group">
-                <label className="form-label">Haemoglobin (g/dL)</label>
-                <input
-                  type="number"
-                  step="0.1"
-                  className="form-control"
-                  placeholder="e.g. 8.5"
-                  value={vitalsData.haemoglobin}
-                  onChange={(e) => setVitalsData({ ...vitalsData, haemoglobin: e.target.value })}
-                />
-              </div>
-
+              {/* 12. Serum Ferritin */}
               <div className="form-group">
                 <label className="form-label">Serum Ferritin (ng/mL)</label>
                 <input
                   type="number"
                   step="0.1"
+                  min="0"
+                  max="50000"
                   className="form-control"
-                  placeholder="e.g. 1350"
+                  placeholder="e.g. 1350 (Ref: 20-300)"
                   value={vitalsData.ferritin}
-                  onChange={(e) => setVitalsData({ ...vitalsData, ferritin: e.target.value })}
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">SpO2 (%)</label>
-                <input
-                  type="number"
-                  className="form-control"
-                  value={vitalsData.spo2}
-                  onChange={(e) => setVitalsData({ ...vitalsData, spo2: e.target.value })}
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Pulse (bpm)</label>
-                <input
-                  type="number"
-                  className="form-control"
-                  value={vitalsData.pulse}
-                  onChange={(e) => setVitalsData({ ...vitalsData, pulse: e.target.value })}
+                  onChange={(e) => setVitalsData((prev) => ({ ...prev, ferritin: e.target.value }))}
                 />
               </div>
             </div>
@@ -605,7 +755,7 @@ export default function PatientDetailPage() {
                 rows="3"
                 placeholder="Transfusion observations, chelation dosage, physician advice..."
                 value={vitalsData.notes}
-                onChange={(e) => setVitalsData({ ...vitalsData, notes: e.target.value })}
+                onChange={(e) => setVitalsData((prev) => ({ ...prev, notes: e.target.value }))}
               />
             </div>
 

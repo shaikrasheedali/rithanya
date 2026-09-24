@@ -224,17 +224,20 @@ async function purgePatientData(req, res, next) {
       return res.status(404).json({ success: false, message: 'Patient record not found' });
     }
 
-    // Cascade delete clinical readings
-    await prisma.clinicalReading.deleteMany({ where: { patientId: id } });
-    // Cascade delete admissions
-    await prisma.admission.deleteMany({ where: { patientId: id } });
-    // Detach or delete inventory logs referencing patient
-    await prisma.inventoryLog.updateMany({
-      where: { patientId: id },
-      data: { patientId: null, notes: 'Patient unlinked per DPDP Erasure' }
-    });
-    // Finally delete patient record and consent signature blob
-    await prisma.patient.delete({ where: { id } });
+    // Atomic cascading purge under DPDP Act
+    await prisma.$transaction(async (tx) => {
+      // Cascade delete clinical readings
+      await tx.clinicalReading.deleteMany({ where: { patientId: id } });
+      // Cascade delete admissions
+      await tx.admission.deleteMany({ where: { patientId: id } });
+      // Detach or delete inventory logs referencing patient
+      await tx.inventoryLog.updateMany({
+        where: { patientId: id },
+        data: { patientId: null, notes: 'Patient unlinked per DPDP Erasure' }
+      });
+      // Finally delete patient record and consent signature blob
+      await tx.patient.delete({ where: { id } });
+    }, { maxWait: 10000, timeout: 30000 });
 
     // Record compliance audit trail (anonymized patient code only)
     recordAuditLog({
@@ -271,26 +274,34 @@ async function convertToInpatient(req, res, next) {
       return res.status(404).json({ success: false, message: 'Patient not found' });
     }
 
-    const count = await prisma.admission.count();
-    const admissionCode = `ADM-${900 + count + 1}`;
-
-    const admission = await prisma.admission.create({
-      data: {
-        admissionCode,
-        patientId: id,
-        ward: ward || 'Daycare Transfusion Ward',
-        bed: bed || 'Bed-01',
-        attendingDoctor: attendingDoctor || 'Dr. Narayana Murthy, MD',
-        diagnosis: diagnosis || patient.condition || 'Admitted for Observation & Treatment',
-        status: 'admitted',
-        admittedOn: new Date()
+    const { admission, updatedPatient } = await prisma.$transaction(async (tx) => {
+      const count = await tx.admission.count();
+      let admissionCode = `ADM-${900 + count + 1}`;
+      const existingAdm = await tx.admission.findUnique({ where: { admissionCode } });
+      if (existingAdm) {
+        admissionCode = `ADM-${900 + count + 1}-${Math.floor(1000 + Math.random() * 9000)}`;
       }
-    });
 
-    const updatedPatient = await prisma.patient.update({
-      where: { id },
-      data: { status: 'admitted' }
-    });
+      const createdAdmission = await tx.admission.create({
+        data: {
+          admissionCode,
+          patientId: id,
+          ward: ward || 'Daycare Transfusion Ward',
+          bed: bed || 'Bed-01',
+          attendingDoctor: attendingDoctor || 'Dr. Narayana Murthy, MD',
+          diagnosis: diagnosis || patient.condition || 'Admitted for Observation & Treatment',
+          status: 'admitted',
+          admittedOn: new Date()
+        }
+      });
+
+      const updated = await tx.patient.update({
+        where: { id },
+        data: { status: 'admitted' }
+      });
+
+      return { admission: createdAdmission, updatedPatient: updated };
+    }, { maxWait: 10000, timeout: 30000 });
 
     recordAuditLog({
       actorId: req.user ? req.user.id : null,
@@ -300,7 +311,7 @@ async function convertToInpatient(req, res, next) {
       module: 'PATIENTS',
       recordId: id,
       ipAddress: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
-      details: { patientCode: patient.patientCode, admissionCode, ward: admission.ward, bed: admission.bed }
+      details: { patientCode: patient.patientCode, admissionCode: admission.admissionCode, ward: admission.ward, bed: admission.bed }
     });
 
     return res.status(201).json({

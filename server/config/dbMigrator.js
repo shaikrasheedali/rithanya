@@ -218,7 +218,47 @@ async function autoMigrate() {
     // Ignore migration error if schema not initialized
   }
 
-  // 6. Synchronize production master catalog: exact 6 treatments & faculty doctors
+  // 6. Verify and ensure Specialist table columns (slug, registrationNumber, content) exist
+  try {
+    const specialistColumns = await prisma.$queryRawUnsafe(`
+      SELECT COLUMN_NAME 
+      FROM INFORMATION_SCHEMA.COLUMNS 
+      WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Specialist'
+    `);
+    const colNames = Array.isArray(specialistColumns) ? specialistColumns.map((c) => c.COLUMN_NAME) : [];
+
+    if (colNames.length > 0) {
+      if (!colNames.includes('slug')) {
+        console.log('[AutoMigrate] Adding missing `slug` column to Specialist table...');
+        await prisma.$executeRawUnsafe(`ALTER TABLE \`Specialist\` ADD COLUMN \`slug\` VARCHAR(191) NULL`);
+        try {
+          await prisma.$executeRawUnsafe(`ALTER TABLE \`Specialist\` ADD UNIQUE INDEX \`Specialist_slug_key\`(\`slug\`)`);
+        } catch (_) {}
+      }
+      if (!colNames.includes('registrationNumber')) {
+        console.log('[AutoMigrate] Adding missing `registrationNumber` column to Specialist table...');
+        await prisma.$executeRawUnsafe(`ALTER TABLE \`Specialist\` ADD COLUMN \`registrationNumber\` VARCHAR(191) NULL`);
+      }
+      if (!colNames.includes('content')) {
+        console.log('[AutoMigrate] Adding missing `content` column to Specialist table...');
+        await prisma.$executeRawUnsafe(`ALTER TABLE \`Specialist\` ADD COLUMN \`content\` LONGTEXT NULL`);
+      }
+
+      // Backfill any missing specialist slugs
+      const unslugged = await prisma.specialist.findMany({ where: { slug: null } });
+      for (const spec of unslugged) {
+        const generatedSlug = spec.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+        await prisma.specialist.update({
+          where: { id: spec.id },
+          data: { slug: generatedSlug || `specialist-${spec.id.slice(0, 8)}` }
+        });
+      }
+    }
+  } catch (colErr) {
+    console.warn('[AutoMigrate] Note during Specialist column verification:', colErr.message);
+  }
+
+  // 7. Synchronize production master catalog: exact 6 treatments & faculty doctors
   try {
     await syncProductionMasterData(prisma);
   } catch (syncErr) {

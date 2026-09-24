@@ -7,6 +7,7 @@ import { useToast } from '../../components/common/Toast';
 import Modal from '../../components/common/Modal';
 import ImageUploadField from '../../components/common/ImageUploadField';
 import RichTextEditor from '../../components/common/RichTextEditor';
+import { getSafeImageUrl, onImageError } from '../../utils/imageUtils';
 
 export default function SpecialistsAdminPage() {
   const { addToast } = useToast();
@@ -138,7 +139,12 @@ export default function SpecialistsAdminPage() {
                 <tr key={doc.id}>
                   <td style={{ width: 64 }}>
                     <div style={{ width: 48, height: 48, borderRadius: 10, overflow: 'hidden', background: '#f5f5f5', border: '1px solid var(--line)' }}>
-                      <img src={doc.image} alt={doc.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                      <img
+                        src={getSafeImageUrl(doc.image)}
+                        alt={doc.name}
+                        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                        onError={(e) => onImageError(e)}
+                      />
                     </div>
                   </td>
                   <td>
@@ -201,7 +207,7 @@ export default function SpecialistsAdminPage() {
                   className="form-control"
                   placeholder="e.g. Dr. D. Narayana Murthy (డా. డి. నారాయణ మూర్తి)"
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
                   required
                 />
               </div>
@@ -213,7 +219,7 @@ export default function SpecialistsAdminPage() {
                   className="form-control"
                   placeholder="dr-narayana-murthy"
                   value={formData.slug}
-                  onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, slug: e.target.value }))}
                 />
               </div>
             </div>
@@ -226,7 +232,7 @@ export default function SpecialistsAdminPage() {
                   className="form-control"
                   placeholder="Senior Consultant Physician & Diabetologist"
                   value={formData.designation}
-                  onChange={(e) => setFormData({ ...formData, designation: e.target.value })}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, designation: e.target.value }))}
                   required
                 />
               </div>
@@ -238,7 +244,7 @@ export default function SpecialistsAdminPage() {
                   className="form-control"
                   placeholder="General Medicine & Diabetology"
                   value={formData.department}
-                  onChange={(e) => setFormData({ ...formData, department: e.target.value })}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, department: e.target.value }))}
                   required
                 />
               </div>
@@ -250,7 +256,7 @@ export default function SpecialistsAdminPage() {
                   className="form-control"
                   placeholder="e.g. 81187"
                   value={formData.registrationNumber}
-                  onChange={(e) => setFormData({ ...formData, registrationNumber: e.target.value })}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, registrationNumber: e.target.value }))}
                 />
               </div>
             </div>
@@ -263,7 +269,7 @@ export default function SpecialistsAdminPage() {
                   className="form-control"
                   placeholder="e.g. 18+ Years"
                   value={formData.experience}
-                  onChange={(e) => setFormData({ ...formData, experience: e.target.value })}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, experience: e.target.value }))}
                 />
               </div>
 
@@ -273,7 +279,7 @@ export default function SpecialistsAdminPage() {
                   type="text"
                   className="form-control"
                   value={formData.opdTimings}
-                  onChange={(e) => setFormData({ ...formData, opdTimings: e.target.value })}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, opdTimings: e.target.value }))}
                 />
               </div>
             </div>
@@ -285,14 +291,14 @@ export default function SpecialistsAdminPage() {
                 rows="2"
                 placeholder="e.g. M.D. (SVIMS), PG Dip in Diabetology (Boston), Fellow in Diabetology (Royal College of Physicians, London)..."
                 value={formData.qualifications}
-                onChange={(e) => setFormData({ ...formData, qualifications: e.target.value })}
+                onChange={(e) => setFormData((prev) => ({ ...prev, qualifications: e.target.value }))}
               />
             </div>
 
             <ImageUploadField
               label="Doctor High-Res Portrait Photo"
               value={formData.image}
-              onChange={(url) => setFormData({ ...formData, image: url })}
+              onChange={(url) => setFormData((prev) => ({ ...prev, image: url }))}
               helperText="Recommended: Clean white or transparent background portrait"
             />
 
@@ -303,7 +309,7 @@ export default function SpecialistsAdminPage() {
                 rows="3"
                 placeholder="Brief summary displayed on listings and card previews..."
                 value={formData.bio}
-                onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+                onChange={(e) => setFormData((prev) => ({ ...prev, bio: e.target.value }))}
               />
             </div>
 
@@ -311,7 +317,7 @@ export default function SpecialistsAdminPage() {
             <RichTextEditor
               label="Comprehensive Doctor Profile & Clinical Details"
               value={formData.content}
-              onChange={(content) => setFormData({ ...formData, content })}
+              onChange={(content) => setFormData((prev) => ({ ...prev, content }))}
               placeholder="Compose detailed clinical background, specializations, procedural expertise, awards, and patient consultation guidelines..."
               minHeight={320}
               helperText="Full rich formatting with headings, alignments, lists, images and videos. Changes reflect instantly on doctor detail page."

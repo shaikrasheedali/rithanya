@@ -21,9 +21,9 @@ export default function AdminTopbar({ title, subtitle, actions, onMenuClick }) {
             <Menu size={20} />
           </button>
         )}
-        <div>
+        <div className="topbar-title-block">
           <h2>{title || 'Dashboard'}</h2>
-          {subtitle && <p style={{ fontSize: 13, color: 'var(--ink-soft)', marginTop: 2 }}>{subtitle}</p>}
+          {subtitle && <p className="topbar-subtitle">{subtitle}</p>}
         </div>
       </div>
 

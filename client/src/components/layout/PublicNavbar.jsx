@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   Activity,
   Phone,
@@ -19,10 +20,12 @@ import {
   ArrowRight
 } from 'lucide-react';
 import RithanyaLogo from '../common/RithanyaLogo';
+import LanguagePicker from '../common/LanguagePicker';
 
 export default function PublicNavbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const { t } = useTranslation();
   const location = useLocation();
 
   useEffect(() => {
@@ -47,16 +50,28 @@ export default function PublicNavbar() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  // Body scroll lock on mobile menu open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
+
   const navLinks = [
-    { name: 'Home', path: '/', icon: Home },
-    { name: 'About', path: '/about', icon: Info },
-    { name: 'Services', path: '/services', icon: Stethoscope },
-    { name: 'Treatments', path: '/treatments', icon: Activity },
-    { name: 'Doctors', path: '/doctors', icon: Users },
-    { name: 'Products', path: '/products', icon: Package },
-    { name: 'Media Gallery', path: '/gallery', icon: Image },
-    { name: 'Insights', path: '/insights', icon: BookOpen },
-    { name: 'Contact', path: '/contact', icon: Mail }
+    { name: t('nav.home', 'Home'), path: '/', icon: Home },
+    { name: t('nav.about', 'About'), path: '/about', icon: Info },
+    { name: t('nav.services', 'Services'), path: '/services', icon: Stethoscope },
+    { name: t('nav.treatments', 'Treatments'), path: '/treatments', icon: Activity },
+    { name: t('nav.doctors', 'Doctors'), path: '/doctors', icon: Users },
+    { name: t('nav.products', 'Products'), path: '/products', icon: Package },
+    { name: t('nav.gallery', 'Media Gallery'), path: '/gallery', icon: Image },
+    { name: t('nav.insights', 'Insights'), path: '/insights', icon: BookOpen },
+    { name: t('nav.contact', 'Contact'), path: '/contact', icon: Mail }
   ];
 
   const checkIsActive = (path) => {
@@ -80,8 +95,8 @@ export default function PublicNavbar() {
               <RithanyaLogo size="100%" />
             </div>
             <div className="island-brand-text">
-              <span className="brand-title">Rithanya Hospital</span>
-              <span className="brand-subtitle">Diabetology & Thalassemia Daycare</span>
+              <span className="brand-title">{t('hospital_name', 'Rithanya Hospital')}</span>
+              <span className="brand-subtitle">{t('hospital_tagline', 'Diabetology & Thalassemia Daycare')}</span>
             </div>
           </Link>
 
@@ -104,6 +119,9 @@ export default function PublicNavbar() {
 
           {/* Action CTAs */}
           <div className="island-actions">
+            {/* Language Picker Dropdown */}
+            <LanguagePicker compact={true} />
+
             <a
               href="tel:+918328581019"
               className="island-btn island-btn-phone"
@@ -116,17 +134,17 @@ export default function PublicNavbar() {
             <Link
               to="/contact#appointment"
               className="island-btn island-btn-primary island-desktop-btn"
-              title="Book an Outpatient Consultation"
+              title={t('nav.book_appointment', 'Book Appointment')}
             >
               <Calendar size={14} />
-              <span>Book Appointment</span>
+              <span>{t('nav.book_appointment', 'Book Appointment')}</span>
             </Link>
 
             <Link
               to="/admin/login"
               className="island-circle-login-btn island-desktop-btn"
-              title="Staff Portal Login"
-              aria-label="Staff Portal Login"
+              title={t('nav.staff_portal', 'Staff Portal Login')}
+              aria-label={t('nav.staff_portal', 'Staff Portal Login')}
             >
               <ArrowRight size={15} />
             </Link>
@@ -147,9 +165,12 @@ export default function PublicNavbar() {
         {/* Mobile Floating Dropdown Card */}
         {mobileMenuOpen && (
           <div className="island-mobile-drawer">
-            <div className="drawer-header">
-              <span className="drawer-heading">Navigation Menu</span>
-              <span className="drawer-sub">Select a department or service</span>
+            <div className="drawer-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div>
+                <span className="drawer-heading">Navigation Menu</span>
+                <span className="drawer-sub">Select a department or service</span>
+              </div>
+              <LanguagePicker compact={false} />
             </div>
 
             <ul className="drawer-links">
@@ -181,7 +202,7 @@ export default function PublicNavbar() {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 <Calendar size={16} />
-                <span>Book Appointment</span>
+                <span>{t('nav.book_appointment', 'Book Appointment')}</span>
               </Link>
 
               <div className="drawer-actions-row">
@@ -191,7 +212,7 @@ export default function PublicNavbar() {
                   style={{ flex: 1, justifyContent: 'center' }}
                 >
                   <Phone size={14} className="text-red" />
-                  <span>Call Emergency</span>
+                  <span>{t('nav.emergency_call', 'Call Emergency')}</span>
                 </a>
 
                 <Link
@@ -201,7 +222,7 @@ export default function PublicNavbar() {
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   <ShieldCheck size={14} />
-                  <span>Staff Portal</span>
+                  <span>{t('nav.staff_portal', 'Staff Portal')}</span>
                 </Link>
               </div>
             </div>

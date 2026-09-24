@@ -16,6 +16,11 @@ export default function RichTextEditor({
   const editorRef = useRef(null);
   const quillInstanceRef = useRef(null);
   const isInternalChangeRef = useRef(false);
+  const onChangeRef = useRef(onChange);
+
+  useEffect(() => {
+    onChangeRef.current = onChange;
+  }, [onChange]);
 
   const [stats, setStats] = useState({ words: 0, chars: 0 });
 
@@ -97,10 +102,10 @@ export default function RichTextEditor({
       const html = quill.root.innerHTML;
       const text = quill.getText();
       updateStats(text);
-      if (onChange) {
+      if (onChangeRef.current) {
         // Return empty string if only empty tag
         const cleanVal = html === '<p><br></p>' ? '' : html;
-        onChange(cleanVal);
+        onChangeRef.current(cleanVal);
       }
       setTimeout(() => {
         isInternalChangeRef.current = false;
@@ -144,7 +149,7 @@ export default function RichTextEditor({
       const quill = quillInstanceRef.current;
       if (quill) {
         quill.setText('');
-        if (onChange) onChange('');
+        if (onChangeRef.current) onChangeRef.current('');
       }
     }
   };

@@ -240,20 +240,25 @@ CREATE TABLE `Blog` (
 -- CreateTable
 CREATE TABLE `Specialist` (
     `id` VARCHAR(191) NOT NULL,
+    `slug` VARCHAR(191) NULL,
     `name` VARCHAR(191) NOT NULL,
     `designation` VARCHAR(191) NOT NULL,
     `department` VARCHAR(191) NOT NULL,
-    `qualifications` VARCHAR(191) NOT NULL,
+    `qualifications` TEXT NOT NULL,
+    `registrationNumber` VARCHAR(191) NULL,
     `experience` VARCHAR(191) NOT NULL DEFAULT '15+ Years',
     `opdTimings` VARCHAR(191) NOT NULL DEFAULT 'Mon - Sat: 11:00 AM - 5:00 PM',
     `image` VARCHAR(1000) NOT NULL,
     `bio` TEXT NOT NULL,
+    `content` LONGTEXT NULL,
     `availableDays` JSON NULL,
     `status` VARCHAR(191) NOT NULL DEFAULT 'active',
     `sortOrder` INTEGER NOT NULL DEFAULT 0,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
+    UNIQUE INDEX `Specialist_slug_key`(`slug`),
+    INDEX `Specialist_slug_idx`(`slug`),
     INDEX `Specialist_department_idx`(`department`),
     INDEX `Specialist_status_idx`(`status`),
     PRIMARY KEY (`id`)

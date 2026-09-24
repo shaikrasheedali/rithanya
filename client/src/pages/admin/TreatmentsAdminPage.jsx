@@ -7,6 +7,7 @@ import { useToast } from '../../components/common/Toast';
 import Modal from '../../components/common/Modal';
 import ImageUploadField from '../../components/common/ImageUploadField';
 import RichTextEditor from '../../components/common/RichTextEditor';
+import { getSafeImageUrl, onImageError } from '../../utils/imageUtils';
 
 export default function TreatmentsAdminPage() {
   const { addToast } = useToast();
@@ -163,9 +164,10 @@ export default function TreatmentsAdminPage() {
                 <tr key={t.id}>
                   <td style={{ width: 70 }}>
                     <img
-                      src={t.coverImage}
+                      src={getSafeImageUrl(t.coverImage)}
                       alt={t.title}
                       style={{ width: 54, height: 40, objectFit: 'cover', borderRadius: 8 }}
+                      onError={(e) => onImageError(e)}
                     />
                   </td>
                   <td>
@@ -238,7 +240,7 @@ export default function TreatmentsAdminPage() {
                   className="form-control"
                   placeholder="e.g. Thalassemia Daycare Transfusion"
                   value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
                   required
                 />
               </div>
@@ -250,7 +252,7 @@ export default function TreatmentsAdminPage() {
                   className="form-control"
                   placeholder="e.g. Daycare Hematology, Endocrinology"
                   value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, category: e.target.value }))}
                   required
                 />
               </div>
@@ -261,7 +263,7 @@ export default function TreatmentsAdminPage() {
                   type="text"
                   className="form-control"
                   value={formData.department}
-                  onChange={(e) => setFormData({ ...formData, department: e.target.value })}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, department: e.target.value }))}
                 />
               </div>
 
@@ -271,7 +273,7 @@ export default function TreatmentsAdminPage() {
                   type="text"
                   className="form-control"
                   value={formData.doctorName}
-                  onChange={(e) => setFormData({ ...formData, doctorName: e.target.value })}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, doctorName: e.target.value }))}
                 />
               </div>
 
@@ -282,7 +284,7 @@ export default function TreatmentsAdminPage() {
                   className="form-control"
                   placeholder="e.g. 3 - 4 Hours or 45 mins"
                   value={formData.duration}
-                  onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, duration: e.target.value }))}
                 />
               </div>
 
@@ -291,7 +293,7 @@ export default function TreatmentsAdminPage() {
                 <select
                   className="form-control"
                   value={formData.status}
-                  onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, status: e.target.value }))}
                 >
                   <option value="published">Published</option>
                   <option value="draft">Draft</option>
@@ -302,7 +304,7 @@ export default function TreatmentsAdminPage() {
             <ImageUploadField
               label="Treatment Cover Image"
               value={formData.coverImage}
-              onChange={(url) => setFormData({ ...formData, coverImage: url })}
+              onChange={(url) => setFormData((prev) => ({ ...prev, coverImage: url }))}
               required
               helperText="Uploads to /assets/uploads and automatically registers in Media Library"
             />
@@ -314,7 +316,7 @@ export default function TreatmentsAdminPage() {
                 className="form-control"
                 placeholder="e.g. /assets/1.mp4 or video stream URL"
                 value={formData.videoUrl}
-                onChange={(e) => setFormData({ ...formData, videoUrl: e.target.value })}
+                onChange={(e) => setFormData((prev) => ({ ...prev, videoUrl: e.target.value }))}
               />
             </div>
 
@@ -325,7 +327,7 @@ export default function TreatmentsAdminPage() {
                 className="form-control"
                 placeholder="e.g. Severe chronic hemolytic anemia, Hb < 9 g/dL"
                 value={formData.indications}
-                onChange={(e) => setFormData({ ...formData, indications: e.target.value })}
+                onChange={(e) => setFormData((prev) => ({ ...prev, indications: e.target.value }))}
               />
             </div>
 
@@ -335,7 +337,7 @@ export default function TreatmentsAdminPage() {
                 className="form-control"
                 rows="2"
                 value={formData.summary}
-                onChange={(e) => setFormData({ ...formData, summary: e.target.value })}
+                onChange={(e) => setFormData((prev) => ({ ...prev, summary: e.target.value }))}
                 required
               />
             </div>
@@ -347,14 +349,14 @@ export default function TreatmentsAdminPage() {
                 rows="4"
                 placeholder="Saline triple pre-crossmatching&#10;Micro-aggregate leukodepletion blood filtration&#10;Continuous SpO2 and hemodynamic monitoring"
                 value={formData.proceduresText}
-                onChange={(e) => setFormData({ ...formData, proceduresText: e.target.value })}
+                onChange={(e) => setFormData((prev) => ({ ...prev, proceduresText: e.target.value }))}
               />
             </div>
 
             <RichTextEditor
               label="Detailed Treatment Content & Clinical Guidelines"
               value={formData.content}
-              onChange={(html) => setFormData({ ...formData, content: html })}
+              onChange={(html) => setFormData((prev) => ({ ...prev, content: html }))}
               placeholder="Describe procedure steps, clinical mechanisms, safety audits, patient prep instructions..."
               minHeight={320}
               required

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Upload, X, Check, Image as ImageIcon, Link as LinkIcon } from 'lucide-react';
 import { apiRequest } from '../../utils/api';
 import { useToast } from './Toast';
+import { getSafeImageUrl, onImageError } from '../../utils/imageUtils';
 
 export default function ImageUploadField({ label, value, onChange, required = false, helperText }) {
   const { addToast } = useToast();
@@ -111,13 +112,10 @@ export default function ImageUploadField({ label, value, onChange, required = fa
                 }}
               >
                 <img
-                  src={value}
+                  src={getSafeImageUrl(value)}
                   alt="Preview"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = 'https://via.placeholder.com/60?text=Error';
-                  }}
+                  style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                  onError={(e) => onImageError(e)}
                 />
               </div>
 

@@ -108,6 +108,28 @@ test('Comprehensive Full-Stack Hospital ERP & DPDP Suite', async (t) => {
     testReadingId = res.body.data.id;
   });
 
+  await t.test('POST /api/clinical - Boundary validation rejects physiologically impossible values', async () => {
+    // Impossible Hb (> 30)
+    const badHbRes = await request(app)
+      .post('/api/clinical')
+      .set('Authorization', `Bearer ${superadminToken}`)
+      .send({
+        patientId: testPatientId,
+        haemoglobin: 45
+      });
+    assert.strictEqual(badHbRes.status, 400);
+
+    // Impossible SpO2 (> 100)
+    const badSpo2Res = await request(app)
+      .post('/api/clinical')
+      .set('Authorization', `Bearer ${superadminToken}`)
+      .send({
+        patientId: testPatientId,
+        spo2: 115
+      });
+    assert.strictEqual(badSpo2Res.status, 400);
+  });
+
   await t.test('PUT /api/clinical/:id - Update clinical reading', async () => {
     const res = await request(app)
       .put(`/api/clinical/${testReadingId}`)
@@ -231,6 +253,76 @@ test('Comprehensive Full-Stack Hospital ERP & DPDP Suite', async (t) => {
       .delete(`/api/blogs/${testBlogId}`)
       .set('Authorization', `Bearer ${superadminToken}`);
     assert.strictEqual(delRes.status, 200);
+
+    // Delete non-existent blog record (verifying P2025 handling - returns 404 cleanly, not 500)
+    const delNonExistentBlog = await request(app)
+      .delete(`/api/blogs/${testBlogId}`)
+      .set('Authorization', `Bearer ${superadminToken}`);
+    assert.strictEqual(delNonExistentBlog.status, 404);
+  });
+
+  await t.test('CMS Specialists / Doctors CRUD & P2025 Resilience', async () => {
+    // 1. Create doctor with slug, registrationNumber, content
+    const createRes = await request(app)
+      .post('/api/specialists')
+      .set('Authorization', `Bearer ${superadminToken}`)
+      .send({
+        name: 'Dr. Test A. Sharma',
+        title: 'Senior Consultant Diabetologist',
+        department: 'Diabetology & Endocrinology',
+        qualification: 'MBBS, MD, DM (Endocrinology)',
+        experience: '12 Years',
+        registrationNumber: 'TSMC-67890',
+        bio: 'Expert in glycemic management and pediatric diabetes',
+        content: '<p>Detailed clinical profile and research publications...</p>',
+        image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=800&q=80',
+        schedule: 'Mon - Fri (10:00 AM - 2:00 PM)',
+        consultationFee: 500,
+        phone: '+91 83285 81019',
+        email: 'dr.sharma.test@rithanya.com',
+        isFeatured: true
+      });
+    assert.strictEqual(createRes.status, 201);
+    assert.strictEqual(createRes.body.success, true);
+    assert.ok(createRes.body.data.id);
+    assert.ok(createRes.body.data.slug);
+    testSpecialistId = createRes.body.data.id;
+    const specialistSlug = createRes.body.data.slug;
+
+    // 2. Read all specialists
+    const listRes = await request(app).get('/api/specialists');
+    assert.strictEqual(listRes.status, 200);
+    assert.ok(Array.isArray(listRes.body.data));
+    assert.ok(listRes.body.data.some((s) => s.id === testSpecialistId));
+
+    // 3. Read single specialist by slug
+    const getRes = await request(app).get(`/api/specialists/${specialistSlug}`);
+    assert.strictEqual(getRes.status, 200);
+    assert.strictEqual(getRes.body.data.registrationNumber, 'TSMC-67890');
+
+    // 4. Update specialist
+    const updateRes = await request(app)
+      .put(`/api/specialists/${testSpecialistId}`)
+      .set('Authorization', `Bearer ${superadminToken}`)
+      .send({
+        qualification: 'MBBS, MD, DM, FRCP',
+        experience: '14 Years'
+      });
+    assert.strictEqual(updateRes.status, 200);
+    assert.strictEqual(updateRes.body.data.qualifications, 'MBBS, MD, DM, FRCP');
+
+    // 5. Delete specialist
+    const delRes = await request(app)
+      .delete(`/api/specialists/${testSpecialistId}`)
+      .set('Authorization', `Bearer ${superadminToken}`);
+    assert.strictEqual(delRes.status, 200);
+    assert.strictEqual(delRes.body.success, true);
+
+    // 6. Delete again (P2025 non-existent record handling - must return 404, not 500)
+    const delAgainRes = await request(app)
+      .delete(`/api/specialists/${testSpecialistId}`)
+      .set('Authorization', `Bearer ${superadminToken}`);
+    assert.strictEqual(delAgainRes.status, 404);
   });
 
   // 8. STAFF HR & CREDENTIALS

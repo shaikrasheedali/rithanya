@@ -24,6 +24,7 @@ import {
 import { apiRequest } from '../../utils/api';
 import { useToast } from '../../components/common/Toast';
 import HeroVideoSlider from '../../components/home/HeroVideoSlider';
+import SpecialtiesMarquee from '../../components/common/SpecialtiesMarquee';
 import { formatDate } from '../../utils/formatters';
 
 const DEFAULT_TREATMENT_IMAGES = [
@@ -138,6 +139,9 @@ export default function HomePage() {
     <div className="home-page">
       {/* 1. HERO SECTION: FULL VIEWPORT HEIGHT */}
       <HeroVideoSlider />
+
+      {/* SPECIALTIES & HBA2 ANNOUNCEMENT MARQUEE */}
+      <SpecialtiesMarquee />
 
       {/* 2. SECTION: [ABOUT US / HOSPITAL ENTRANCE - 50/50 TWO-ASIDE SPLIT] */}
       <section className="home-viewport-section bg-white" id="about" aria-label="About Rithanya Hospital">

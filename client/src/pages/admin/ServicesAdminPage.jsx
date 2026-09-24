@@ -6,6 +6,7 @@ import { useToast } from '../../components/common/Toast';
 import Modal from '../../components/common/Modal';
 import ImageUploadField from '../../components/common/ImageUploadField';
 import RichTextEditor from '../../components/common/RichTextEditor';
+import { getSafeImageUrl, onImageError } from '../../utils/imageUtils';
 
 export default function ServicesAdminPage() {
   const { addToast } = useToast();
@@ -139,7 +140,12 @@ export default function ServicesAdminPage() {
                 <tr key={s.id}>
                   <td style={{ width: 80 }}>
                     <div style={{ width: 60, height: 40, borderRadius: 8, overflow: 'hidden' }}>
-                      <img src={s.coverImage} alt={s.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      <img
+                        src={getSafeImageUrl(s.coverImage)}
+                        alt={s.title}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        onError={(e) => onImageError(e)}
+                      />
                     </div>
                   </td>
                   <td>
@@ -184,7 +190,7 @@ export default function ServicesAdminPage() {
                   type="text"
                   className="form-control"
                   value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
                   required
                 />
               </div>
@@ -195,7 +201,7 @@ export default function ServicesAdminPage() {
                   type="text"
                   className="form-control"
                   value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, category: e.target.value }))}
                   required
                 />
               </div>
@@ -206,7 +212,7 @@ export default function ServicesAdminPage() {
                   type="text"
                   className="form-control"
                   value={formData.author}
-                  onChange={(e) => setFormData({ ...formData, author: e.target.value })}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, author: e.target.value }))}
                 />
               </div>
 
@@ -216,7 +222,7 @@ export default function ServicesAdminPage() {
                   type="text"
                   className="form-control"
                   value={formData.readTime}
-                  onChange={(e) => setFormData({ ...formData, readTime: e.target.value })}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, readTime: e.target.value }))}
                 />
               </div>
             </div>
@@ -224,7 +230,7 @@ export default function ServicesAdminPage() {
             <ImageUploadField
               label="Cover Image"
               value={formData.coverImage}
-              onChange={(url) => setFormData({ ...formData, coverImage: url })}
+              onChange={(url) => setFormData((prev) => ({ ...prev, coverImage: url }))}
               required
               helperText="Uploads to /assets/uploads and automatically registers in Media Library"
             />
@@ -235,7 +241,7 @@ export default function ServicesAdminPage() {
                 className="form-control"
                 rows="2"
                 value={formData.summary}
-                onChange={(e) => setFormData({ ...formData, summary: e.target.value })}
+                onChange={(e) => setFormData((prev) => ({ ...prev, summary: e.target.value }))}
                 required
               />
             </div>
@@ -243,7 +249,7 @@ export default function ServicesAdminPage() {
             <RichTextEditor
               label="HTML / Rich Clinical Content"
               value={formData.content}
-              onChange={(html) => setFormData({ ...formData, content: html })}
+              onChange={(html) => setFormData((prev) => ({ ...prev, content: html }))}
               placeholder="Detail medical procedures, diagnostic protocols, patient guidelines, and equipment specs..."
               minHeight={300}
               required

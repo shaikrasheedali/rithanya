@@ -220,7 +220,14 @@ async function deleteTreatment(req, res, next) {
   try {
     const { id } = req.params;
 
-    await prisma.treatment.delete({ where: { id } });
+    const existing = await prisma.treatment.findFirst({
+      where: { OR: [{ id }, { slug: id }] }
+    });
+    if (!existing) {
+      return res.status(404).json({ success: false, message: 'Treatment protocol not found or already removed' });
+    }
+
+    await prisma.treatment.delete({ where: { id: existing.id } });
 
     invalidatePublicCache('treatments');
 
@@ -230,12 +237,15 @@ async function deleteTreatment(req, res, next) {
       actorRole: req.user ? req.user.role : 'ADMIN',
       action: 'DELETE_TREATMENT',
       module: 'TREATMENTS',
-      recordId: id,
+      recordId: existing.id,
       ipAddress: req.headers['x-forwarded-for'] || req.socket.remoteAddress
     });
 
     return res.json({ success: true, message: 'Treatment deleted successfully' });
   } catch (err) {
+    if (err.code === 'P2025') {
+      return res.status(404).json({ success: false, message: 'Treatment protocol not found or already removed' });
+    }
     next(err);
   }
 }

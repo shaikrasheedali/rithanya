@@ -111,10 +111,19 @@ async function updateBlog(req, res, next) {
 async function deleteBlog(req, res, next) {
   try {
     const { id } = req.params;
-    await prisma.blog.delete({ where: { id } });
+    const existing = await prisma.blog.findFirst({
+      where: { OR: [{ id }, { slug: id }] }
+    });
+    if (!existing) {
+      return res.status(404).json({ success: false, message: 'Blog article not found or already removed' });
+    }
+    await prisma.blog.delete({ where: { id: existing.id } });
     invalidatePublicCache('blogs');
     return res.json({ success: true, message: 'Blog deleted' });
   } catch (err) {
+    if (err.code === 'P2025') {
+      return res.status(404).json({ success: false, message: 'Blog article not found or already removed' });
+    }
     next(err);
   }
 }

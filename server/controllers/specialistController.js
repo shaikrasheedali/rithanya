@@ -77,11 +77,14 @@ async function createSpecialist(req, res, next) {
       name,
       slug,
       designation,
+      title,
       department,
       qualifications,
+      qualification,
       registrationNumber,
       experience,
       opdTimings,
+      schedule,
       image,
       bio,
       content,
@@ -90,26 +93,36 @@ async function createSpecialist(req, res, next) {
       sortOrder
     } = req.body;
 
-    if (!name || !designation || !department) {
-      return res.status(400).json({ success: false, message: 'Name, designation, and department are required' });
+    const actualDesignation = designation || title;
+    const actualQualifications = qualifications || qualification;
+    const actualOpdTimings = opdTimings || schedule;
+
+    if (!name || !actualDesignation || !department) {
+      return res.status(400).json({ success: false, message: 'Name, designation/title, and department are required' });
     }
 
-    const generatedSlug = (slug || name)
+    const baseSlug = (slug || name)
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '');
+      .replace(/(^-|-$)/g, '') || `doctor-${Date.now().toString().slice(-4)}`;
+
+    let finalSlug = baseSlug;
+    const existingWithSlug = await prisma.specialist.findFirst({ where: { slug: finalSlug } });
+    if (existingWithSlug) {
+      finalSlug = `${baseSlug}-${Date.now().toString().slice(-4)}`;
+    }
 
     const specialist = await prisma.specialist.create({
       data: {
-        slug: generatedSlug,
+        slug: finalSlug,
         name,
-        designation,
+        designation: actualDesignation,
         department,
-        qualifications: qualifications || 'MBBS, MD',
+        qualifications: actualQualifications || 'MBBS, MD',
         registrationNumber: registrationNumber || null,
         experience: experience || '15+ Years',
-        opdTimings: opdTimings || 'Mon - Sat: 11:00 AM - 5:00 PM',
-        image: image || '/assets/specialist-placeholder.jpg',
+        opdTimings: actualOpdTimings || 'Mon - Sat: 11:00 AM - 5:00 PM',
+        image: image || '/Dr Narayana Murthy-Rithanya Hospital-Khammam.png',
         bio: bio || '',
         content: content || null,
         availableDays: availableDays || ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
@@ -148,18 +161,31 @@ async function updateSpecialist(req, res, next) {
     for (const key of allowed) {
       if (req.body[key] !== undefined) updateData[key] = req.body[key];
     }
+    if (req.body.title !== undefined && updateData.designation === undefined) updateData.designation = req.body.title;
+    if (req.body.qualification !== undefined && updateData.qualifications === undefined) updateData.qualifications = req.body.qualification;
+    if (req.body.schedule !== undefined && updateData.opdTimings === undefined) updateData.opdTimings = req.body.schedule;
     if (updateData.sortOrder !== undefined) {
       updateData.sortOrder = parseInt(updateData.sortOrder, 10) || 0;
     }
 
+    const existing = await prisma.specialist.findFirst({
+      where: { OR: [{ id }, { slug: id }] }
+    });
+    if (!existing) {
+      return res.status(404).json({ success: false, message: 'Specialist doctor profile not found' });
+    }
+
     const specialist = await prisma.specialist.update({
-      where: { id },
+      where: { id: existing.id },
       data: updateData
     });
 
     invalidatePublicCache('specialists');
     return res.json({ success: true, data: specialist });
   } catch (err) {
+    if (err.code === 'P2025') {
+      return res.status(404).json({ success: false, message: 'Specialist doctor profile not found' });
+    }
     next(err);
   }
 }
@@ -167,10 +193,19 @@ async function updateSpecialist(req, res, next) {
 async function deleteSpecialist(req, res, next) {
   try {
     const { id } = req.params;
-    await prisma.specialist.delete({ where: { id } });
+    const existing = await prisma.specialist.findFirst({
+      where: { OR: [{ id }, { slug: id }] }
+    });
+    if (!existing) {
+      return res.status(404).json({ success: false, message: 'Specialist doctor profile not found or already removed' });
+    }
+    await prisma.specialist.delete({ where: { id: existing.id } });
     invalidatePublicCache('specialists');
     return res.json({ success: true, message: 'Specialist deleted' });
   } catch (err) {
+    if (err.code === 'P2025') {
+      return res.status(404).json({ success: false, message: 'Specialist doctor profile not found or already removed' });
+    }
     next(err);
   }
 }

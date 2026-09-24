@@ -83,35 +83,43 @@ async function approveAndPurge(req, res, next) {
     if (reqRecord.patientCode) patientWhere.push({ patientCode: reqRecord.patientCode });
     if (reqRecord.phone) patientWhere.push({ phone: reqRecord.phone });
 
-    let purgedCount = 0;
-    if (patientWhere.length > 0) {
-      const matchingPatients = await prisma.patient.findMany({
-        where: { OR: patientWhere }
+    // Atomic cascading erasure under DPDP Act
+    const { purgedCount, updated } = await prisma.$transaction(async (tx) => {
+      let count = 0;
+      if (patientWhere.length > 0) {
+        const matchingPatients = await tx.patient.findMany({
+          where: { OR: patientWhere }
+        });
+
+        for (const p of matchingPatients) {
+          // Cascade delete readings
+          await tx.clinicalReading.deleteMany({ where: { patientId: p.id } });
+          // Cascade delete admissions
+          await tx.admission.deleteMany({ where: { patientId: p.id } });
+          // Detach or delete inventory logs referencing patient
+          await tx.inventoryLog.updateMany({
+            where: { patientId: p.id },
+            data: { patientId: null, notes: 'Patient unlinked per DPDP Erasure' }
+          });
+          // Finally delete patient record
+          await tx.patient.delete({ where: { id: p.id } });
+          count += 1;
+        }
+      }
+
+      // Update request record atomically
+      const updatedReq = await tx.erasureRequest.update({
+        where: { id },
+        data: {
+          status: 'completed',
+          processedAt: new Date(),
+          processedBy: req.user ? req.user.name : 'DPO / Admin',
+          notes: notes ? `${notes} (Purged ${count} patient record(s))` : `Approved and purged ${count} record(s)`
+        }
       });
 
-      for (const p of matchingPatients) {
-        // Cascade delete
-        await prisma.clinicalReading.deleteMany({ where: { patientId: p.id } });
-        await prisma.admission.deleteMany({ where: { patientId: p.id } });
-        await prisma.inventoryLog.updateMany({
-          where: { patientId: p.id },
-          data: { patientId: null, notes: 'Patient unlinked per DPDP Erasure' }
-        });
-        await prisma.patient.delete({ where: { id: p.id } });
-        purgedCount += 1;
-      }
-    }
-
-    // Update request record
-    const updated = await prisma.erasureRequest.update({
-      where: { id },
-      data: {
-        status: 'completed',
-        processedAt: new Date(),
-        processedBy: req.user ? req.user.name : 'DPO / Admin',
-        notes: notes ? `${notes} (Purged ${purgedCount} patient record(s))` : `Approved and purged ${purgedCount} record(s)`
-      }
-    });
+      return { purgedCount: count, updated: updatedReq };
+    }, { maxWait: 10000, timeout: 30000 });
 
     recordAuditLog({
       actorId: req.user ? req.user.id : null,
