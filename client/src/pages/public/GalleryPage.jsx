@@ -3,6 +3,7 @@ import { Play, Image as ImageIcon, Youtube, Instagram, Facebook, Video, External
 import { apiRequest } from '../../utils/api';
 import Modal from '../../components/common/Modal';
 import { parseEmbedSource } from '../../utils/mediaEmbed';
+import useDynamicTranslation from '../../utils/dynamicTranslator';
 
 function getEmbedIframeUrl(mediaType, url) {
   if (!url) return null;
@@ -31,6 +32,7 @@ function getEmbedIframeUrl(mediaType, url) {
 }
 
 export default function GalleryPage() {
+  const { t, loc, locItems } = useDynamicTranslation();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState('All');
@@ -53,8 +55,10 @@ export default function GalleryPage() {
 
   const categories = ['All', 'Facility', 'Daycare', 'Diagnostics', 'Specialists', 'Patient Care'];
 
-  const filtered = items.filter((item) => {
-    const matchCat = category === 'All' || item.category === category;
+  const localizedItems = locItems(items);
+
+  const filtered = localizedItems.filter((item) => {
+    const matchCat = category === 'All' || item.category === category || item.category === loc(category);
     const itemType = (item.mediaType || 'IMAGE').toUpperCase();
     const matchType =
       mediaFilter === 'ALL' ||
@@ -67,10 +71,10 @@ export default function GalleryPage() {
     <div className="gallery-page" style={{ padding: '60px 0 80px' }}>
       <div className="container">
         <div className="section-head">
-          <span className="section-tag">Hospital Infrastructure & Media</span>
-          <h1 className="section-title">Hospital Media & Facility Gallery</h1>
+          <span className="section-tag">{loc('Hospital Infrastructure & Media')}</span>
+          <h1 className="section-title">{loc('Hospital Media & Facility Gallery')}</h1>
           <p className="section-subtitle">
-            Take a visual tour of our sanitized day-care transfusion beds, clinical bio-analyzer laboratory, outpatient chambers, and video insights from our medical consultants.
+            {loc('Take a visual tour of our sanitized day-care transfusion beds, clinical bio-analyzer laboratory, outpatient chambers, and video insights from our medical consultants.')}
           </p>
         </div>
 
@@ -100,7 +104,7 @@ export default function GalleryPage() {
               style={{ borderRadius: 24, padding: '6px 16px' }}
               onClick={() => setMediaFilter('ALL')}
             >
-              All Media
+              {loc('All Media')}
             </button>
             <button
               type="button"
@@ -108,7 +112,7 @@ export default function GalleryPage() {
               style={{ borderRadius: 24, padding: '6px 16px' }}
               onClick={() => setMediaFilter('PHOTOS')}
             >
-              Facility Photos
+              {loc('Facility Photos')}
             </button>
             <button
               type="button"
@@ -116,7 +120,7 @@ export default function GalleryPage() {
               style={{ borderRadius: 24, padding: '6px 16px' }}
               onClick={() => setMediaFilter('VIDEOS')}
             >
-              Videos & Social Media
+              {loc('Videos & Social Media')}
             </button>
           </div>
 
@@ -135,17 +139,17 @@ export default function GalleryPage() {
                 }}
                 onClick={() => setCategory(cat)}
               >
-                {cat}
+                {loc(cat)}
               </button>
             ))}
           </div>
         </div>
 
         {loading ? (
-          <div style={{ textAlign: 'center', padding: 60 }}>Loading hospital media items...</div>
+          <div style={{ textAlign: 'center', padding: 60 }}>{t('common.loading', 'Loading hospital media items...')}</div>
         ) : filtered.length === 0 ? (
           <div style={{ textAlign: 'center', padding: 60, color: 'var(--ink-soft)' }}>
-            No media items found in this section.
+            {loc('No media items found in this section.')}
           </div>
         ) : (
           <div className="grid-3">
@@ -246,7 +250,7 @@ export default function GalleryPage() {
         <Modal
           isOpen={!!activeItem}
           onClose={() => setActiveItem(null)}
-          title={activeItem?.title || 'Hospital Media'}
+          title={activeItem?.title || loc('Hospital Media')}
           size="lg"
         >
           {activeItem && (
@@ -322,7 +326,7 @@ export default function GalleryPage() {
                       className="btn btn-outline btn-sm"
                       style={{ fontSize: 12 }}
                     >
-                      <span>Open on Social Platform</span>
+                      <span>{loc('Open on Social Platform')}</span>
                       <ExternalLink size={12} />
                     </a>
                   )}

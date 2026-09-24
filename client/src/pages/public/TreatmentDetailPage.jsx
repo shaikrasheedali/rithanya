@@ -15,10 +15,12 @@ import {
 } from 'lucide-react';
 import { apiRequest } from '../../utils/api';
 import { useToast } from '../../components/common/Toast';
+import useDynamicTranslation from '../../utils/dynamicTranslator';
 
 export default function TreatmentDetailPage() {
   const { slug } = useParams();
   const { addToast } = useToast();
+  const { t, loc, locItem } = useDynamicTranslation();
   const [treatment, setTreatment] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -52,7 +54,7 @@ export default function TreatmentDetailPage() {
   if (loading) {
     return (
       <div className="container" style={{ padding: '100px 0', textAlign: 'center' }}>
-        <p style={{ color: 'var(--ink-soft)' }}>Loading treatment clinical protocol...</p>
+        <p style={{ color: 'var(--ink-soft)' }}>{t('common.loading', 'Loading clinical protocol...')}</p>
       </div>
     );
   }
@@ -60,17 +62,19 @@ export default function TreatmentDetailPage() {
   if (!treatment) {
     return (
       <div className="container" style={{ padding: '100px 0', textAlign: 'center' }}>
-        <h2>Treatment Not Found</h2>
+        <h2>{loc('Treatment Not Found')}</h2>
         <p style={{ color: 'var(--ink-soft)', marginBottom: 20 }}>
-          The requested clinical procedure or treatment could not be found.
+          {loc('The requested clinical procedure or treatment could not be found.')}
         </p>
         <Link to="/treatments" className="btn btn-primary">
           <ArrowLeft size={16} />
-          <span>Back to All Treatments</span>
+          <span>{loc('Back to All Treatments')}</span>
         </Link>
       </div>
     );
   }
+
+  const currentTreatment = locItem(treatment);
 
   return (
     <div className="treatment-detail-page" style={{ padding: '40px 0 100px' }}>
@@ -79,7 +83,7 @@ export default function TreatmentDetailPage() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
           <Link to="/treatments" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: 'var(--ink-soft)', textDecoration: 'none', fontWeight: 600, fontSize: 14 }}>
             <ArrowLeft size={16} />
-            <span>Back to Treatments Catalog</span>
+            <span>{loc('Back to Treatments Catalog')}</span>
           </Link>
           <button
             type="button"
@@ -88,7 +92,7 @@ export default function TreatmentDetailPage() {
             style={{ borderRadius: 20 }}
           >
             <Share2 size={14} />
-            <span>Share Protocol</span>
+            <span>{loc('Share Protocol')}</span>
           </button>
         </div>
 
@@ -104,9 +108,9 @@ export default function TreatmentDetailPage() {
             boxShadow: '0 20px 50px rgba(0, 0, 0, 0.12)'
           }}
         >
-          {treatment.videoUrl ? (
+          {currentTreatment.videoUrl ? (
             <video
-              src={treatment.videoUrl}
+              src={currentTreatment.videoUrl}
               autoPlay
               muted
               loop
@@ -115,8 +119,8 @@ export default function TreatmentDetailPage() {
             />
           ) : (
             <img
-              src={treatment.coverImage}
-              alt={treatment.title}
+              src={currentTreatment.coverImage}
+              alt={currentTreatment.title}
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
           )}
@@ -154,7 +158,7 @@ export default function TreatmentDetailPage() {
                   letterSpacing: 0.5
                 }}
               >
-                {treatment.category}
+                {currentTreatment.category}
               </span>
               <span
                 style={{
@@ -170,17 +174,17 @@ export default function TreatmentDetailPage() {
                 }}
               >
                 <Clock size={13} />
-                <span>{treatment.duration || 'Standard Session'}</span>
+                <span>{loc(currentTreatment.duration || 'Standard Session')}</span>
               </span>
             </div>
 
             <h1 style={{ fontSize: 'clamp(26px, 4vw, 42px)', fontWeight: 800, color: '#fff', lineHeight: 1.2, marginBottom: 8 }}>
-              {treatment.title}
+              {currentTreatment.title}
             </h1>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'rgba(255, 255, 255, 0.9)', fontSize: 14 }}>
               <Stethoscope size={16} />
-              <span>Attending: <strong>{treatment.doctorName}</strong> — {treatment.department}</span>
+              <span>{loc('Attending')}: <strong>{loc(currentTreatment.doctorName)}</strong> — {currentTreatment.department}</span>
             </div>
           </div>
         </div>
@@ -190,7 +194,7 @@ export default function TreatmentDetailPage() {
           {/* Main Article Content */}
           <div>
             {/* Clinical Indications Box */}
-            {treatment.indications && (
+            {currentTreatment.indications && (
               <div
                 style={{
                   background: 'var(--red-50)',
@@ -206,17 +210,17 @@ export default function TreatmentDetailPage() {
                 <AlertCircle size={22} style={{ color: 'var(--red-700)', flexShrink: 0, marginTop: 2 }} />
                 <div>
                   <h4 style={{ fontSize: 14, fontWeight: 700, textTransform: 'uppercase', color: 'var(--red-900)', letterSpacing: 0.5, marginBottom: 4 }}>
-                    Clinical Indications & Eligibility
+                    {loc('Clinical Indications & Eligibility')}
                   </h4>
                   <p style={{ fontSize: 14, color: 'var(--ink)', margin: 0, lineHeight: 1.5 }}>
-                    {treatment.indications}
+                    {currentTreatment.indications}
                   </p>
                 </div>
               </div>
             )}
 
             {/* Procedures Checklist */}
-            {Array.isArray(treatment.procedures) && treatment.procedures.length > 0 && (
+            {Array.isArray(currentTreatment.procedures) && currentTreatment.procedures.length > 0 && (
               <div
                 style={{
                   background: '#fff',
@@ -229,13 +233,13 @@ export default function TreatmentDetailPage() {
               >
                 <h3 style={{ fontSize: 17, fontWeight: 800, color: 'var(--ink)', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
                   <Sparkles size={18} style={{ color: 'var(--red-700)' }} />
-                  <span>Clinical Procedures & Safety Protocol</span>
+                  <span>{loc('Clinical Procedures & Safety Protocol')}</span>
                 </h3>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: 14 }}>
-                  {treatment.procedures.map((proc, idx) => (
+                  {currentTreatment.procedures.map((proc, idx) => (
                     <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 13.5, color: 'var(--ink)' }}>
                       <CheckCircle2 size={16} style={{ color: 'var(--green)', flexShrink: 0, marginTop: 2 }} />
-                      <span>{proc}</span>
+                      <span>{loc(proc)}</span>
                     </div>
                   ))}
                 </div>
@@ -254,7 +258,7 @@ export default function TreatmentDetailPage() {
                 lineHeight: 1.75,
                 color: 'var(--ink)'
               }}
-              dangerouslySetInnerHTML={{ __html: treatment.content }}
+              dangerouslySetInnerHTML={{ __html: currentTreatment.content }}
             />
           </div>
 
@@ -270,24 +274,24 @@ export default function TreatmentDetailPage() {
               }}
             >
               <h3 style={{ fontSize: 20, fontWeight: 800, color: 'var(--ink)', marginBottom: 12 }}>
-                Book This Treatment
+                {loc('Book This Treatment')}
               </h3>
               <p style={{ fontSize: 13.5, color: 'var(--ink-soft)', lineHeight: 1.6, marginBottom: 20 }}>
-                Consult directly with <strong>{treatment.doctorName}</strong> for customized pre-assessment and daycare bed reservation.
+                {loc('Consult directly with')} <strong>{loc(currentTreatment.doctorName)}</strong> {loc('for customized pre-assessment and daycare bed reservation.')}
               </p>
 
               <div style={{ borderTop: '1px solid var(--line)', paddingTop: 16, marginBottom: 20, display: 'flex', flexDirection: 'column', gap: 10, fontSize: 13 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: 'var(--ink-soft)' }}>Department:</span>
-                  <span style={{ fontWeight: 600 }}>{treatment.department}</span>
+                  <span style={{ color: 'var(--ink-soft)' }}>{t('common.department', 'Department')}:</span>
+                  <span style={{ fontWeight: 600 }}>{currentTreatment.department}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: 'var(--ink-soft)' }}>Typical Duration:</span>
-                  <span style={{ fontWeight: 600 }}>{treatment.duration || '45 - 90 mins'}</span>
+                  <span style={{ color: 'var(--ink-soft)' }}>{loc('Typical Duration')}:</span>
+                  <span style={{ fontWeight: 600 }}>{loc(currentTreatment.duration || '45 - 90 mins')}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: 'var(--ink-soft)' }}>Safety Standard:</span>
-                  <span style={{ fontWeight: 600, color: 'var(--green)' }}>Leukodepleted Blood Unit</span>
+                  <span style={{ color: 'var(--ink-soft)' }}>{loc('Safety Standard')}:</span>
+                  <span style={{ fontWeight: 600, color: 'var(--green)' }}>{loc('Leukodepleted Blood Unit')}</span>
                 </div>
               </div>
 
@@ -297,7 +301,7 @@ export default function TreatmentDetailPage() {
                 style={{ width: '100%', justifyContent: 'center', borderRadius: 12, padding: '12px 20px', fontSize: 14.5, fontWeight: 700, marginBottom: 12 }}
               >
                 <Calendar size={18} />
-                <span>Book Appointment</span>
+                <span>{loc('Book Appointment')}</span>
               </Link>
 
               <a
@@ -306,7 +310,7 @@ export default function TreatmentDetailPage() {
                 style={{ width: '100%', justifyContent: 'center', borderRadius: 12, padding: '11px 20px', fontSize: 13.5 }}
               >
                 <Phone size={16} />
-                <span>Call Emergency Line</span>
+                <span>{t('nav.callEmergency', 'Call Emergency Line')}</span>
               </a>
             </div>
 
@@ -324,8 +328,8 @@ export default function TreatmentDetailPage() {
             >
               <ShieldCheck size={26} style={{ color: 'var(--red-700)', flexShrink: 0 }} />
               <div>
-                <h5 style={{ fontSize: 13, fontWeight: 700, margin: 0, color: 'var(--ink)' }}>Clinical Safety Standard</h5>
-                <p style={{ fontSize: 11.5, color: 'var(--ink-soft)', margin: '2px 0 0' }}>Supervised by Dr. Narayana Murthy M.D. (Senior Diabetologist)</p>
+                <h5 style={{ fontSize: 13, fontWeight: 700, margin: 0, color: 'var(--ink)' }}>{loc('Clinical Safety Standard')}</h5>
+                <p style={{ fontSize: 11.5, color: 'var(--ink-soft)', margin: '2px 0 0' }}>{loc('Supervised by Dr. Narayana Murthy M.D. (Senior Diabetologist)')}</p>
               </div>
             </div>
           </div>

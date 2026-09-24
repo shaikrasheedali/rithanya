@@ -18,10 +18,12 @@ import {
 import { apiRequest } from '../../utils/api';
 import { formatCurrency } from '../../utils/formatters';
 import { useToast } from '../../components/common/Toast';
+import useDynamicTranslation from '../../utils/dynamicTranslator';
 
 export default function ProductDetailPage() {
   const { slug } = useParams();
   const { addToast } = useToast();
+  const { t, loc, locItem } = useDynamicTranslation();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
@@ -81,7 +83,7 @@ export default function ProductDetailPage() {
   if (loading) {
     return (
       <div className="container" style={{ padding: '120px 0', textAlign: 'center' }}>
-        <p style={{ color: 'var(--ink-soft)', fontSize: 16 }}>Loading product specifications...</p>
+        <p style={{ color: 'var(--ink-soft)', fontSize: 16 }}>{t('common.loading', 'Loading clinical records...')}</p>
       </div>
     );
   }
@@ -89,23 +91,25 @@ export default function ProductDetailPage() {
   if (!product) {
     return (
       <div className="container" style={{ padding: '120px 0', textAlign: 'center' }}>
-        <h2 style={{ fontSize: 28, marginBottom: 12 }}>Product Not Found</h2>
+        <h2 style={{ fontSize: 28, marginBottom: 12 }}>{loc('Product Not Found')}</h2>
         <p style={{ color: 'var(--ink-soft)', marginBottom: 24, fontSize: 15 }}>
-          The requested health monitoring kit or clinical product could not be located.
+          {loc('The requested health monitoring kit or clinical product could not be located.')}
         </p>
         <Link to="/products" className="btn btn-primary">
           <ArrowLeft size={16} />
-          <span>Back to Products Store</span>
+          <span>{loc('Back to Products Store')}</span>
         </Link>
       </div>
     );
   }
 
+  const currentProduct = locItem(product);
+
   // Parse features if string
-  const featuresList = Array.isArray(product.features)
-    ? product.features
-    : typeof product.features === 'string'
-    ? JSON.parse(product.features || '[]')
+  const featuresList = Array.isArray(currentProduct.features)
+    ? currentProduct.features
+    : typeof currentProduct.features === 'string'
+    ? JSON.parse(currentProduct.features || '[]')
     : [];
 
   return (
@@ -115,7 +119,7 @@ export default function ProductDetailPage() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28, flexWrap: 'wrap', gap: 12 }}>
           <Link to="/products" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: 'var(--ink-soft)', textDecoration: 'none', fontWeight: 600, fontSize: 14 }}>
             <ArrowLeft size={16} />
-            <span>Back to Hospital Pharmacy Store</span>
+            <span>{loc('Back to Hospital Pharmacy Store')}</span>
           </Link>
           <div style={{ display: 'flex', gap: 12 }}>
             <button
@@ -125,11 +129,11 @@ export default function ProductDetailPage() {
               style={{ borderRadius: 20 }}
             >
               <Share2 size={14} />
-              <span>Share Product</span>
+              <span>{loc('Share Product')}</span>
             </button>
             <Link to="/products" className="btn btn-primary btn-sm" style={{ borderRadius: 20 }}>
               <ShoppingCart size={14} />
-              <span>View Cart</span>
+              <span>{t('cart.viewCart', 'View Cart')}</span>
             </Link>
           </div>
         </div>
@@ -152,11 +156,11 @@ export default function ProductDetailPage() {
         >
           {/* Media Presentation (Image or Video) */}
           <div style={{ position: 'relative', borderRadius: 20, overflow: 'hidden', background: '#faf9fa', border: '1px solid var(--line)' }}>
-            {product.videoUrl ? (
+            {currentProduct.videoUrl ? (
               <div style={{ position: 'relative', paddingBottom: '75%', height: 0, overflow: 'hidden' }}>
                 <iframe
-                  src={product.videoUrl.replace('watch?v=', 'embed/')}
-                  title={product.name}
+                  src={currentProduct.videoUrl.replace('watch?v=', 'embed/')}
+                  title={currentProduct.name}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                   style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 0 }}
@@ -165,14 +169,14 @@ export default function ProductDetailPage() {
             ) : (
               <div style={{ width: '100%', height: 360, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
                 <img
-                  src={product.image || '/image.png'}
-                  alt={product.name}
+                  src={currentProduct.image || '/image.png'}
+                  alt={currentProduct.name}
                   style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
                 />
               </div>
             )}
 
-            {product.tag && (
+            {currentProduct.tag && (
               <div
                 style={{
                   position: 'absolute',
@@ -188,11 +192,11 @@ export default function ProductDetailPage() {
                   letterSpacing: '0.04em'
                 }}
               >
-                {product.tag}
+                {currentProduct.tag}
               </div>
             )}
 
-            {product.discountText && (
+            {currentProduct.discountText && (
               <div
                 style={{
                   position: 'absolute',
@@ -206,7 +210,7 @@ export default function ProductDetailPage() {
                   fontWeight: 800
                 }}
               >
-                {product.discountText}
+                {loc(currentProduct.discountText)}
               </div>
             )}
           </div>
@@ -214,15 +218,15 @@ export default function ProductDetailPage() {
           {/* Product Purchasing Box */}
           <div>
             <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--red-700)', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: 8 }}>
-              {product.category || 'Hospital Pharmacy'}
+              {currentProduct.category || loc('Hospital Pharmacy')}
             </span>
 
             <h1 style={{ fontSize: 'clamp(24px, 3.2vw, 34px)', color: 'var(--ink)', marginBottom: 12, lineHeight: 1.25 }}>
-              {product.name}
+              {currentProduct.name}
             </h1>
 
             <p style={{ fontSize: 15, color: 'var(--ink-soft)', lineHeight: 1.6, marginBottom: 20 }}>
-              {product.summary}
+              {currentProduct.summary}
             </p>
 
             {/* Price Box */}
@@ -239,16 +243,16 @@ export default function ProductDetailPage() {
               }}
             >
               <span style={{ fontSize: 30, fontWeight: 800, color: 'var(--red-900)' }}>
-                {formatCurrency(product.price)}
+                {formatCurrency(currentProduct.price)}
               </span>
-              {product.originalPrice && (
+              {currentProduct.originalPrice && (
                 <span style={{ fontSize: 16, color: 'var(--ink-soft)', textDecoration: 'line-through' }}>
-                  {formatCurrency(product.originalPrice)}
+                  {formatCurrency(currentProduct.originalPrice)}
                 </span>
               )}
-              {product.originalPrice && product.originalPrice > product.price && (
+              {currentProduct.originalPrice && currentProduct.originalPrice > currentProduct.price && (
                 <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--green)', background: 'rgba(20, 130, 95, 0.1)', padding: '2px 8px', borderRadius: 6 }}>
-                  Save {formatCurrency(product.originalPrice - product.price)}
+                  {loc('Save')} {formatCurrency(currentProduct.originalPrice - currentProduct.price)}
                 </span>
               )}
             </div>
@@ -257,13 +261,13 @@ export default function ProductDetailPage() {
             {featuresList.length > 0 && (
               <div style={{ marginBottom: 24 }}>
                 <h4 style={{ fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--ink-soft)', marginBottom: 10, fontWeight: 700 }}>
-                  Key Clinical Features
+                  {loc('Key Clinical Features')}
                 </h4>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 8 }}>
                   {featuresList.map((feat, idx) => (
                     <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--ink)' }}>
                       <CheckCircle2 size={16} style={{ color: 'var(--green)', flexShrink: 0 }} />
-                      <span>{feat}</span>
+                      <span>{loc(feat)}</span>
                     </div>
                   ))}
                 </div>
@@ -299,11 +303,11 @@ export default function ProductDetailPage() {
                 style={{ padding: '12px 28px', fontSize: 15, borderRadius: 14 }}
               >
                 <ShoppingCart size={18} />
-                <span>{added ? 'Added to Cart ✓' : `Add to Cart — ${formatCurrency(product.price * quantity)}`}</span>
+                <span>{added ? `${loc('Added to Cart')} ✓` : `${loc('Add to Cart')} — ${formatCurrency(currentProduct.price * quantity)}`}</span>
               </button>
 
               <Link to="/products" className="btn btn-secondary" style={{ padding: '12px 20px', borderRadius: 14 }}>
-                View Cart & Order
+                {t('cart.viewCart', 'View Cart')}
               </Link>
             </div>
           </div>
@@ -313,17 +317,17 @@ export default function ProductDetailPage() {
         <div className="product-detail-grid">
           {/* Main Rich Content */}
           <div className="product-content-main">
-            {product.content ? (
+            {currentProduct.content ? (
               <div className="card" style={{ padding: 'clamp(20px, 3vw, 36px)', marginBottom: 30, borderRadius: 20 }}>
                 <div
                   className="product-rich-content ql-editor"
-                  dangerouslySetInnerHTML={{ __html: product.content }}
+                  dangerouslySetInnerHTML={{ __html: currentProduct.content }}
                 />
               </div>
             ) : (
               <div className="card" style={{ padding: 'clamp(20px, 3vw, 36px)', marginBottom: 30, borderRadius: 20 }}>
-                <h3 style={{ fontSize: 20, marginBottom: 12 }}>Product Clinical Overview</h3>
-                <p style={{ fontSize: 15, lineHeight: 1.75, color: 'var(--ink)' }}>{product.summary}</p>
+                <h3 style={{ fontSize: 20, marginBottom: 12 }}>{loc('Product Clinical Overview')}</h3>
+                <p style={{ fontSize: 15, lineHeight: 1.75, color: 'var(--ink)' }}>{currentProduct.summary}</p>
               </div>
             )}
 
@@ -341,10 +345,10 @@ export default function ProductDetailPage() {
                 <ShieldCheck size={26} style={{ color: 'var(--emerald-700)', flexShrink: 0, marginTop: 2 }} />
                 <div>
                   <h3 style={{ fontSize: 18, color: 'var(--emerald-900)', marginBottom: 6 }}>
-                    Verified by Rithanya Hospital Medical Board
+                    {loc('Verified by Rithanya Hospital Medical Board')}
                   </h3>
                   <p style={{ fontSize: 14, color: 'var(--emerald-800)', lineHeight: 1.6, margin: 0 }}>
-                    Every diagnostic monitor, lancet drum, and nutritional therapy package is inspected and approved by our clinical department to ensure strict medical-grade calibration and patient safety.
+                    {loc('Every diagnostic monitor, lancet drum, and nutritional therapy package is inspected and approved by our clinical department to ensure strict medical-grade calibration and patient safety.')}
                   </p>
                 </div>
               </div>
@@ -355,31 +359,31 @@ export default function ProductDetailPage() {
           <div className="product-sidebar" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             {/* Pharmacy Dispatch Card */}
             <div className="card" style={{ padding: 24, borderRadius: 20 }}>
-              <h4 style={{ fontSize: 16, marginBottom: 14, color: 'var(--ink)' }}>Hospital Pharmacy Dispatch</h4>
+              <h4 style={{ fontSize: 16, marginBottom: 14, color: 'var(--ink)' }}>{loc('Hospital Pharmacy Dispatch')}</h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 14, fontSize: 13.5 }}>
                 <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
                   <Truck size={18} style={{ color: 'var(--red-700)', flexShrink: 0 }} />
-                  <span><strong>Free Delivery:</strong> Anywhere across Khammam within 24 hours.</span>
+                  <span><strong>{loc('Free Delivery')}:</strong> {loc('Anywhere across Khammam within 24 hours.')}</span>
                 </div>
                 <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
                   <ShieldCheck size={18} style={{ color: 'var(--green)', flexShrink: 0 }} />
-                  <span><strong>Payment:</strong> Cash on Delivery / UPI upon inspection.</span>
+                  <span><strong>{loc('Payment')}:</strong> {loc('Cash on Delivery / UPI upon inspection.')}</span>
                 </div>
                 <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
                   <Phone size={18} style={{ color: 'var(--red-700)', flexShrink: 0 }} />
-                  <span><strong>Pharmacy Desk:</strong> 8328581019 / 9948713504</span>
+                  <span><strong>{loc('Pharmacy Desk')}:</strong> 8328581019 / 9948713504</span>
                 </div>
               </div>
             </div>
 
             {/* Direct Consultation Notice */}
             <div className="card" style={{ padding: 22, borderRadius: 20, background: '#fcfbfb' }}>
-              <h4 style={{ fontSize: 15, marginBottom: 10, color: 'var(--ink)' }}>Need Medical Advice?</h4>
+              <h4 style={{ fontSize: 15, marginBottom: 10, color: 'var(--ink)' }}>{loc('Need Medical Advice?')}</h4>
               <p style={{ fontSize: 13, color: 'var(--ink-soft)', lineHeight: 1.6, marginBottom: 14 }}>
-                If you have questions about which device or nutritional supplement is right for your condition, consult directly with our physicians.
+                {loc('If you have questions about which device or nutritional supplement is right for your condition, consult directly with our physicians.')}
               </p>
               <Link to="/doctors" className="btn btn-outline btn-sm" style={{ width: '100%', justifyContent: 'center' }}>
-                Consult Specialist Doctors
+                {loc('Consult Specialist Doctors')}
               </Link>
             </div>
           </div>

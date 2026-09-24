@@ -17,19 +17,22 @@ import {
   Building,
   Check
 } from 'lucide-react';
+import useDynamicTranslation from '../../utils/dynamicTranslator';
 
 export default function AboutPage() {
+  const { t, loc } = useDynamicTranslation();
+
   return (
     <div className="about-page" style={{ padding: '50px 0 90px' }}>
       <div className="container">
         {/* Page Header */}
         <div className="section-head" style={{ textAlign: 'center', marginBottom: 48 }}>
-          <span className="section-tag">Rithanya Hospital • రిహార్దిక సేవా సంకల్పం</span>
+          <span className="section-tag">{t('aboutPage.tag', 'Rithanya Hospital • Advanced Clinical Care')}</span>
           <h1 className="section-title" style={{ fontSize: 'clamp(28px, 4.5vw, 44px)' }}>
-            Excellence in Clinical Medicine, Guided by Human Compassion
+            {t('aboutPage.title', 'Excellence in Clinical Medicine, Guided by Human Compassion')}
           </h1>
           <p className="section-subtitle" style={{ maxWidth: 840, margin: '0 auto', fontSize: 16 }}>
-            Rithanya Hospital (రితన్య హాస్పిటల్) was established on Nehru Road, Khammam, to bring advanced, ethical internal medicine, specialized Diabetology, and a life-sustaining 24/7 Daycare Transfusion Centre to the community.
+            {t('aboutPage.sub', 'Rithanya Hospital was established on Nehru Road, Khammam, to bring advanced, ethical internal medicine, specialized Diabetology, and a life-sustaining 24/7 Daycare Transfusion Centre to the community.')}
           </p>
         </div>
 
@@ -50,25 +53,31 @@ export default function AboutPage() {
           >
             <div className="grid-2" style={{ alignItems: 'center', gap: 36 }}>
               <div>
-                <span className="badge badge-red" style={{ marginBottom: 12 }}>Our Foundation & Legacy</span>
+                <span className="badge badge-red" style={{ marginBottom: 12 }}>
+                  {t('aboutPage.foundationBadge', 'Our Foundation & Legacy')}
+                </span>
                 <h2 style={{ fontSize: 'clamp(22px, 3.5vw, 32px)', marginBottom: 16, color: 'var(--ink)' }}>
-                  A Trusted Healing Haven in the Heart of Khammam
+                  {t('aboutPage.foundationTitle', 'A Trusted Healing Haven in the Heart of Khammam')}
                 </h2>
                 <p style={{ color: 'var(--ink-soft)', lineHeight: 1.8, fontSize: 15, marginBottom: 16 }}>
-                  Located opposite the Old L.I.C. Office on Nehru Road, Rithanya Hospital combines modern diagnostic capabilities with a warm, patient-first clinical environment. Driven by a deep commitment to affordable and transparent healthcare, the hospital has grown into a vital clinical anchor for Khammam and surrounding rural and semi-urban communities.
+                  {t('aboutPage.foundationP1', 'Located opposite the Old L.I.C. Office on Nehru Road, Rithanya Hospital combines modern diagnostic capabilities with a warm, patient-first clinical environment. Driven by a deep commitment to affordable and transparent healthcare, the hospital has grown into a vital clinical anchor for Khammam and surrounding rural and semi-urban communities.')}
                 </p>
                 <p style={{ color: 'var(--ink-soft)', lineHeight: 1.8, fontSize: 15, marginBottom: 20 }}>
-                  Our specialized Daycare Transfusion Unit was specifically established to address the acute challenges faced by children and families battling Beta Thalassemia Major and Sickle Cell Anemia. With complete Aarogyasri cashless coverage and an in-house 24/7 blood bank, young warriors receive scheduled, infection-controlled transfusions with absolute safety and peace of mind.
+                  {t('aboutPage.foundationP2', 'Our specialized Daycare Transfusion Unit was specifically established to address the acute challenges faced by children and families battling Beta Thalassemia Major and Sickle Cell Anemia. With complete Aarogyasri cashless coverage and an in-house 24/7 blood bank, young warriors receive scheduled, infection-controlled transfusions with absolute safety and peace of mind.')}
                 </p>
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14 }}>
                   <div style={{ padding: '12px 16px', background: 'var(--canvas)', borderRadius: 12, border: '1px solid var(--line)' }}>
                     <h4 style={{ color: 'var(--red-700)', fontSize: 20, margin: 0, fontWeight: 800 }}>24/7</h4>
-                    <p style={{ fontSize: 12.5, color: 'var(--ink-soft)', margin: '4px 0 0', fontWeight: 600 }}>Emergency & Blood Bank</p>
+                    <p style={{ fontSize: 12.5, color: 'var(--ink-soft)', margin: '4px 0 0', fontWeight: 600 }}>
+                      {t('aboutPage.stat1Label', 'Emergency & Blood Bank')}
+                    </p>
                   </div>
                   <div style={{ padding: '12px 16px', background: 'var(--canvas)', borderRadius: 12, border: '1px solid var(--line)' }}>
                     <h4 style={{ color: 'var(--red-700)', fontSize: 20, margin: 0, fontWeight: 800 }}>Aarogyasri</h4>
-                    <p style={{ fontSize: 12.5, color: 'var(--ink-soft)', margin: '4px 0 0', fontWeight: 600 }}>Thalassemia & Sickle Cell</p>
+                    <p style={{ fontSize: 12.5, color: 'var(--ink-soft)', margin: '4px 0 0', fontWeight: 600 }}>
+                      {t('aboutPage.stat2Label', 'Thalassemia & Sickle Cell')}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -81,8 +90,8 @@ export default function AboutPage() {
                   style={{ width: '100%', height: '100%', maxHeight: 380, objectFit: 'cover', display: 'block' }}
                 />
                 <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%)', padding: '16px 20px', color: '#fff' }}>
-                  <p style={{ fontSize: 14, fontWeight: 700, margin: 0 }}>Nehru Road Campus • Khammam</p>
-                  <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.85)', margin: '2px 0 0' }}>Diabetology, Daycare Transfusion & 24/7 Diagnostics</p>
+                  <p style={{ fontSize: 14, fontWeight: 700, margin: 0 }}>{loc('Nehru Road Campus • Khammam')}</p>
+                  <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.85)', margin: '2px 0 0' }}>{loc('Diabetology, Daycare Transfusion & 24/7 Diagnostics')}</p>
                 </div>
               </div>
             </div>
@@ -91,10 +100,12 @@ export default function AboutPage() {
           {/* Founding Leadership Showcase */}
           <div style={{ marginTop: 32 }}>
             <div style={{ textAlign: 'center', marginBottom: 28 }}>
-              <span className="section-tag">Institutional Leadership</span>
-              <h3 style={{ fontSize: 24, fontWeight: 800, color: 'var(--ink)' }}>Our Founding Visionaries</h3>
+              <span className="section-tag">{t('aboutPage.leadershipTag', 'Institutional Leadership')}</span>
+              <h3 style={{ fontSize: 24, fontWeight: 800, color: 'var(--ink)' }}>
+                {t('aboutPage.leadershipTitle', 'Our Founding Visionaries')}
+              </h3>
               <p style={{ fontSize: 14.5, color: 'var(--ink-soft)', maxWidth: 640, margin: '4px auto 0' }}>
-                Dedicated senior clinical practitioners directing every medical and ethical protocol at Rithanya Hospital.
+                {t('aboutPage.leadershipSub', 'Dedicated senior clinical practitioners directing every medical and ethical protocol at Rithanya Hospital.')}
               </p>
             </div>
 
@@ -131,18 +142,20 @@ export default function AboutPage() {
                   />
                 </div>
                 <div>
-                  <span className="badge badge-red" style={{ marginBottom: 6, fontSize: 11 }}>Founder & Chief Physician</span>
+                  <span className="badge badge-red" style={{ marginBottom: 6, fontSize: 11 }}>
+                    {t('aboutPage.drNarayanaRole', 'Founder & Chief Physician')}
+                  </span>
                   <h4 style={{ fontSize: 18, fontWeight: 800, color: 'var(--ink)', margin: '0 0 4px' }}>
-                    Dr. D. Narayana Murthy
+                    {loc('Dr. D. Narayana Murthy')}
                   </h4>
                   <p style={{ fontSize: 13, color: 'var(--red-700)', fontWeight: 700, margin: '0 0 8px' }}>
                     డా॥ డి. నారాయణమూర్తి (Reg. 81187)
                   </p>
                   <p style={{ fontSize: 12, color: 'var(--ink-soft)', lineHeight: 1.5, margin: '0 0 10px' }}>
-                    MD (General Physician SVIMS) • Ex. Senior Resident (SVIMS) • Ex. Resident (JIPMER) • Fellowship in Clinical Endocrinology & Diabetes RCP (London) • Fellowship in Diabetes & Renal Management RCP (London)
+                    {loc('MD (General Physician SVIMS) • Ex. Senior Resident (SVIMS) • Ex. Resident (JIPMER) • Fellowship in Clinical Endocrinology & Diabetes RCP (London) • Fellowship in Diabetes & Renal Management RCP (London)')}
                   </p>
                   <Link to="/doctors/dr-d-narayana-murthy" className="btn btn-outline btn-sm" style={{ padding: '4px 12px', fontSize: 12 }}>
-                    <span>View Doctor Profile</span>
+                    <span>{t('aboutPage.viewDocProfile', 'View Doctor Profile')}</span>
                   </Link>
                 </div>
               </div>
@@ -179,18 +192,20 @@ export default function AboutPage() {
                   />
                 </div>
                 <div>
-                  <span className="badge badge-red" style={{ marginBottom: 6, fontSize: 11 }}>Co-Founder & Consultant</span>
+                  <span className="badge badge-red" style={{ marginBottom: 6, fontSize: 11 }}>
+                    {t('aboutPage.drDeepaRole', 'Co-Founder & Consultant')}
+                  </span>
                   <h4 style={{ fontSize: 18, fontWeight: 800, color: 'var(--ink)', margin: '0 0 4px' }}>
-                    Dr. A. Lakshmi Deepa
+                    {loc('Dr. A. Lakshmi Deepa')}
                   </h4>
                   <p style={{ fontSize: 13, color: 'var(--red-700)', fontWeight: 700, margin: '0 0 8px' }}>
                     డా॥ ఎ. లక్ష్మీదీప (Reg. 19422)
                   </p>
                   <p style={{ fontSize: 12, color: 'var(--ink-soft)', lineHeight: 1.5, margin: '0 0 10px' }}>
-                    M.B.B.S. • Gynecologist & Women's Health Specialist (స్త్రీల వైద్య నిపుణులు) • Focused on comprehensive maternal care, adolescent wellness, and endocrine health.
+                    {loc("M.B.B.S. • Gynecologist & Women's Health Specialist (స్త్రీల వైద్య నిపుణులు) • Focused on comprehensive maternal care, adolescent wellness, and endocrine health.")}
                   </p>
                   <Link to="/doctors/dr-a-lakshmi-deepa" className="btn btn-outline btn-sm" style={{ padding: '4px 12px', fontSize: 12 }}>
-                    <span>View Doctor Profile</span>
+                    <span>{t('aboutPage.viewDocProfile', 'View Doctor Profile')}</span>
                   </Link>
                 </div>
               </div>
@@ -203,10 +218,10 @@ export default function AboutPage() {
             ========================================================================== */}
         <section style={{ marginBottom: 70 }} aria-label="Vision and Mission">
           <div className="section-head" style={{ textAlign: 'center', marginBottom: 36 }}>
-            <span className="section-tag">Guiding Light • దార్శనికత & లక్ష్యం</span>
-            <h2 className="section-title">Our Vision & Mission</h2>
+            <span className="section-tag">{t('aboutPage.visionMissionTag', 'Guiding Light')}</span>
+            <h2 className="section-title">{t('aboutPage.visionMissionTitle', 'Our Vision & Mission')}</h2>
             <p className="section-subtitle" style={{ maxWidth: 740, margin: '0 auto' }}>
-              Setting benchmark standards for compassionate outpatient care, advanced diabetology, and dedicated hemoglobinopathy transfusion support.
+              {t('aboutPage.visionMissionSub', 'Setting benchmark standards for compassionate outpatient care, advanced diabetology, and dedicated hemoglobinopathy transfusion support.')}
             </p>
           </div>
 
@@ -238,23 +253,23 @@ export default function AboutPage() {
                 <Award size={26} />
               </div>
               <h3 style={{ fontSize: 22, fontWeight: 800, color: 'var(--ink)', marginBottom: 12 }}>
-                Our Institutional Vision
+                {t('aboutPage.visionTitle', 'Our Institutional Vision')}
               </h3>
               <p style={{ fontSize: 15, color: 'var(--ink-soft)', lineHeight: 1.8, marginBottom: 16 }}>
-                To stand as Telangana’s foremost center of clinical trust, where chronic conditions like Diabetes and Thalassemia are managed with scientific rigor, empathetic continuity, and complete patient dignity, ensuring that no patient is denied life-saving treatment due to geographical or financial constraints.
+                {t('aboutPage.visionP', 'To stand as Telangana’s foremost center of clinical trust, where chronic conditions like Diabetes and Thalassemia are managed with scientific rigor, empathetic continuity, and complete patient dignity, ensuring that no patient is denied life-saving treatment due to geographical or financial constraints.')}
               </p>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
                 <li style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13.5, color: 'var(--ink)' }}>
                   <CheckCircle size={16} style={{ color: 'var(--red-700)', flexShrink: 0 }} />
-                  <span>Lifelong vascular and organ protection for every diabetic individual</span>
+                  <span>{loc('Lifelong vascular and organ protection for every diabetic individual')}</span>
                 </li>
                 <li style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13.5, color: 'var(--ink)' }}>
                   <CheckCircle size={16} style={{ color: 'var(--red-700)', flexShrink: 0 }} />
-                  <span>Elimination of transfusion complications through 100% leukodepletion</span>
+                  <span>{loc('Elimination of transfusion complications through 100% leukodepletion')}</span>
                 </li>
                 <li style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13.5, color: 'var(--ink)' }}>
                   <CheckCircle size={16} style={{ color: 'var(--red-700)', flexShrink: 0 }} />
-                  <span>A peaceful, child-friendly healing atmosphere in Khammam</span>
+                  <span>{loc('A peaceful, child-friendly healing atmosphere in Khammam')}</span>
                 </li>
               </ul>
             </div>
@@ -286,23 +301,23 @@ export default function AboutPage() {
                 <Heart size={26} />
               </div>
               <h3 style={{ fontSize: 22, fontWeight: 800, color: 'var(--ink)', marginBottom: 12 }}>
-                Our Active Mission
+                {t('aboutPage.missionTitle', 'Our Active Mission')}
               </h3>
               <p style={{ fontSize: 15, color: 'var(--ink-soft)', lineHeight: 1.8, marginBottom: 16 }}>
-                To provide accessible, evidence-guided physician care where patients receive thorough investigations, clear communication, and personalized therapeutic regimens without commercial over-investigation or irrational polypharmacy.
+                {t('aboutPage.missionP', 'To provide accessible, evidence-guided physician care where patients receive thorough investigations, clear communication, and personalized therapeutic regimens without commercial over-investigation or irrational polypharmacy.')}
               </p>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
                 <li style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13.5, color: 'var(--ink)' }}>
                   <CheckCircle size={16} style={{ color: 'var(--green)', flexShrink: 0 }} />
-                  <span>Deliver 24/7 Emergency and Blood Bank services with speed and precision</span>
+                  <span>{loc('Deliver 24/7 Emergency and Blood Bank services with speed and precision')}</span>
                 </li>
                 <li style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13.5, color: 'var(--ink)' }}>
                   <CheckCircle size={16} style={{ color: 'var(--green)', flexShrink: 0 }} />
-                  <span>Administer free Aarogyasri daycare transfusions for thalassemia children</span>
+                  <span>{loc('Administer free Aarogyasri daycare transfusions for thalassemia children')}</span>
                 </li>
                 <li style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13.5, color: 'var(--ink)' }}>
                   <CheckCircle size={16} style={{ color: 'var(--green)', flexShrink: 0 }} />
-                  <span>Support women's health and family wellness through specialized care</span>
+                  <span>{loc("Support women's health and family wellness through specialized care")}</span>
                 </li>
               </ul>
             </div>
@@ -314,10 +329,10 @@ export default function AboutPage() {
             ========================================================================== */}
         <section aria-label="Our Values and Ethics">
           <div className="section-head" style={{ textAlign: 'center', marginBottom: 36 }}>
-            <span className="section-tag">Moral Foundations • మా విలువలు & నైతిక ప్రమాణాలు</span>
-            <h2 className="section-title">Our Values & Ethics</h2>
+            <span className="section-tag">{t('aboutPage.valuesTag', 'Moral Foundations')}</span>
+            <h2 className="section-title">{t('aboutPage.valuesTitle', 'Our Values & Ethics')}</h2>
             <p className="section-subtitle" style={{ maxWidth: 740, margin: '0 auto' }}>
-              The uncompromised clinical, ethical, and digital standards that define every interaction at Rithanya Hospital.
+              {t('aboutPage.valuesSub', 'The uncompromised clinical, ethical, and digital standards that define every interaction at Rithanya Hospital.')}
             </p>
           </div>
 
@@ -327,10 +342,10 @@ export default function AboutPage() {
                 <Stethoscope size={22} />
               </div>
               <h3 style={{ fontSize: 18, fontWeight: 800, marginBottom: 10, color: 'var(--ink)' }}>
-                Ethical Prescribing
+                {t('aboutPage.ethicalPrescribing', 'Ethical Prescribing')}
               </h3>
               <p style={{ color: 'var(--ink-soft)', fontSize: 14, lineHeight: 1.7, margin: 0 }}>
-                We strictly oppose irrational polypharmacy. Every medicine, laboratory test, and procedure prescribed is clinically justified and clearly explained to the patient.
+                {t('aboutPage.ethicalPrescribingDesc', 'We strictly oppose irrational polypharmacy. Every medicine, laboratory test, and procedure prescribed is clinically justified and clearly explained to the patient.')}
               </p>
             </div>
 
@@ -339,10 +354,10 @@ export default function AboutPage() {
                 <Droplet size={22} />
               </div>
               <h3 style={{ fontSize: 18, fontWeight: 800, marginBottom: 10, color: 'var(--ink)' }}>
-                Zero-Compromise Blood Safety
+                {t('aboutPage.bloodSafety', 'Zero-Compromise Blood Safety')}
               </h3>
               <p style={{ color: 'var(--ink-soft)', fontSize: 14, lineHeight: 1.7, margin: 0 }}>
-                Triple pre-transfusion crossmatching, calibrated donor screening, and bedside leukodepletion micro-filters guarantee supreme safety against transfusion reactions and HLA alloimmunization.
+                {t('aboutPage.bloodSafetyDesc', 'Triple pre-transfusion crossmatching, calibrated donor screening, and bedside leukodepletion micro-filters guarantee supreme safety against transfusion reactions and HLA alloimmunization.')}
               </p>
             </div>
 
@@ -351,10 +366,10 @@ export default function AboutPage() {
                 <ShieldCheck size={22} />
               </div>
               <h3 style={{ fontSize: 18, fontWeight: 800, marginBottom: 10, color: 'var(--ink)' }}>
-                DPDP Act 2023 Digital Trust
+                {t('aboutPage.digitalTrust', 'DPDP Act 2023 Digital Trust')}
               </h3>
               <p style={{ color: 'var(--ink-soft)', fontSize: 14, lineHeight: 1.7, margin: 0 }}>
-                Full statutory compliance with the Digital Personal Data Protection Act 2023. Patient records, live camera consent photos, and right to data erasure are protected with institutional rigor.
+                {t('aboutPage.digitalTrustDesc', 'Full statutory compliance with the Digital Personal Data Protection Act 2023. Patient records, live camera consent photos, and right to data erasure are protected with institutional rigor.')}
               </p>
             </div>
           </div>
@@ -371,24 +386,24 @@ export default function AboutPage() {
             }}
           >
             <h3 style={{ fontSize: 'clamp(22px, 3.5vw, 28px)', fontWeight: 800, marginBottom: 12 }}>
-              Visit Rithanya Hospital in Khammam
+              {t('aboutPage.visitTitle', 'Visit Rithanya Hospital in Khammam')}
             </h3>
             <p style={{ fontSize: 15, color: 'rgba(255, 255, 255, 0.88)', maxWidth: 640, margin: '0 auto 24px', lineHeight: 1.6 }}>
-              Nehru Road, Opposite Old L.I.C. Office, Khammam (నెహ్రూరోడ్, పాత ఎల్.ఐ.సి. ఆఫీస్ ఎదురుగా, ఖమ్మం)
+              {t('aboutPage.visitAddress', 'Nehru Road, Opposite Old L.I.C. Office, Khammam, Telangana 507001')}
             </p>
 
             <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
               <Link to="/contact#appointment" className="btn btn-primary" style={{ background: '#fff', color: 'var(--red-900)' }}>
                 <Calendar size={16} />
-                <span>Book Doctor Appointment</span>
+                <span>{t('aboutPage.bookAppointmentBtn', 'Book Doctor Appointment')}</span>
               </Link>
               <a href="tel:+918328581019" className="btn btn-secondary" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff', borderColor: 'rgba(255,255,255,0.3)' }}>
                 <Phone size={16} />
-                <span>Call +91 83285 81019</span>
+                <span>+91 83285 81019</span>
               </a>
               <a href="tel:+919948713504" className="btn btn-secondary" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff', borderColor: 'rgba(255,255,255,0.3)' }}>
                 <Phone size={16} />
-                <span>Call +91 99487 13504</span>
+                <span>+91 99487 13504</span>
               </a>
             </div>
           </div>

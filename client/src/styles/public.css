@@ -96,6 +96,7 @@
   margin: 0;
   padding: 0;
   flex-shrink: 1;
+  flex-wrap: nowrap;
 }
 
 .island-nav-link {
@@ -801,14 +802,18 @@
    FLOATING DYNAMIC ISLAND NAVBAR - RESPONSIVE BREAKPOINTS
    ========================================================================== */
 
-/* 1. Large Desktops & Wide Laptops (1201px - 1380px) */
+/* 1. Large Desktops & Wide Laptops (1241px - 1380px) */
 @media (max-width: 1380px) {
   .brand-subtitle {
     display: none !important;
   }
+  .island-nav-links {
+    gap: 1px !important;
+    flex-wrap: nowrap !important;
+  }
   .island-nav-link {
-    padding: 6px 9px !important;
-    font-size: 13px !important;
+    padding: 6px 7px !important;
+    font-size: 12.5px !important;
   }
   .island-btn-phone .phone-text {
     display: none !important;
@@ -821,8 +826,8 @@
   }
 }
 
-/* 2. Tablets, iPads & Compact Laptops (769px - 1200px) */
-@media (max-width: 1200px) {
+/* 2. Tablets, iPads & Compact Laptops (769px - 1240px) */
+@media (max-width: 1240px) {
   .island-nav-links {
     display: none !important;
   }

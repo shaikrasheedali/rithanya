@@ -17,10 +17,12 @@ import {
 } from 'lucide-react';
 import { apiRequest } from '../../utils/api';
 import { useToast } from '../../components/common/Toast';
+import useDynamicTranslation from '../../utils/dynamicTranslator';
 
 export default function SpecialistDetailPage() {
   const { slug } = useParams();
   const { addToast } = useToast();
+  const { t, loc, locItem } = useDynamicTranslation();
   const [specialist, setSpecialist] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -95,7 +97,7 @@ export default function SpecialistDetailPage() {
   if (loading) {
     return (
       <div className="container" style={{ padding: '120px 0', textAlign: 'center' }}>
-        <p style={{ color: 'var(--ink-soft)', fontSize: 16 }}>Loading specialist profile...</p>
+        <p style={{ color: 'var(--ink-soft)', fontSize: 16 }}>{t('common.loading', 'Loading clinical records...')}</p>
       </div>
     );
   }
@@ -103,17 +105,19 @@ export default function SpecialistDetailPage() {
   if (!specialist) {
     return (
       <div className="container" style={{ padding: '120px 0', textAlign: 'center' }}>
-        <h2 style={{ fontSize: 28, marginBottom: 12 }}>Doctor Profile Not Found</h2>
+        <h2 style={{ fontSize: 28, marginBottom: 12 }}>{loc('Doctor Profile Not Found')}</h2>
         <p style={{ color: 'var(--ink-soft)', marginBottom: 24, fontSize: 15 }}>
-          The requested medical specialist or consultant could not be found.
+          {loc('The requested medical specialist or consultant could not be found.')}
         </p>
         <Link to="/doctors" className="btn btn-primary">
           <ArrowLeft size={16} />
-          <span>Back to All Specialists</span>
+          <span>{loc('Back to All Specialists')}</span>
         </Link>
       </div>
     );
   }
+
+  const currentDoctor = locItem(specialist);
 
   return (
     <div className="doctor-detail-page" style={{ padding: '40px 0 100px', background: 'var(--canvas)' }}>
@@ -122,7 +126,7 @@ export default function SpecialistDetailPage() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28, flexWrap: 'wrap', gap: 12 }}>
           <Link to="/doctors" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: 'var(--ink-soft)', textDecoration: 'none', fontWeight: 600, fontSize: 14 }}>
             <ArrowLeft size={16} />
-            <span>Back to Doctors Directory</span>
+            <span>{loc('Back to Doctors Directory')}</span>
           </Link>
           <button
             type="button"
@@ -131,7 +135,7 @@ export default function SpecialistDetailPage() {
             style={{ borderRadius: 20 }}
           >
             <Share2 size={14} />
-            <span>Share Doctor Profile</span>
+            <span>{loc('Share Doctor Profile')}</span>
           </button>
         </div>
 
@@ -165,8 +169,8 @@ export default function SpecialistDetailPage() {
             }}
           >
             <img
-              src={specialist.image || '/image.png'}
-              alt={specialist.name}
+              src={currentDoctor.image || '/image.png'}
+              alt={currentDoctor.name}
               style={{
                 width: '100%',
                 maxHeight: 380,
@@ -175,7 +179,7 @@ export default function SpecialistDetailPage() {
                 display: 'block'
               }}
             />
-            {specialist.registrationNumber && (
+            {currentDoctor.registrationNumber && (
               <div
                 style={{
                   position: 'absolute',
@@ -195,7 +199,7 @@ export default function SpecialistDetailPage() {
                 }}
               >
                 <UserCheck size={12} />
-                <span>Reg: {specialist.registrationNumber}</span>
+                <span>Reg: {currentDoctor.registrationNumber}</span>
               </div>
             )}
           </div>
@@ -204,9 +208,9 @@ export default function SpecialistDetailPage() {
           <div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 14 }}>
               <span className="badge badge-red" style={{ fontSize: 12, padding: '5px 12px' }}>
-                {specialist.department}
+                {currentDoctor.department}
               </span>
-              {specialist.experience && (
+              {currentDoctor.experience && (
                 <span
                   style={{
                     background: 'var(--emerald-50)',
@@ -222,17 +226,17 @@ export default function SpecialistDetailPage() {
                   }}
                 >
                   <Award size={13} />
-                  {specialist.experience} Experience
+                  {currentDoctor.experience} {t('common.experience', 'Experience')}
                 </span>
               )}
             </div>
 
             <h1 style={{ fontSize: 'clamp(24px, 3.5vw, 36px)', color: 'var(--ink)', marginBottom: 8, lineHeight: 1.25 }}>
-              {specialist.name}
+              {currentDoctor.name}
             </h1>
 
             <p style={{ color: 'var(--red-700)', fontWeight: 700, fontSize: 'clamp(14px, 2vw, 17px)', marginBottom: 16 }}>
-              {specialist.designation}
+              {currentDoctor.designation}
             </p>
 
             {/* Qualifications Box */}
@@ -251,10 +255,10 @@ export default function SpecialistDetailPage() {
               <GraduationCap size={20} style={{ color: 'var(--red-700)', flexShrink: 0, marginTop: 2 }} />
               <div>
                 <span style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--ink-soft)', fontWeight: 700, display: 'block', marginBottom: 2 }}>
-                  Medical Qualifications & Fellowships
+                  {loc('Medical Qualifications & Fellowships')}
                 </span>
                 <p style={{ fontSize: 13.5, color: 'var(--ink)', lineHeight: 1.5, margin: 0, fontWeight: 500 }}>
-                  {specialist.qualifications}
+                  {currentDoctor.qualifications}
                 </p>
               </div>
             </div>
@@ -262,18 +266,18 @@ export default function SpecialistDetailPage() {
             {/* OPD Timings */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: 'var(--ink-soft)', fontSize: 13.5, marginBottom: 24, flexWrap: 'wrap' }}>
               <Clock size={16} style={{ color: 'var(--red-700)', flexShrink: 0 }} />
-              <span><strong>OPD Timings:</strong> {specialist.opdTimings || 'Monday – Saturday: 10:00 AM – 02:00 PM & 06:00 PM – 09:00 PM'}</span>
+              <span><strong>{t('common.consultationHours', 'OPD Timings')}:</strong> {currentDoctor.opdTimings || 'Monday – Saturday: 10:00 AM – 02:00 PM & 06:00 PM – 09:00 PM'}</span>
             </div>
 
             {/* CTAs */}
             <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
               <a href="#book-consultation" className="btn btn-primary">
                 <Calendar size={16} />
-                <span>Book OPD Consultation</span>
+                <span>{loc('Book OPD Consultation')}</span>
               </a>
               <a href="tel:8328581019" className="btn btn-secondary">
                 <Phone size={16} />
-                <span>Call: 8328581019</span>
+                <span>{t('common.callUs', 'Call Us')}: 8328581019</span>
               </a>
             </div>
           </div>
@@ -287,19 +291,19 @@ export default function SpecialistDetailPage() {
             <div className="card" style={{ padding: 'clamp(20px, 3vw, 36px)', marginBottom: 30, borderRadius: 20 }}>
               <h2 style={{ fontSize: 22, color: 'var(--ink)', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
                 <HeartPulse size={22} style={{ color: 'var(--red-700)' }} />
-                <span>Clinical Profile & Patient Care Philosophy</span>
+                <span>{loc('Clinical Profile & Patient Care Philosophy')}</span>
               </h2>
               <p style={{ fontSize: 15, color: 'var(--ink)', lineHeight: 1.75, margin: 0 }}>
-                {specialist.bio}
+                {currentDoctor.bio}
               </p>
             </div>
 
             {/* Rich Content Article (Quill formatted from CMS) */}
-            {specialist.content && (
+            {currentDoctor.content && (
               <div className="card" style={{ padding: 'clamp(20px, 3vw, 36px)', marginBottom: 30, borderRadius: 20 }}>
                 <div
                   className="doctor-rich-content ql-editor"
-                  dangerouslySetInnerHTML={{ __html: specialist.content }}
+                  dangerouslySetInnerHTML={{ __html: currentDoctor.content }}
                 />
               </div>
             )}
@@ -318,10 +322,10 @@ export default function SpecialistDetailPage() {
                 <ShieldCheck size={26} style={{ color: 'var(--emerald-700)', flexShrink: 0, marginTop: 2 }} />
                 <div>
                   <h3 style={{ fontSize: 18, color: 'var(--emerald-900)', marginBottom: 6 }}>
-                    Direct Consultant Supervision at Rithanya Hospital
+                    {loc('Direct Consultant Supervision at Rithanya Hospital')}
                   </h3>
                   <p style={{ fontSize: 14, color: 'var(--emerald-800)', lineHeight: 1.6, margin: 0 }}>
-                    Every patient consultation is personally reviewed by our lead consultants. Backed by 24/7 in-house emergency support, digital diagnostic labs, and the Rithanya 24 Hours Blood Bank on Nehru Road, Khammam.
+                    {loc('Every patient consultation is personally reviewed by our lead consultants. Backed by 24/7 in-house emergency support, digital diagnostic labs, and the Rithanya 24 Hours Blood Bank on Nehru Road, Khammam.')}
                   </p>
                 </div>
               </div>
@@ -334,15 +338,15 @@ export default function SpecialistDetailPage() {
             <div id="book-consultation" className="card" style={{ padding: 26, borderRadius: 20, border: '1.5px solid var(--red-200)', background: '#ffffff' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
                 <Calendar size={20} style={{ color: 'var(--red-700)' }} />
-                <h3 style={{ fontSize: 18, margin: 0 }}>Book Consultation</h3>
+                <h3 style={{ fontSize: 18, margin: 0 }}>{loc('Book Consultation')}</h3>
               </div>
 
               {bookingSuccess ? (
                 <div style={{ textAlign: 'center', padding: '24px 12px' }}>
                   <CheckCircle2 size={42} style={{ color: 'var(--emerald-600)', margin: '0 auto 12px' }} />
-                  <h4 style={{ fontSize: 16, color: 'var(--ink)', marginBottom: 6 }}>Booking Received!</h4>
+                  <h4 style={{ fontSize: 16, color: 'var(--ink)', marginBottom: 6 }}>{t('home.bookingSuccessTitle', 'Appointment Request Submitted!')}</h4>
                   <p style={{ fontSize: 13, color: 'var(--ink-soft)', lineHeight: 1.5, marginBottom: 16 }}>
-                    Our medical reception desk at Nehru Road, Khammam will call you at <strong>{bookingForm.phone}</strong> to confirm your slot with {specialist.name}.
+                    {t('home.bookingSuccessMsg', 'Our hospital coordinator will call you shortly to confirm your consultation schedule.')}
                   </p>
                   <button
                     type="button"
@@ -353,13 +357,13 @@ export default function SpecialistDetailPage() {
                     className="btn btn-secondary btn-sm"
                     style={{ width: '100%' }}
                   >
-                    Book Another Slot
+                    {loc('Book Another Slot')}
                   </button>
                 </div>
               ) : (
                 <form onSubmit={handleBookingSubmit}>
                   <div className="form-group" style={{ marginBottom: 14 }}>
-                    <label className="form-label" style={{ fontSize: 12 }}>Patient Full Name *</label>
+                    <label className="form-label" style={{ fontSize: 12 }}>{t('home.patientName', 'Patient Full Name')} *</label>
                     <input
                       type="text"
                       className="form-control"
@@ -371,7 +375,7 @@ export default function SpecialistDetailPage() {
                   </div>
 
                   <div className="form-group" style={{ marginBottom: 14 }}>
-                    <label className="form-label" style={{ fontSize: 12 }}>Mobile Number *</label>
+                    <label className="form-label" style={{ fontSize: 12 }}>{t('home.phone', 'Mobile Number')} *</label>
                     <input
                       type="tel"
                       className="form-control"
@@ -383,7 +387,7 @@ export default function SpecialistDetailPage() {
                   </div>
 
                   <div className="form-group" style={{ marginBottom: 14 }}>
-                    <label className="form-label" style={{ fontSize: 12 }}>Preferred Date *</label>
+                    <label className="form-label" style={{ fontSize: 12 }}>{t('home.preferredDate', 'Preferred Date')} *</label>
                     <input
                       type="date"
                       className="form-control"
@@ -395,19 +399,19 @@ export default function SpecialistDetailPage() {
                   </div>
 
                   <div className="form-group" style={{ marginBottom: 14 }}>
-                    <label className="form-label" style={{ fontSize: 12 }}>Preferred Timing</label>
+                    <label className="form-label" style={{ fontSize: 12 }}>{loc('Preferred Timing')}</label>
                     <select
                       className="form-control"
                       value={bookingForm.timeSlot}
                       onChange={(e) => setBookingForm({ ...bookingForm, timeSlot: e.target.value })}
                     >
-                      <option value="Morning (10:00 AM - 01:30 PM)">Morning: 10:00 AM – 01:30 PM</option>
-                      <option value="Evening (05:30 PM - 08:30 PM)">Evening: 05:30 PM – 08:30 PM</option>
+                      <option value="Morning (10:00 AM - 01:30 PM)">{loc('Morning: 10:00 AM – 01:30 PM')}</option>
+                      <option value="Evening (05:30 PM - 08:30 PM)">{loc('Evening: 05:30 PM – 08:30 PM')}</option>
                     </select>
                   </div>
 
                   <div className="form-group" style={{ marginBottom: 16 }}>
-                    <label className="form-label" style={{ fontSize: 12 }}>Symptoms / Medical Query (Optional)</label>
+                    <label className="form-label" style={{ fontSize: 12 }}>{t('home.reason', 'Symptoms / Medical Query (Optional)')}</label>
                     <textarea
                       className="form-control"
                       rows={2}
@@ -423,7 +427,7 @@ export default function SpecialistDetailPage() {
                     style={{ width: '100%' }}
                     disabled={submittingBooking}
                   >
-                    {submittingBooking ? 'Submitting...' : 'Confirm Appointment Request'}
+                    {submittingBooking ? t('common.loading', 'Submitting...') : t('home.bookSubmit', 'Confirm Appointment Request')}
                   </button>
                 </form>
               )}
@@ -431,25 +435,25 @@ export default function SpecialistDetailPage() {
 
             {/* Hospital Contact & Facility Card */}
             <div className="card" style={{ padding: 22, borderRadius: 20, background: '#fcfbfb' }}>
-              <h4 style={{ fontSize: 15, marginBottom: 12, color: 'var(--ink)' }}>Hospital Facilities & Contact</h4>
+              <h4 style={{ fontSize: 15, marginBottom: 12, color: 'var(--ink)' }}>{loc('Hospital Facilities & Contact')}</h4>
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12, fontSize: 13, color: 'var(--ink-soft)' }}>
                 <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
                   <MapPin size={16} style={{ color: 'var(--red-700)', flexShrink: 0, marginTop: 2 }} />
-                  <span>Nehru Road, Opposite Old L.I.C. Office, Khammam</span>
+                  <span>{t('footer.address', 'Nehru Road, Opp. Old L.I.C. Office, Khammam, Telangana 507001')}</span>
                 </div>
 
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                   <Phone size={16} style={{ color: 'var(--red-700)', flexShrink: 0 }} />
-                  <span>Phones: <strong>8328581019</strong> / <strong>9948713504</strong></span>
+                  <span>{loc('Phones')}: <strong>8328581019</strong> / <strong>9948713504</strong></span>
                 </div>
 
                 <div style={{ borderTop: '1px solid var(--line)', paddingTop: 10, marginTop: 4 }}>
-                  <p style={{ margin: '0 0 6px', fontWeight: 600, color: 'var(--ink)' }}>24/7 In-House Facilities:</p>
+                  <p style={{ margin: '0 0 6px', fontWeight: 600, color: 'var(--ink)' }}>{loc('24/7 In-House Facilities:')}</p>
                   <ul style={{ margin: 0, paddingLeft: 18, lineHeight: 1.6, fontSize: 12.5 }}>
-                    <li>24/7 Emergency Medical Response</li>
-                    <li>Rithanya Blood Bank 24 Hours Available</li>
-                    <li>Aarogyasri Facility for Sickle Cell Anemia & Thalassemia Children</li>
+                    <li>{loc('24/7 Emergency Medical Response')}</li>
+                    <li>{loc('Rithanya Blood Bank 24 Hours Available')}</li>
+                    <li>{loc('Aarogyasri Facility for Sickle Cell Anemia & Thalassemia Children')}</li>
                   </ul>
                 </div>
               </div>

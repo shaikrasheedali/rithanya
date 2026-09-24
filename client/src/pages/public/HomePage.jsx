@@ -407,11 +407,11 @@ export default function HomePage() {
           <div className="section-head">
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(169, 17, 41, 0.08)', padding: '6px 14px', borderRadius: 20, fontSize: 12, fontWeight: 700, color: 'var(--red-700)', marginBottom: 12 }}>
               <span className="pulse-dot" />
-              <span>Real-Time Transfusion Reserve</span>
+              <span>{t('bloodBank.tag', 'Real-Time Transfusion Reserve')}</span>
             </div>
-            <h2 className="section-title">Blood Bank Stock Availability</h2>
+            <h2 className="section-title">{t('bloodBank.title', 'Blood Bank Stock Availability')}</h2>
             <p className="section-subtitle">
-              Exact available live units count that is unreserved and ready for transfusion across all 8 blood groups.
+              {t('bloodBank.sub', 'Exact available live units count that is unreserved and ready for transfusion across all 8 blood groups.')}
             </p>
           </div>
 
@@ -437,16 +437,16 @@ export default function HomePage() {
               </div>
               <div>
                 <strong style={{ fontSize: 15, color: 'var(--ink)', display: 'block' }}>
-                  {bloodTotals.availableUnits} Live Units Currently Available (Unreserved)
+                  {bloodTotals.availableUnits} {t('bloodBank.unitsAvailableUnreserved', 'Live Units Currently Available (Unreserved)')}
                 </strong>
                 <span style={{ fontSize: 12, color: 'var(--green)', fontWeight: 600 }}>
-                  ✓ Triple Pre-Crossmatched & Saline Compatible
+                  {t('bloodBank.preCrossmatched', '✓ Triple Pre-Crossmatched & Saline Compatible')}
                 </span>
               </div>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <span style={{ fontSize: 12, color: 'var(--ink-soft)' }}>Emergency Hotline:</span>
+              <span style={{ fontSize: 12, color: 'var(--ink-soft)' }}>{t('bloodBank.emergencyHotline', 'Emergency Hotline:')}</span>
               <a href="tel:+918328581019" className="btn btn-primary btn-sm">
                 <Phone size={14} />
                 <span>+91 83285 81019</span>
@@ -469,7 +469,7 @@ export default function HomePage() {
                 const liveCount = stock.availableUnits !== undefined ? stock.availableUnits : (stock.unreservedUnits !== undefined ? stock.unreservedUnits : Math.max(0, (stock.units || 0) - (stock.reservedUnits || 0)));
                 const thresholdVal = stock.threshold || 5;
                 const isLow = stock.isLow !== undefined ? stock.isLow : (liveCount <= thresholdVal);
-                const statusLabel = stock.status || (isLow ? 'Near Low' : 'Optimal');
+                const statusLabel = isLow ? t('bloodBank.nearLow', 'Near Low') : t('bloodBank.optimal', 'Optimal');
 
                 return (
                   <div
@@ -484,33 +484,33 @@ export default function HomePage() {
                     </div>
 
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginBottom: 8 }}>
-                      <span style={{ color: 'var(--ink-soft)' }}>Units Available:</span>
+                      <span style={{ color: 'var(--ink-soft)' }}>{t('bloodBank.unitsAvailable', 'Units Available')}:</span>
                       <strong style={{ fontSize: 15, color: isLow ? 'var(--red-700)' : 'var(--ink)' }}>
-                        {liveCount} units
+                        {liveCount} {t('bloodBank.units', 'units')}
                       </strong>
                     </div>
 
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'var(--ink-soft)', marginBottom: 8 }}>
-                      <span>Threshold:</span>
-                      <span>{thresholdVal} units</span>
+                      <span>{t('bloodBank.threshold', 'Threshold')}:</span>
+                      <span>{thresholdVal} {t('bloodBank.units', 'units')}</span>
                     </div>
 
                     <div style={{ borderTop: '1px solid var(--line)', paddingTop: 8, fontSize: 11, color: 'var(--green)', display: 'flex', alignItems: 'center', gap: 4 }}>
                       <Check size={12} />
-                      <span>Unreserved & Ready</span>
+                      <span>{t('bloodBank.unreservedReady', 'Unreserved & Ready')}</span>
                     </div>
                   </div>
                 );
               })
             ) : (
               <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '36px 0', color: 'var(--ink-soft)' }}>
-                <p>Blood bank stock units are synchronized live with hospital inventory. Connecting to registry...</p>
+                <p>{t('bloodBank.connecting', 'Blood bank stock units are synchronized live with hospital inventory. Connecting to registry...')}</p>
               </div>
             )}
           </div>
 
           <div style={{ textAlign: 'center', fontSize: 12.5, color: 'var(--ink-soft)' }}>
-            <span>* For immediate daycare transfusion allocation or rare negative group reservation, contact our 24/7 Transfusion Coordinator.</span>
+            <span>{t('bloodBank.disclaimer', '* For immediate daycare transfusion allocation or rare negative group reservation, contact our 24/7 Transfusion Coordinator.')}</span>
           </div>
         </div>
       </section>

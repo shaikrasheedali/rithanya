@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { MapPin, Phone, Mail, Clock, Send, CheckCircle2 } from 'lucide-react';
 import { apiRequest } from '../../utils/api';
 import { useToast } from '../../components/common/Toast';
+import useDynamicTranslation from '../../utils/dynamicTranslator';
 
 export default function ContactPage() {
   const { addToast } = useToast();
+  const { t, loc } = useDynamicTranslation();
   const [form, setForm] = useState({ name: '', phone: '', email: '', message: '' });
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -12,7 +14,7 @@ export default function ContactPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.name || !form.phone) {
-      addToast('Please enter your name and phone number', 'error');
+      addToast(loc('Please enter your name and phone number'), 'error');
       return;
     }
     setLoading(true);
@@ -25,10 +27,10 @@ export default function ContactPage() {
         })
       });
       setSent(true);
-      addToast('Your inquiry has been sent to Rithanya Hospital.', 'success');
+      addToast(loc('Your inquiry has been sent to Rithanya Hospital.'), 'success');
       setForm({ name: '', phone: '', email: '', message: '' });
     } catch (err) {
-      addToast(err.message || 'Failed to send inquiry', 'error');
+      addToast(err.message || loc('Failed to send inquiry'), 'error');
     } finally {
       setLoading(false);
     }
@@ -38,10 +40,10 @@ export default function ContactPage() {
     <div className="contact-page" style={{ padding: '60px 0 80px' }}>
       <div className="container">
         <div className="section-head">
-          <span className="section-tag">Hospital Location & Helpdesk</span>
-          <h1 className="section-title">Get in Touch with Our Clinical Team</h1>
+          <span className="section-tag">{loc('Hospital Location & Helpdesk')}</span>
+          <h1 className="section-title">{loc('Get in Touch with Our Clinical Team')}</h1>
           <p className="section-subtitle">
-            Located conveniently on Nehru Road, Khammam. We are open for daily OPD consultations, routine diagnostic collection, 24/7 emergency response, and 24-hour in-house blood bank support.
+            {loc('Located conveniently on Nehru Road, Khammam. We are open for daily OPD consultations, routine diagnostic collection, 24/7 emergency response, and 24-hour in-house blood bank support.')}
           </p>
         </div>
 
@@ -49,7 +51,7 @@ export default function ContactPage() {
           {/* Contact Details Card */}
           <div>
             <div className="card card-responsive" style={{ marginBottom: 24 }}>
-              <h3 style={{ fontSize: 20, marginBottom: 20 }}>Hospital Contact Details</h3>
+              <h3 style={{ fontSize: 20, marginBottom: 20 }}>{loc('Hospital Contact Details')}</h3>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
                 <div style={{ display: 'flex', gap: 14 }}>
@@ -57,9 +59,9 @@ export default function ContactPage() {
                     <MapPin size={20} />
                   </div>
                   <div>
-                    <h4 style={{ fontSize: 14, fontWeight: 700 }}>Hospital Address</h4>
+                    <h4 style={{ fontSize: 14, fontWeight: 700 }}>{loc('Hospital Address')}</h4>
                     <p style={{ fontSize: 13, color: 'var(--ink-soft)', marginTop: 2 }}>
-                      Nehru Road, Opposite Old L.I.C. Office, Khammam (నెహ్రూరోడ్, పాత ఎల్.ఐ.సి. ఆఫీస్ ఎదురుగా, ఖమ్మం)
+                      {t('footer.address', 'Nehru Road, Opp. Old L.I.C. Office, Khammam, Telangana 507001')}
                     </p>
                   </div>
                 </div>
@@ -69,7 +71,7 @@ export default function ContactPage() {
                     <Phone size={20} />
                   </div>
                   <div>
-                    <h4 style={{ fontSize: 14, fontWeight: 700 }}>Phone / Emergency Support</h4>
+                    <h4 style={{ fontSize: 14, fontWeight: 700 }}>{loc('Phone / Emergency Support')}</h4>
                     <p style={{ fontSize: 13, color: 'var(--ink-soft)', marginTop: 2 }}>
                       8328581019 &nbsp;|&nbsp; 9948713504
                     </p>
@@ -81,7 +83,7 @@ export default function ContactPage() {
                     <Mail size={20} />
                   </div>
                   <div>
-                    <h4 style={{ fontSize: 14, fontWeight: 700 }}>Email Communications</h4>
+                    <h4 style={{ fontSize: 14, fontWeight: 700 }}>{loc('Email Communications')}</h4>
                     <p style={{ fontSize: 13, color: 'var(--ink-soft)', marginTop: 2 }}>
                       info@rithanyahospital.com / dr.narayana5@gmail.com
                     </p>
@@ -93,12 +95,12 @@ export default function ContactPage() {
                     <Clock size={20} />
                   </div>
                   <div>
-                    <h4 style={{ fontSize: 14, fontWeight: 700 }}>Operating Hours & Facilities</h4>
+                    <h4 style={{ fontSize: 14, fontWeight: 700 }}>{loc('Operating Hours & Facilities')}</h4>
                     <p style={{ fontSize: 13, color: 'var(--ink-soft)', marginTop: 2 }}>
-                      • 24/7 Emergency Medical Response<br />
-                      • Rithanya Blood Bank 24 Hours Available<br />
-                      • Aarogyasri Facility for Sickle Cell & Thalassemia Children<br />
-                      • OPD Timings: 10:00 AM – 02:00 PM & 06:00 PM – 09:00 PM
+                      • {loc('24/7 Emergency Medical Response')}<br />
+                      • {loc('Rithanya Blood Bank 24 Hours Available')}<br />
+                      • {loc('Aarogyasri Facility for Sickle Cell & Thalassemia Children')}<br />
+                      • {t('common.consultationHours', 'OPD Timings')}: 10:00 AM – 02:00 PM & 06:00 PM – 09:00 PM
                     </p>
                   </div>
                 </div>
@@ -108,26 +110,26 @@ export default function ContactPage() {
 
           {/* Contact Inquiry Form */}
           <div className="card card-responsive">
-            <h3 style={{ fontSize: 20, marginBottom: 8 }}>Send a Direct Clinical Message</h3>
+            <h3 style={{ fontSize: 20, marginBottom: 8 }}>{loc('Send a Direct Clinical Message')}</h3>
             <p style={{ fontSize: 13, color: 'var(--ink-soft)', marginBottom: 24 }}>
-              Have questions regarding blood transfusion daycare beds, lab diagnostics, or doctor consultation? Leave a message below.
+              {loc('Have questions regarding blood transfusion daycare beds, lab diagnostics, or doctor consultation? Leave a message below.')}
             </p>
 
             {sent ? (
               <div style={{ background: 'var(--green-bg)', padding: 24, borderRadius: 12, textAlign: 'center' }}>
                 <CheckCircle2 size={40} style={{ color: 'var(--green)', margin: '0 auto 10px' }} />
-                <h4 style={{ color: 'var(--green)', fontSize: 16 }}>Message Sent Successfully!</h4>
+                <h4 style={{ color: 'var(--green)', fontSize: 16 }}>{loc('Message Sent Successfully!')}</h4>
                 <p style={{ fontSize: 13, color: 'var(--ink-soft)', marginTop: 6 }}>
-                  Our administrative coordinator will contact you shortly.
+                  {loc('Our administrative coordinator will contact you shortly.')}
                 </p>
                 <button type="button" className="btn btn-secondary btn-sm" onClick={() => setSent(false)} style={{ marginTop: 16 }}>
-                  Send Another Message
+                  {loc('Send Another Message')}
                 </button>
               </div>
             ) : (
               <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                  <label className="form-label">Full Name *</label>
+                  <label className="form-label">{t('home.patientName', 'Full Name')} *</label>
                   <input
                     type="text"
                     className="form-control"
@@ -139,7 +141,7 @@ export default function ContactPage() {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Phone Number *</label>
+                  <label className="form-label">{t('home.phone', 'Phone Number')} *</label>
                   <input
                     type="tel"
                     className="form-control"
@@ -151,7 +153,7 @@ export default function ContactPage() {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Email Address (Optional)</label>
+                  <label className="form-label">{loc('Email Address (Optional)')}</label>
                   <input
                     type="email"
                     className="form-control"
@@ -162,7 +164,7 @@ export default function ContactPage() {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Message / Inquiry Details</label>
+                  <label className="form-label">{loc('Message / Inquiry Details')}</label>
                   <textarea
                     className="form-control"
                     rows="4"
@@ -174,7 +176,7 @@ export default function ContactPage() {
 
                 <button type="submit" className="btn btn-primary" style={{ width: '100%' }} disabled={loading}>
                   <Send size={16} />
-                  <span>{loading ? 'Sending...' : 'Transmit Message'}</span>
+                  <span>{loading ? t('common.loading', 'Sending...') : loc('Transmit Message')}</span>
                 </button>
               </form>
             )}
