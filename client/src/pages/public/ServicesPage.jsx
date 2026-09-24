@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Search, CheckCircle2 } from 'lucide-react';
 import { apiRequest } from '../../utils/api';
+import { useDynamicTranslation } from '../../utils/dynamicTranslator';
 
 export default function ServicesPage() {
+  const { t, locItems } = useDynamicTranslation();
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -23,13 +25,14 @@ export default function ServicesPage() {
     fetchServices();
   }, []);
 
-  const categories = ['All', ...new Set(services.map((s) => s.category))];
+  const localizedServices = locItems(services);
+  const categories = ['All', ...new Set(localizedServices.map((s) => s.category).filter(Boolean))];
 
-  const filtered = services.filter((s) => {
+  const filtered = localizedServices.filter((s) => {
     const matchesCat = selectedCategory === 'All' || s.category === selectedCategory;
     const matchesSearch =
-      s.title.toLowerCase().includes(search.toLowerCase()) ||
-      s.summary.toLowerCase().includes(search.toLowerCase());
+      (s.title || '').toLowerCase().includes(search.toLowerCase()) ||
+      (s.summary || '').toLowerCase().includes(search.toLowerCase());
     return matchesCat && matchesSearch;
   });
 
@@ -37,10 +40,10 @@ export default function ServicesPage() {
     <div className="services-page" style={{ padding: '60px 0 80px' }}>
       <div className="container">
         <div className="section-head">
-          <span className="section-tag">Clinical Departments</span>
-          <h1 className="section-title">Comprehensive Healthcare Services</h1>
+          <span className="section-tag">{t('home.departmentsTag', 'Clinical Departments')}</span>
+          <h1 className="section-title">{t('home.departmentsTitle', 'Comprehensive Healthcare Services')}</h1>
           <p className="section-subtitle">
-            Specialized departments catering to internal medicine, chronic disease management, pediatric health, and transfusion daycare.
+            {t('home.departmentsSub', 'Specialized departments catering to internal medicine, chronic disease management, pediatric health, and transfusion daycare.')}
           </p>
         </div>
 
@@ -63,7 +66,7 @@ export default function ServicesPage() {
                 className={`btn btn-sm ${selectedCategory === cat ? 'btn-primary' : 'btn-secondary'}`}
                 onClick={() => setSelectedCategory(cat)}
               >
-                {cat}
+                {cat === 'All' ? t('common.all', 'All') : cat}
               </button>
             ))}
           </div>
@@ -73,7 +76,7 @@ export default function ServicesPage() {
             <input
               type="text"
               className="form-control"
-              placeholder="Search specialties..."
+              placeholder={t('common.search', 'Search specialties...')}
               style={{ paddingLeft: 36 }}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -83,10 +86,12 @@ export default function ServicesPage() {
 
         {/* Grid of services */}
         {loading ? (
-          <div style={{ textAlign: 'center', padding: 60 }}>Loading clinical services...</div>
+          <div style={{ textAlign: 'center', padding: 60, color: 'var(--ink-soft)' }}>
+            {t('common.loading', 'Loading clinical services...')}
+          </div>
         ) : filtered.length === 0 ? (
           <div style={{ textAlign: 'center', padding: 60, background: '#fff', borderRadius: 20 }}>
-            No services match your criteria.
+            {t('common.noResults', 'No services match your criteria.')}
           </div>
         ) : (
           <div className="grid-3">
@@ -104,7 +109,7 @@ export default function ServicesPage() {
                     className="btn btn-outline btn-sm"
                     style={{ alignSelf: 'flex-start', marginTop: 'auto' }}
                   >
-                    <span>Read Full Overview</span>
+                    <span>{t('home.viewOverview', 'Read Full Overview')}</span>
                     <ArrowRight size={14} />
                   </Link>
                 </div>

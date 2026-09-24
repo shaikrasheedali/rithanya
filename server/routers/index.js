@@ -40,6 +40,7 @@ router.use('/orders', inquiryRouter);
 router.use('/inquiries', inquiryRouter);
 router.use('/gallery', galleryRouter);
 router.use('/media', mediaRouter);
+router.use('/upload', mediaRouter);
 router.use('/staff', staffRouter);
 router.use('/credentials', credentialRouter);
 router.use('/finance', financeRouter);

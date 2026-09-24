@@ -20,7 +20,7 @@ export default function GalleryAdminPage() {
     title: '',
     category: 'Facility',
     mediaType: 'IMAGE',
-    imageUrl: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=1200&q=85',
+    imageUrl: '',
     embedUrl: '',
     caption: ''
   });
@@ -46,7 +46,7 @@ export default function GalleryAdminPage() {
         title: item.title,
         category: item.category,
         mediaType: item.mediaType || 'IMAGE',
-        imageUrl: item.imageUrl,
+        imageUrl: item.imageUrl || '',
         embedUrl: item.embedUrl || '',
         caption: item.caption || ''
       });
@@ -56,7 +56,7 @@ export default function GalleryAdminPage() {
         title: '',
         category: 'Facility',
         mediaType: 'IMAGE',
-        imageUrl: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=1200&q=85',
+        imageUrl: '',
         embedUrl: '',
         caption: ''
       });

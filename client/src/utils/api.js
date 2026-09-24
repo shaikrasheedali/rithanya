@@ -52,14 +52,33 @@ export async function apiRequest(endpoint, options = {}) {
     if (response.status === 401 && !endpoint.includes('/auth/login')) {
       localStorage.removeItem('rh_token');
       localStorage.removeItem('rh_user');
-      if (window.location.pathname.startsWith('/admin') && window.location.pathname !== '/admin/login') {
+      if (typeof window !== 'undefined' && window.location.pathname.startsWith('/admin') && window.location.pathname !== '/admin/login') {
         window.location.href = '/admin/login';
       }
+      throw new Error('Your session has expired or authentication is required. Please log in again.');
     }
 
-    const data = await response.json();
+    const contentType = response.headers.get('content-type') || '';
+    let data;
+
+    if (contentType.includes('application/json')) {
+      try {
+        data = await response.json();
+      } catch (jsonErr) {
+        throw new Error('Failed to parse server response as JSON');
+      }
+    } else {
+      const rawText = await response.text();
+      if (!response.ok) {
+        // Strip HTML tags if server returned an HTML error page
+        const stripped = rawText.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+        throw new Error(stripped ? `Server error (${response.status}): ${stripped.slice(0, 150)}` : `Server error with HTTP ${response.status}`);
+      }
+      data = { success: true, text: rawText };
+    }
+
     if (!response.ok) {
-      throw new Error(data.message || `Request failed with status ${response.status}`);
+      throw new Error(data?.message || `Request failed with status ${response.status}`);
     }
 
     // Save to client cache

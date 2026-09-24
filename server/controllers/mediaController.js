@@ -82,7 +82,14 @@ async function uploadMedia(req, res, next) {
       }
     });
 
-    return res.status(201).json({ success: true, data: asset });
+    return res.status(201).json({
+      success: true,
+      url: publicUrl,
+      data: {
+        ...asset,
+        url: publicUrl
+      }
+    });
   } catch (err) {
     next(err);
   }

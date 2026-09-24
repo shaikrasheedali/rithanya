@@ -22,8 +22,10 @@ import {
 import { apiRequest } from '../../utils/api';
 import { formatCurrency } from '../../utils/formatters';
 import { useToast } from '../../components/common/Toast';
+import { useDynamicTranslation } from '../../utils/dynamicTranslator';
 
 export default function ProductsPage() {
+  const { t, locItems } = useDynamicTranslation();
   const { addToast } = useToast();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -74,9 +76,10 @@ export default function ProductsPage() {
     loadProducts();
   }, []);
 
-  const categories = ['All', ...new Set(products.map((p) => p.category))];
+  const localizedProducts = locItems(products);
+  const categories = ['All', ...new Set(localizedProducts.map((p) => p.category).filter(Boolean))];
 
-  const filteredProducts = products.filter((p) => {
+  const filteredProducts = localizedProducts.filter((p) => {
     return selectedCategory === 'All' || p.category === selectedCategory;
   });
 
@@ -185,13 +188,13 @@ export default function ProductsPage() {
             }}
           >
             <Sparkles size={15} />
-            <span>Clinical Pharmacy & Healthcare Essentials</span>
+            <span>{t('home.wellnessTag', 'Clinical Pharmacy & Healthcare Essentials')}</span>
           </div>
           <h1 className="section-title" style={{ fontSize: 'clamp(28px, 4vw, 44px)', marginBottom: 14 }}>
-            Healthcare Products & Home Monitoring Kits
+            {t('home.wellnessTitle', 'Healthcare Products & Home Monitoring Kits')}
           </h1>
           <p className="section-subtitle" style={{ maxWidth: 740, margin: '0 auto', fontSize: 16, color: 'var(--ink-soft)' }}>
-            Certified diagnostic monitors, nutritional support for thalassemia warriors, and diabetic foot care essentials recommended by <strong>Dr. Narayana Murthy M.D.</strong>
+            {t('home.wellnessSub', 'Certified diagnostic monitors, nutritional support for thalassemia warriors, and diabetic foot care essentials recommended by Dr. Narayana Murthy M.D.')}
           </p>
         </div>
 
@@ -220,7 +223,7 @@ export default function ProductsPage() {
                 className={`btn btn-sm ${selectedCategory === cat ? 'btn-primary' : 'btn-secondary'}`}
                 style={{ borderRadius: 20, fontSize: 13, padding: '7px 16px' }}
               >
-                {cat}
+                {cat === 'All' ? t('common.all', 'All') : cat}
               </button>
             ))}
           </div>
@@ -236,7 +239,7 @@ export default function ProductsPage() {
             style={{ borderRadius: 9999, padding: '9px 20px', display: 'inline-flex', alignItems: 'center', gap: 10 }}
           >
             <ShoppingCart size={17} />
-            <span>View Cart ({cartCount})</span>
+            <span>{t('cart.viewCart', 'View Cart')} ({cartCount})</span>
             {cartCount > 0 && (
               <span style={{ background: '#fff', color: 'var(--red-700)', borderRadius: 12, padding: '1px 8px', fontSize: 12, fontWeight: 800 }}>
                 {formatCurrency(cartTotal)}
@@ -248,7 +251,7 @@ export default function ProductsPage() {
         {/* Products Grid */}
         {loading ? (
           <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--ink-soft)' }}>
-            <p>Loading clinical products catalog...</p>
+            <p>{t('common.loading', 'Loading clinical products catalog...')}</p>
           </div>
         ) : (
           <div className="grid-3">

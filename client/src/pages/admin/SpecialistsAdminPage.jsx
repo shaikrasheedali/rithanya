@@ -23,7 +23,7 @@ export default function SpecialistsAdminPage() {
     experience: '',
     registrationNumber: '',
     opdTimings: 'Morning: 10:00 AM – 02:00 PM | Evening: 06:00 PM – 09:00 PM',
-    image: '/image.png',
+    image: '',
     bio: '',
     content: ''
   });
@@ -54,7 +54,7 @@ export default function SpecialistsAdminPage() {
         experience: item.experience || '',
         registrationNumber: item.registrationNumber || '',
         opdTimings: item.opdTimings || 'Morning: 10:00 AM – 02:00 PM | Evening: 06:00 PM – 09:00 PM',
-        image: item.image || '/image.png',
+        image: item.image || '',
         bio: item.bio || '',
         content: item.content || ''
       });
@@ -69,7 +69,7 @@ export default function SpecialistsAdminPage() {
         experience: '',
         registrationNumber: '',
         opdTimings: 'Morning: 10:00 AM – 02:00 PM | Evening: 06:00 PM – 09:00 PM',
-        image: '/image.png',
+        image: '',
         bio: '',
         content: ''
       });

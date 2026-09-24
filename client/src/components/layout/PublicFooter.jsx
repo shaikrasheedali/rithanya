@@ -2,8 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ShieldCheck, HeartHandshake, Phone, MapPin, Mail, Lock } from 'lucide-react';
 import RithanyaLogo from '../common/RithanyaLogo';
+import { useDynamicTranslation } from '../../utils/dynamicTranslator';
 
 export default function PublicFooter() {
+  const { t, loc } = useDynamicTranslation();
+
   return (
     <footer className="public-footer">
       <div className="container">
@@ -29,12 +32,12 @@ export default function PublicFooter() {
                 <RithanyaLogo size="100%" />
               </div>
               <div className="brand-text">
-                <h1 style={{ color: '#fff', fontSize: 18, margin: 0 }}>Rithanya Hospital</h1>
-                <span style={{ color: '#aaa', fontSize: 12 }}>Compassionate Clinical Medicine</span>
+                <h1 style={{ color: '#fff', fontSize: 18, margin: 0 }}>{t('brand.name')}</h1>
+                <span style={{ color: '#aaa', fontSize: 12 }}>{t('brand.subtitle')}</span>
               </div>
             </div>
             <p style={{ fontSize: 13.5, color: '#aaa', lineHeight: 1.7, marginBottom: 16 }}>
-              Comprehensive Diabetic Care & Thalassemia / Sickle-Cell Daycare Transfusion Centre in Khammam, spearheaded by senior consultant Dr. Narayana Murthy M.D.
+              {t('footer.aboutText')}
             </p>
             <div className="footer-dpdp-badge">
               <ShieldCheck size={16} className="text-green" />
@@ -44,45 +47,45 @@ export default function PublicFooter() {
 
           {/* Col 2: Quick Links */}
           <div className="footer-col">
-            <h4>Quick Navigation</h4>
+            <h4>{t('footer.quickLinks')}</h4>
             <ul className="footer-links">
-              <li><Link to="/">Home Overview</Link></li>
-              <li><Link to="/about">About Rithanya Hospital</Link></li>
-              <li><Link to="/services">Clinical Specialties</Link></li>
-              <li><Link to="/treatments">Treatments & 40 Conditions</Link></li>
-              <li><Link to="/doctors">Specialist Doctors & Faculty</Link></li>
-              <li><Link to="/products">Healthcare Products & Pharmacy</Link></li>
-              <li><Link to="/gallery">Hospital Media Gallery</Link></li>
-              <li><Link to="/insights">Health Insights & Library</Link></li>
+              <li><Link to="/">{t('nav.home')}</Link></li>
+              <li><Link to="/about">{t('nav.about')}</Link></li>
+              <li><Link to="/services">{t('nav.services')}</Link></li>
+              <li><Link to="/treatments">{t('nav.treatments')}</Link></li>
+              <li><Link to="/doctors">{t('nav.doctors')}</Link></li>
+              <li><Link to="/products">{t('nav.products')}</Link></li>
+              <li><Link to="/gallery">{t('nav.gallery')}</Link></li>
+              <li><Link to="/insights">{t('nav.insights')}</Link></li>
             </ul>
           </div>
 
           {/* Col 3: Legal & DPDP Compliance */}
           <div className="footer-col">
-            <h4>Patient Rights & Facilities</h4>
+            <h4>{loc('Patient Rights & Facilities')}</h4>
             <ul className="footer-links">
-              <li style={{ color: '#fff', fontSize: 13, fontWeight: 600 }}>• 24/7 Emergency Services</li>
-              <li style={{ color: '#fff', fontSize: 13, fontWeight: 600 }}>• Rithanya Blood Bank 24 Hours</li>
-              <li style={{ color: '#fff', fontSize: 13, fontWeight: 600 }}>• Aarogyasri Facility (Sickle Cell & Thalassemia)</li>
-              <li style={{ marginTop: 8 }}><Link to="/privacy">Privacy Notice</Link></li>
-              <li><Link to="/terms">Terms of Clinical Service</Link></li>
+              <li style={{ color: '#fff', fontSize: 13, fontWeight: 600 }}>• {t('home.emergencyCardTitle')}</li>
+              <li style={{ color: '#fff', fontSize: 13, fontWeight: 600 }}>• {t('home.bloodBankCardTitle')}</li>
+              <li style={{ color: '#fff', fontSize: 13, fontWeight: 600 }}>• {t('home.aarogyasriCardTitle')}</li>
+              <li style={{ marginTop: 8 }}><Link to="/privacy">{loc('Privacy Notice')}</Link></li>
+              <li><Link to="/terms">{loc('Terms of Clinical Service')}</Link></li>
               <li>
                 <Link to="/request-erasure" style={{ color: '#df3850', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
                   <Lock size={14} />
-                  <span>Request Erasure (DPDP Act)</span>
+                  <span>{loc('Request Erasure (DPDP Act)')}</span>
                 </Link>
               </li>
-              <li><Link to="/admin/login">Hospital Staff Login</Link></li>
+              <li><Link to="/admin/login">{t('nav.staffPortal')}</Link></li>
             </ul>
           </div>
 
           {/* Col 4: Contact info */}
           <div className="footer-col">
-            <h4>Contact & Location</h4>
+            <h4>{t('nav.contact')}</h4>
             <ul className="footer-links" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               <li style={{ display: 'flex', gap: 10, fontSize: 13, color: '#aaa' }}>
                 <MapPin size={18} style={{ color: '#df3850', flexShrink: 0 }} />
-                <span>Nehru Road, Opposite Old L.I.C. Office, Khammam (నెహ్రూరోడ్, పాత ఎల్.ఐ.సి. ఆఫీస్ ఎదురుగా, ఖమ్మం)</span>
+                <span>{t('brand.tagline')}</span>
               </li>
               <li style={{ display: 'flex', gap: 10, fontSize: 13, color: '#aaa' }}>
                 <Phone size={18} style={{ color: '#df3850', flexShrink: 0 }} />
@@ -97,8 +100,8 @@ export default function PublicFooter() {
         </div>
 
         <div className="footer-bottom">
-          <p>© {new Date().getFullYear()} Rithanya Hospital & Diagnostics. All Rights Reserved.</p>
-          <p>Care with precision · Thalassemia Daycare Support Centre</p>
+          <p>© {new Date().getFullYear()} {t('brand.name')}. {t('footer.rights')}</p>
+          <p>{t('brand.subtitle')} • Khammam</p>
         </div>
       </div>
     </footer>

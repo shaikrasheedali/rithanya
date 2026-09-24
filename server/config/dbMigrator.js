@@ -258,7 +258,30 @@ async function autoMigrate() {
     console.warn('[AutoMigrate] Note during Specialist column verification:', colErr.message);
   }
 
-  // 7. Synchronize production master catalog: exact 6 treatments & faculty doctors
+  // 7. Verify and ensure ProductPackage table columns (videoUrl, content) exist
+  try {
+    const productColumns = await prisma.$queryRawUnsafe(`
+      SELECT COLUMN_NAME 
+      FROM INFORMATION_SCHEMA.COLUMNS 
+      WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'ProductPackage'
+    `);
+    const pColNames = Array.isArray(productColumns) ? productColumns.map((c) => c.COLUMN_NAME) : [];
+
+    if (pColNames.length > 0) {
+      if (!pColNames.includes('videoUrl')) {
+        console.log('[AutoMigrate] Adding missing `videoUrl` column to ProductPackage table...');
+        await prisma.$executeRawUnsafe(`ALTER TABLE \`ProductPackage\` ADD COLUMN \`videoUrl\` VARCHAR(1000) NULL`);
+      }
+      if (!pColNames.includes('content')) {
+        console.log('[AutoMigrate] Adding missing `content` column to ProductPackage table...');
+        await prisma.$executeRawUnsafe(`ALTER TABLE \`ProductPackage\` ADD COLUMN \`content\` LONGTEXT NULL`);
+      }
+    }
+  } catch (pColErr) {
+    console.warn('[AutoMigrate] Note during ProductPackage column verification:', pColErr.message);
+  }
+
+  // 8. Synchronize production master catalog: exact 6 treatments & faculty doctors
   try {
     await syncProductionMasterData(prisma);
   } catch (syncErr) {

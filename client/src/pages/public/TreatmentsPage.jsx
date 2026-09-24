@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Search, Clock, Stethoscope, CheckCircle2, Droplet, Sparkles, Activity } from 'lucide-react';
 import { apiRequest } from '../../utils/api';
+import { useDynamicTranslation } from '../../utils/dynamicTranslator';
 
 const DEFAULT_TREATMENT_IMAGES = [
   'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80',
@@ -13,6 +14,7 @@ const DEFAULT_TREATMENT_IMAGES = [
 ];
 
 export default function TreatmentsPage() {
+  const { t, locItems } = useDynamicTranslation();
   const [treatments, setTreatments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -32,14 +34,15 @@ export default function TreatmentsPage() {
     fetchTreatments();
   }, []);
 
-  const categories = ['All', ...new Set(treatments.map((t) => t.category))];
+  const localizedTreatments = locItems(treatments);
+  const categories = ['All', ...new Set(localizedTreatments.map((t) => t.category).filter(Boolean))];
 
-  const filtered = treatments.filter((t) => {
-    const matchesCat = selectedCategory === 'All' || t.category === selectedCategory;
+  const filtered = localizedTreatments.filter((item) => {
+    const matchesCat = selectedCategory === 'All' || item.category === selectedCategory;
     const matchesSearch =
-      t.title.toLowerCase().includes(search.toLowerCase()) ||
-      t.summary.toLowerCase().includes(search.toLowerCase()) ||
-      (t.department && t.department.toLowerCase().includes(search.toLowerCase()));
+      (item.title || '').toLowerCase().includes(search.toLowerCase()) ||
+      (item.summary || '').toLowerCase().includes(search.toLowerCase()) ||
+      (item.department && item.department.toLowerCase().includes(search.toLowerCase()));
     return matchesCat && matchesSearch;
   });
 
@@ -63,13 +66,13 @@ export default function TreatmentsPage() {
             }}
           >
             <Sparkles size={15} />
-            <span>Treatments & Conditions Managed</span>
+            <span>{t('home.treatmentsTag', 'Treatments & Conditions Managed')}</span>
           </div>
           <h1 className="section-title" style={{ fontSize: 'clamp(28px, 4vw, 44px)', marginBottom: 14 }}>
-            Treatments & Conditions Managed
+            {t('home.treatmentsTitle', 'Treatments & Conditions Managed')}
           </h1>
           <p className="section-subtitle" style={{ maxWidth: 780, margin: '0 auto', fontSize: 16, color: 'var(--ink-soft)' }}>
-            Under the clinical leadership of <strong>Dr. D. Narayana Murthy</strong> (MD SVIMS, Diabetologist) and <strong>Dr. A. Lakshmi Deepa</strong> (MBBS, Gynecologist), Rithanya Hospital provides structured, evidence-based care for 40 major medical conditions, emergency medicine, and chronic disease regulation.
+            {t('home.treatmentsSub', 'Under the clinical leadership of Dr. D. Narayana Murthy (MD SVIMS, Diabetologist) and Dr. A. Lakshmi Deepa (MBBS, Gynecologist), Rithanya Hospital provides structured, evidence-based care for 40 major medical conditions, emergency medicine, and chronic disease regulation.')}
           </p>
         </div>
 
@@ -98,7 +101,7 @@ export default function TreatmentsPage() {
                 className={`btn btn-sm ${selectedCategory === cat ? 'btn-primary' : 'btn-secondary'}`}
                 style={{ borderRadius: 20, fontSize: 13, padding: '7px 16px' }}
               >
-                {cat}
+                {cat === 'All' ? t('common.all', 'All') : cat}
               </button>
             ))}
           </div>
@@ -111,7 +114,7 @@ export default function TreatmentsPage() {
             <input
               type="text"
               className="form-control"
-              placeholder="Search clinical treatments..."
+              placeholder={t('common.search', 'Search clinical treatments...')}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               style={{ paddingLeft: 38, borderRadius: 20, fontSize: 13 }}
@@ -123,11 +126,11 @@ export default function TreatmentsPage() {
         {loading ? (
           <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--ink-soft)' }}>
             <Activity size={32} style={{ animation: 'spin 1.5s linear infinite', color: 'var(--red-700)', marginBottom: 12 }} />
-            <p>Loading clinical treatment protocols...</p>
+            <p>{t('common.loading', 'Loading clinical treatment protocols...')}</p>
           </div>
         ) : filtered.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--ink-soft)' }}>
-            <p style={{ fontSize: 16 }}>No treatments found matching your criteria.</p>
+            <p style={{ fontSize: 16 }}>{t('common.noResults', 'No treatments found matching your criteria.')}</p>
           </div>
         ) : (
           /* Treatments Grid */

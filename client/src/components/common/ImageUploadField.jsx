@@ -35,9 +35,12 @@ export default function ImageUploadField({ label, value, onChange, required = fa
         body: formData
       });
 
-      if (res.data?.url) {
-        onChange(res.data.url);
+      const uploadedUrl = res.data?.url || res.url;
+      if (uploadedUrl) {
+        onChange(uploadedUrl);
         addToast('Image uploaded successfully to server uploads directory!', 'success');
+      } else {
+        throw new Error('Upload succeeded but no image URL was returned by server');
       }
     } catch (err) {
       addToast(err.message || 'Image upload failed', 'error');

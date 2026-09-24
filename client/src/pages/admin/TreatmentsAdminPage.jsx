@@ -26,7 +26,7 @@ export default function TreatmentsAdminPage() {
     indications: '',
     summary: '',
     content: '',
-    coverImage: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=1200&q=85',
+    coverImage: '',
     videoUrl: '',
     proceduresText: '',
     status: 'published'
@@ -59,7 +59,7 @@ export default function TreatmentsAdminPage() {
         indications: item.indications || '',
         summary: item.summary,
         content: item.content,
-        coverImage: item.coverImage,
+        coverImage: item.coverImage || '',
         videoUrl: item.videoUrl || '',
         proceduresText: Array.isArray(item.procedures) ? item.procedures.join('\n') : '',
         status: item.status
@@ -75,7 +75,7 @@ export default function TreatmentsAdminPage() {
         indications: '',
         summary: '',
         content: '',
-        coverImage: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=1200&q=85',
+        coverImage: '',
         videoUrl: '',
         proceduresText: '',
         status: 'published'

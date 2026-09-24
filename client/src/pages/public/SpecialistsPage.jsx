@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Clock, Calendar, ArrowRight, Award, UserCheck, GraduationCap, Phone, ShieldCheck } from 'lucide-react';
 import { apiRequest } from '../../utils/api';
+import { useDynamicTranslation } from '../../utils/dynamicTranslator';
 
 export default function SpecialistsPage() {
+  const { t, loc, locItems } = useDynamicTranslation();
   const [specialists, setSpecialists] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -22,24 +24,26 @@ export default function SpecialistsPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
+  const displayedDocs = locItems(specialists);
+
   return (
     <div className="specialists-page" style={{ padding: '60px 0 100px', background: 'var(--canvas)' }}>
       <div className="container">
         <div className="section-head" style={{ marginBottom: 50, textAlign: 'center' }}>
-          <span className="section-tag">Hospital Medical Faculty</span>
-          <h1 className="section-title">Specialist Doctors & Lead Consultants</h1>
+          <span className="section-tag">{t('home.doctorsTag')}</span>
+          <h1 className="section-title">{t('home.doctorsTitle')}</h1>
           <p className="section-subtitle" style={{ maxWidth: 760, margin: '0 auto' }}>
-            Experienced clinical practitioners committed to compassionate patient communication, evidence-based therapies, and holistic long-term disease management at Rithanya Hospital, Khammam.
+            {t('home.doctorsSub')}
           </p>
         </div>
 
         {loading ? (
           <div style={{ textAlign: 'center', padding: '80px 0', color: 'var(--ink-soft)' }}>
-            Loading doctor profiles...
+            {t('common.loading')}
           </div>
         ) : (
           <div className="specialists-block-list">
-            {specialists.map((doc) => {
+            {displayedDocs.map((doc) => {
               const profileUrl = `/doctors/${doc.slug || doc.id}`;
 
               return (

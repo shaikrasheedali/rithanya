@@ -65,6 +65,20 @@ app.use('/api', (req, res, next) => {
 // Mount Master API Router
 app.use('/api', apiRouter);
 
+// Alias root /upload directly to media upload for direct client compatibility
+app.use('/upload', (req, res, next) => {
+  req.url = '/media/upload';
+  apiRouter(req, res, next);
+});
+
+// Explicit JSON 404 handler for any unhandled /api/* routes so they NEVER return HTML
+app.all('/api/*', (req, res) => {
+  return res.status(404).json({
+    success: false,
+    message: `API endpoint not found: ${req.method} ${req.originalUrl}`
+  });
+});
+
 // Unified Frontend Serving: Serve built React client from client/dist on the exact same port
 const distPath = path.join(__dirname, '../client/dist');
 const publicPath = path.join(__dirname, '../client/public');
@@ -77,9 +91,9 @@ if (fs.existsSync(distPath)) {
   console.log(`[Unified Port] Serving React frontend production bundle from: ${distPath}`);
   app.use(express.static(distPath));
 
-  // SPA fallback for HTML5 History routing
+  // SPA fallback for HTML5 History routing (GET only, ignore /api and /assets)
   app.get('*', (req, res, next) => {
-    if (req.originalUrl.startsWith('/api')) {
+    if (req.originalUrl.startsWith('/api') || req.originalUrl.startsWith('/assets')) {
       return next();
     }
     res.sendFile(path.join(distPath, 'index.html'));

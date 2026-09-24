@@ -125,26 +125,17 @@ export default function PublicNavbar() {
             <a
               href="tel:+918328581019"
               className="island-btn island-btn-phone"
-              title="24/7 Emergency Transfusion Hotline"
+              title={t('nav.emergencyHotline', '24/7 Emergency Transfusion Hotline')}
             >
               <Phone size={14} className="phone-icon" />
               <span className="phone-text">+91 83285 81019</span>
             </a>
 
             <Link
-              to="/contact#appointment"
-              className="island-btn island-btn-primary island-desktop-btn"
-              title={t('nav.book_appointment', 'Book Appointment')}
-            >
-              <Calendar size={14} />
-              <span>{t('nav.book_appointment', 'Book Appointment')}</span>
-            </Link>
-
-            <Link
               to="/admin/login"
               className="island-circle-login-btn island-desktop-btn"
-              title={t('nav.staff_portal', 'Staff Portal Login')}
-              aria-label={t('nav.staff_portal', 'Staff Portal Login')}
+              title={t('nav.staffPortal', 'Staff Portal Login')}
+              aria-label={t('nav.staffPortal', 'Staff Portal Login')}
             >
               <ArrowRight size={15} />
             </Link>
@@ -167,10 +158,31 @@ export default function PublicNavbar() {
           <div className="island-mobile-drawer">
             <div className="drawer-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div>
-                <span className="drawer-heading">Navigation Menu</span>
-                <span className="drawer-sub">Select a department or service</span>
+                <span className="drawer-heading">{t('nav.menuHeading', 'Navigation Menu')}</span>
+                <span className="drawer-sub">{t('nav.menuSub', 'Select a department or clinical service')}</span>
               </div>
-              <LanguagePicker compact={false} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <LanguagePicker compact={false} />
+                <button
+                  type="button"
+                  onClick={() => setMobileMenuOpen(false)}
+                  aria-label="Close menu"
+                  style={{
+                    background: 'var(--red-50)',
+                    border: '1px solid var(--red-100)',
+                    color: 'var(--red-700)',
+                    borderRadius: '50%',
+                    width: 32,
+                    height: 32,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <X size={16} />
+                </button>
+              </div>
             </div>
 
             <ul className="drawer-links">
@@ -196,15 +208,6 @@ export default function PublicNavbar() {
             </ul>
 
             <div className="drawer-actions">
-              <Link
-                to="/contact#appointment"
-                className="btn btn-primary btn-block"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <Calendar size={16} />
-                <span>{t('nav.book_appointment', 'Book Appointment')}</span>
-              </Link>
-
               <div className="drawer-actions-row">
                 <a
                   href="tel:+918328581019"
@@ -212,7 +215,7 @@ export default function PublicNavbar() {
                   style={{ flex: 1, justifyContent: 'center' }}
                 >
                   <Phone size={14} className="text-red" />
-                  <span>{t('nav.emergency_call', 'Call Emergency')}</span>
+                  <span>{t('nav.callEmergency', 'Call Emergency')}</span>
                 </a>
 
                 <Link
@@ -222,7 +225,7 @@ export default function PublicNavbar() {
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   <ShieldCheck size={14} />
-                  <span>{t('nav.staff_portal', 'Staff Portal')}</span>
+                  <span>{t('nav.staffPortal', 'Staff Portal')}</span>
                 </Link>
               </div>
             </div>

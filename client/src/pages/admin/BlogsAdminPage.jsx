@@ -20,7 +20,7 @@ export default function BlogsAdminPage() {
     readTime: '4 min read',
     summary: '',
     content: '',
-    coverImage: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1200&q=85',
+    coverImage: '',
     tags: 'Diabetes, Thalassemia, Lifestyle'
   });
   const [submitting, setSubmitting] = useState(false);
@@ -48,7 +48,7 @@ export default function BlogsAdminPage() {
         readTime: item.readTime,
         summary: item.summary,
         content: item.content,
-        coverImage: item.coverImage,
+        coverImage: item.coverImage || '',
         tags: Array.isArray(item.tags) ? item.tags.join(', ') : 'Healthcare'
       });
     } else {
@@ -60,7 +60,7 @@ export default function BlogsAdminPage() {
         readTime: '4 min read',
         summary: '',
         content: '',
-        coverImage: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1200&q=85',
+        coverImage: '',
         tags: 'Diabetes, Thalassemia, Lifestyle'
       });
     }

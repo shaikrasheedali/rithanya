@@ -797,25 +797,32 @@
    COMPREHENSIVE RESPONSIVENESS (MOBILE, TABLET, DESKTOP)
    ========================================================================== */
 
-/* Large Tablets & Compact Desktops (1081px - 1240px) */
-@media (max-width: 1240px) {
+/* ==========================================================================
+   FLOATING DYNAMIC ISLAND NAVBAR - RESPONSIVE BREAKPOINTS
+   ========================================================================== */
+
+/* 1. Large Desktops & Wide Laptops (1201px - 1380px) */
+@media (max-width: 1380px) {
+  .brand-subtitle {
+    display: none !important;
+  }
   .island-nav-link {
-    padding: 6px 8px;
-    font-size: 12.5px;
+    padding: 6px 9px !important;
+    font-size: 13px !important;
   }
   .island-btn-phone .phone-text {
-    display: none;
+    display: none !important;
   }
   .island-btn-phone {
-    padding: 8px 10px;
-  }
-  .staff-portal-btn {
-    display: none;
+    width: 38px !important;
+    height: 38px !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
   }
 }
 
-/* Tablets & Compact Laptops (769px - 1260px) */
-@media (max-width: 1260px) {
+/* 2. Tablets, iPads & Compact Laptops (769px - 1200px) */
+@media (max-width: 1200px) {
   .island-nav-links {
     display: none !important;
   }
@@ -824,6 +831,21 @@
   }
   .island-circle-login-btn {
     display: none !important;
+  }
+  .brand-subtitle {
+    display: none !important;
+  }
+  .island-btn-phone .phone-text {
+    display: none !important;
+  }
+  .island-btn-phone {
+    width: 38px !important;
+    height: 38px !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
   }
   .hero-grid {
     grid-template-columns: 1fr;
@@ -839,47 +861,7 @@
   }
 }
 
-@media (max-width: 768px) {
-  .island-btn-phone .phone-text {
-    display: none !important;
-  }
-  .island-btn-phone {
-    padding: 8px 10px !important;
-  }
-  .island-btn-primary.island-desktop-btn {
-    display: none !important;
-  }
-  .island-brand {
-    gap: 8px !important;
-  }
-  .brand-title {
-    font-size: 15px !important;
-  }
-  .brand-subtitle {
-    font-size: 10px !important;
-  }
-}
-
-@media (max-width: 520px) {
-  .brand-subtitle {
-    display: none !important;
-  }
-  .floating-island {
-    padding: 8px 12px !important;
-  }
-  .island-brand-icon {
-    width: 36px !important;
-    height: 36px !important;
-  }
-  .brand-title {
-    font-size: 14px !important;
-  }
-  .island-actions {
-    gap: 6px !important;
-  }
-}
-
-/* Medium Tablets & Mobile Landscape (641px - 860px) */
+/* 3. Medium Tablets & Mobile Landscape (641px - 860px) */
 @media (max-width: 860px) {
   .hero-title {
     font-size: 36px;
@@ -903,7 +885,7 @@
   }
 }
 
-/* Mobile Devices & Phones (up to 768px) */
+/* 4. Tablets & Standard Phones (up to 768px) */
 @media (max-width: 768px) {
   .floating-island-container {
     top: 8px;
@@ -913,49 +895,52 @@
     top: 6px;
   }
   .floating-island {
-    padding: 6px 10px 6px 12px;
+    padding: 7px 12px !important;
+    gap: 8px !important;
     border-radius: 9999px;
-    gap: 8px;
+  }
+  .island-brand {
+    gap: 8px !important;
+    min-width: 0;
+  }
+  .island-brand-icon {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 9px !important;
   }
   .brand-title {
-    font-size: 14px;
+    font-size: 14.5px !important;
     letter-spacing: -0.2px;
   }
   .brand-subtitle {
     display: none !important;
   }
-  .island-brand-icon {
-    width: 32px;
-    height: 32px;
-  }
-  /* Hide wide desktop buttons on mobile to avoid overflow */
-  .island-btn-primary {
-    display: none !important;
-  }
-  .island-circle-login-btn {
-    display: none !important;
+  .island-actions {
+    gap: 6px !important;
   }
   .island-btn-phone .phone-text {
     display: none !important;
   }
   .island-btn-phone {
-    padding: 6px 8px;
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    display: inline-flex;
+    width: 36px !important;
+    height: 36px !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    display: inline-flex !important;
     align-items: center;
     justify-content: center;
   }
   .island-menu-toggle {
-    display: flex !important;
-    width: 34px;
-    height: 34px;
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 50% !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
   }
   .public-main-content {
     padding-top: 76px;
   }
-
   .hero-section {
     padding: 40px 0 60px;
   }
@@ -986,17 +971,6 @@
   .stat-item p {
     font-size: 11px;
   }
-
-  .section-head {
-    margin-bottom: 32px;
-  }
-  .section-title {
-    font-size: 26px;
-  }
-  .section-subtitle {
-    font-size: 14px;
-  }
-
   .footer-grid {
     grid-template-columns: 1fr;
     gap: 28px;
@@ -1008,16 +982,79 @@
   }
 }
 
-/* Small Phones (under 380px) */
-@media (max-width: 380px) {
-  .island-btn-phone {
-    display: none;
+/* 5. Mobile Phones (up to 480px) */
+@media (max-width: 480px) {
+  .floating-island-container {
+    top: 6px;
+    padding: 0 8px;
+  }
+  .floating-island {
+    padding: 6px 10px !important;
+    gap: 6px !important;
+  }
+  .island-brand {
+    gap: 7px !important;
+  }
+  .island-brand-icon {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 8px !important;
   }
   .brand-title {
-    font-size: 13px;
+    font-size: 13.5px !important;
   }
-  .island-btn-primary span {
-    font-size: 11.5px;
+  .island-actions {
+    gap: 5px !important;
+  }
+  .island-btn-phone,
+  .island-menu-toggle {
+    width: 34px !important;
+    height: 34px !important;
+  }
+  .island-mobile-drawer {
+    left: 8px !important;
+    right: 8px !important;
+    border-radius: 20px !important;
+    padding: 12px !important;
+  }
+}
+
+/* 6. Compact / Narrow Phones (up to 360px - e.g. iPhone SE, Fold outer screen) */
+@media (max-width: 360px) {
+  .floating-island-container {
+    top: 5px;
+    padding: 0 5px;
+  }
+  .floating-island {
+    padding: 5px 8px !important;
+    gap: 4px !important;
+  }
+  .island-brand {
+    gap: 6px !important;
+    max-width: 140px;
+  }
+  .island-brand-icon {
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 6px !important;
+  }
+  .brand-title {
+    font-size: 12.5px !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap !important;
+  }
+  .island-actions {
+    gap: 4px !important;
+  }
+  .island-btn-phone,
+  .island-menu-toggle {
+    width: 30px !important;
+    height: 30px !important;
+  }
+  .lang-picker-btn {
+    padding: 4px 6px !important;
+    font-size: 11px !important;
   }
 }
 

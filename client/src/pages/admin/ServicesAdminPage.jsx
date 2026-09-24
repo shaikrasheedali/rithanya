@@ -23,7 +23,7 @@ export default function ServicesAdminPage() {
     readTime: '5 min overview',
     summary: '',
     content: '',
-    coverImage: 'https://images.unsplash.com/photo-1666214280557-f1b5022eb634?auto=format&fit=crop&w=1200&q=85',
+    coverImage: '',
     status: 'published'
   });
   const [submitting, setSubmitting] = useState(false);
@@ -53,7 +53,7 @@ export default function ServicesAdminPage() {
         readTime: item.readTime,
         summary: item.summary,
         content: item.content,
-        coverImage: item.coverImage,
+        coverImage: item.coverImage || '',
         status: item.status
       });
     } else {
@@ -65,7 +65,7 @@ export default function ServicesAdminPage() {
         readTime: '5 min overview',
         summary: '',
         content: '',
-        coverImage: 'https://images.unsplash.com/photo-1666214280557-f1b5022eb634?auto=format&fit=crop&w=1200&q=85',
+        coverImage: '',
         status: 'published'
       });
     }

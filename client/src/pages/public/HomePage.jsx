@@ -26,6 +26,7 @@ import { useToast } from '../../components/common/Toast';
 import HeroVideoSlider from '../../components/home/HeroVideoSlider';
 import SpecialtiesMarquee from '../../components/common/SpecialtiesMarquee';
 import { formatDate } from '../../utils/formatters';
+import { useDynamicTranslation } from '../../utils/dynamicTranslator';
 
 const DEFAULT_TREATMENT_IMAGES = [
   'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80',
@@ -38,6 +39,7 @@ const DEFAULT_TREATMENT_IMAGES = [
 
 export default function HomePage() {
   const { addToast } = useToast();
+  const { t, loc, locItems } = useDynamicTranslation();
 
   const [services, setServices] = useState([]);
   const [treatments, setTreatments] = useState([]);
@@ -135,6 +137,12 @@ export default function HomePage() {
     }
   };
 
+  const displayedServices = locItems(services);
+  const displayedTreatments = locItems(treatments);
+  const displayedSpecialists = locItems(specialists);
+  const displayedProducts = locItems(products);
+  const displayedBlogs = locItems(blogs);
+
   return (
     <div className="home-page">
       {/* 1. HERO SECTION: FULL VIEWPORT HEIGHT */}
@@ -157,7 +165,7 @@ export default function HomePage() {
                 />
                 <div className="home-about-badge">
                   <MapPin size={15} style={{ color: 'var(--red-400)', flexShrink: 0 }} />
-                  <span>Nehru Road, Opp. Old L.I.C. Office, Khammam</span>
+                  <span>{t('brand.tagline')}</span>
                 </div>
               </div>
             </aside>
@@ -166,16 +174,16 @@ export default function HomePage() {
             <aside className="home-about-split-text" aria-label="Hospital Institutional Overview">
               <div style={{ marginBottom: 18 }}>
                 <span className="section-tag" style={{ marginBottom: 10, display: 'inline-block' }}>
-                  Rithanya Hospital • రితన్య హాస్పిటల్
+                  {t('home.aboutTag')}
                 </span>
                 <h2 className="section-title" style={{ fontSize: 'clamp(24px, 3.2vw, 34px)', marginBottom: 8, lineHeight: 1.25, textAlign: 'left' }}>
-                  Nehru Road, Opposite Old L.I.C. Office, Khammam
+                  {t('home.aboutTitle')}
                 </h2>
                 <div style={{ color: 'var(--red-700)', fontWeight: 700, fontSize: 14.5, marginBottom: 12 }}>
-                  నెహ్రూరోడ్, పాత ఎల్.ఐ.సి. ఆఫీస్ ఎదురుగా, ఖమ్మం • 24/7 Emergency Services
+                  {t('home.aboutSub')}
                 </div>
                 <p style={{ color: 'var(--ink-soft)', fontSize: 14.5, lineHeight: 1.6, margin: 0 }}>
-                  Founded by <strong>Dr. D. Narayana Murthy</strong> (MD SVIMS, Diabetologist & General Physician) and <strong>Dr. A. Lakshmi Deepa</strong> (MBBS, Gynecologist & Women's Health Specialist), Rithanya Hospital combines tertiary clinical expertise, round-the-clock emergency care, automated HPLC diagnostics, and dedicated daycare blood transfusions.
+                  {t('home.aboutDesc')}
                 </p>
               </div>
 
@@ -184,30 +192,30 @@ export default function HomePage() {
                 <div className="card" style={{ padding: '12px 16px', border: '1px solid var(--line)', background: 'var(--canvas)', borderRadius: 14 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 3 }}>
                     <Clock size={17} style={{ color: 'var(--red-700)', flexShrink: 0 }} />
-                    <h4 style={{ fontSize: 14.5, fontWeight: 700, margin: 0 }}>24/7 Emergency Services</h4>
+                    <h4 style={{ fontSize: 14.5, fontWeight: 700, margin: 0 }}>{t('home.emergencyCardTitle')}</h4>
                   </div>
                   <p style={{ fontSize: 12.5, color: 'var(--ink-soft)', margin: 0, lineHeight: 1.45 }}>
-                    Round-the-clock emergency medical attention, acute poisoning resuscitation, snake/scorpion bite protocols, and immediate triage.
+                    {t('home.emergencyCardDesc')}
                   </p>
                 </div>
 
                 <div className="card" style={{ padding: '12px 16px', border: '1px solid var(--line)', background: 'var(--canvas)', borderRadius: 14 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 3 }}>
                     <Droplet size={17} style={{ color: 'var(--red-700)', flexShrink: 0 }} />
-                    <h4 style={{ fontSize: 14.5, fontWeight: 700, margin: 0 }}>Rithanya Blood Bank 24 Hours</h4>
+                    <h4 style={{ fontSize: 14.5, fontWeight: 700, margin: 0 }}>{t('home.bloodBankCardTitle')}</h4>
                   </div>
                   <p style={{ fontSize: 12.5, color: 'var(--ink-soft)', margin: 0, lineHeight: 1.45 }}>
-                    రితన్య బ్లడ్ బ్యాంక్ 24 గం॥ అందుబాటులో కలదు. Triple-crossmatched, leukodepleted PRBC units and standby platelets.
+                    {t('home.bloodBankCardDesc')}
                   </p>
                 </div>
 
                 <div className="card" style={{ padding: '12px 16px', border: '1px solid var(--line)', background: 'var(--canvas)', borderRadius: 14 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 3 }}>
                     <ShieldCheck size={17} style={{ color: 'var(--red-700)', flexShrink: 0 }} />
-                    <h4 style={{ fontSize: 14.5, fontWeight: 700, margin: 0 }}>Aarogyasri Facility Available</h4>
+                    <h4 style={{ fontSize: 14.5, fontWeight: 700, margin: 0 }}>{t('home.aarogyasriCardTitle')}</h4>
                   </div>
                   <p style={{ fontSize: 12.5, color: 'var(--ink-soft)', margin: 0, lineHeight: 1.45 }}>
-                    సికిల్ సెల్ అనీమియా, తలసేమియా పిల్లలకు ఆరోగ్యశ్రీ సదుపాయం కలదు. Cashless daycare transfusions for affected children.
+                    {t('home.aarogyasriCardDesc')}
                   </p>
                 </div>
               </div>
@@ -215,11 +223,11 @@ export default function HomePage() {
               {/* Action Buttons */}
               <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
                 <Link to="/about" className="btn btn-primary btn-sm" style={{ padding: '9px 18px', fontSize: 13 }}>
-                  <span>About Hospital & Doctors</span>
+                  <span>{t('home.aboutBtn')}</span>
                   <ArrowRight size={14} />
                 </Link>
                 <Link to="/treatments" className="btn btn-secondary btn-sm" style={{ padding: '9px 18px', fontSize: 13 }}>
-                  <span>View Treatments</span>
+                  <span>{t('nav.treatments')}</span>
                 </Link>
                 <a href="tel:+918328581019" className="btn btn-outline btn-sm" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '9px 18px', fontSize: 13 }}>
                   <Phone size={13} className="text-red" />
@@ -235,10 +243,10 @@ export default function HomePage() {
       <section className="home-viewport-section bg-soft" id="services" aria-label="Clinical Services">
         <div className="container">
           <div className="section-head">
-            <span className="section-tag">Clinical Departments</span>
-            <h2 className="section-title">Specialized Medical Services</h2>
+            <span className="section-tag">{t('home.servicesTag')}</span>
+            <h2 className="section-title">{t('home.servicesTitle')}</h2>
             <p className="section-subtitle">
-              Comprehensive care pathways designed for longitudinal vitality, rapid diagnostics, and day-care transfusions.
+              {t('home.servicesSub')}
             </p>
           </div>
 
@@ -252,8 +260,8 @@ export default function HomePage() {
                   <div style={{ width: '100%', height: 14, background: 'var(--line)', borderRadius: 4 }} />
                 </div>
               ))
-            ) : services.length > 0 ? (
-              services.slice(0, 6).map((s) => (
+            ) : displayedServices.length > 0 ? (
+              displayedServices.slice(0, 6).map((s) => (
                 <div key={s.id} className="service-card" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                   <div className="card-image-wrap" style={{ aspectRatio: '16/9' }}>
                     <img src={s.coverImage} alt={s.title} />
@@ -265,7 +273,7 @@ export default function HomePage() {
                       <p className="service-card-desc">{s.summary}</p>
                     </div>
                     <Link to={`/services/${s.slug}`} className="btn btn-outline btn-sm" style={{ alignSelf: 'flex-start', marginTop: 12 }}>
-                      <span>Explore Department</span>
+                      <span>{t('common.viewDetails')}</span>
                       <ArrowRight size={13} />
                     </Link>
                   </div>
@@ -273,14 +281,14 @@ export default function HomePage() {
               ))
             ) : (
               <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '36px 0', color: 'var(--ink-soft)' }}>
-                <p>Clinical departments are updated live from our clinical registry. None currently listed.</p>
+                <p>{t('common.loading')}</p>
               </div>
             )}
           </div>
 
           <div style={{ textAlign: 'center' }}>
             <Link to="/services" className="btn btn-secondary">
-              <span>View All Medical Specialties & Facilities</span>
+              <span>{t('common.viewAll')} {t('nav.services')}</span>
               <ArrowRight size={15} />
             </Link>
           </div>
@@ -291,10 +299,10 @@ export default function HomePage() {
       <section className="home-viewport-section bg-white" id="treatments" aria-label="Clinical Treatments">
         <div className="container">
           <div className="section-head">
-            <span className="section-tag">Clinical Care • చికిత్సలు</span>
-            <h2 className="section-title">Treatments & Conditions Managed</h2>
+            <span className="section-tag">{t('home.treatmentsTag')}</span>
+            <h2 className="section-title">{t('home.treatmentsTitle')}</h2>
             <p className="section-subtitle">
-              Comprehensive evidence-based care for 40 major acute and chronic conditions, emergency triage, and specialized diabetology.
+              {t('home.treatmentsSub')}
             </p>
           </div>
 
@@ -308,17 +316,17 @@ export default function HomePage() {
                   <div style={{ width: '60%', height: 14, background: 'var(--line)', borderRadius: 4 }} />
                 </div>
               ))
-            ) : treatments.length > 0 ? (
-              treatments.slice(0, 6).map((t, idx) => {
-                const indicators = Array.isArray(t.procedures) ? t.procedures : (Array.isArray(t.indicators) ? t.indicators : []);
+            ) : displayedTreatments.length > 0 ? (
+              displayedTreatments.slice(0, 6).map((tItem, idx) => {
+                const indicators = Array.isArray(tItem.procedures) ? tItem.procedures : (Array.isArray(tItem.indicators) ? tItem.indicators : []);
                 const fallbackImg = DEFAULT_TREATMENT_IMAGES[idx % DEFAULT_TREATMENT_IMAGES.length];
-                const imgSrc = t.coverImage && t.coverImage.trim() !== '' ? t.coverImage : fallbackImg;
+                const imgSrc = tItem.coverImage && tItem.coverImage.trim() !== '' ? tItem.coverImage : fallbackImg;
                 return (
-                  <div key={t.id} className="card" style={{ padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', borderRadius: 16 }}>
+                  <div key={tItem.id} className="card" style={{ padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', borderRadius: 16 }}>
                     <div style={{ position: 'relative', width: '100%', height: 165, overflow: 'hidden', background: '#0b162c' }}>
                       <img
                         src={imgSrc}
-                        alt={t.title}
+                        alt={tItem.title}
                         onError={(e) => {
                           e.currentTarget.onerror = null;
                           e.currentTarget.src = fallbackImg;
@@ -327,7 +335,7 @@ export default function HomePage() {
                       />
                       <div style={{ position: 'absolute', top: 10, left: 10 }}>
                         <span className="badge badge-red" style={{ fontSize: 11, background: 'rgba(169, 17, 41, 0.9)', color: '#fff' }}>
-                          {t.category}
+                          {tItem.category}
                         </span>
                       </div>
                       <div style={{
@@ -345,15 +353,15 @@ export default function HomePage() {
                         gap: 4
                       }}>
                         <Clock size={11} />
-                        <span>{t.duration || 'Standard Session'}</span>
+                        <span>{tItem.duration || 'Standard Session'}</span>
                       </div>
                     </div>
 
                     <div style={{ padding: '20px 22px 22px', flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                       <div>
-                        <h3 style={{ fontSize: 17, color: 'var(--ink)', marginBottom: 8, lineHeight: 1.35 }}>{t.title}</h3>
+                        <h3 style={{ fontSize: 17, color: 'var(--ink)', marginBottom: 8, lineHeight: 1.35 }}>{tItem.title}</h3>
                         <p style={{ fontSize: 13, color: 'var(--ink-soft)', lineHeight: 1.6, marginBottom: 14 }}>
-                          {t.summary}
+                          {tItem.summary}
                         </p>
                       </div>
 
@@ -368,8 +376,8 @@ export default function HomePage() {
                           </div>
                         )}
 
-                        <Link to={`/treatments/${t.slug}`} className="btn btn-outline btn-sm" style={{ width: '100%', justifyContent: 'center' }}>
-                          <span>Protocol Details</span>
+                        <Link to={`/treatments/${tItem.slug}`} className="btn btn-outline btn-sm" style={{ width: '100%', justifyContent: 'center' }}>
+                          <span>{t('common.viewDetails')}</span>
                           <ArrowRight size={13} />
                         </Link>
                       </div>
@@ -379,14 +387,14 @@ export default function HomePage() {
               })
             ) : (
               <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '36px 0', color: 'var(--ink-soft)' }}>
-                <p>Treatment pathways are retrieved directly from clinical protocols. None currently listed.</p>
+                <p>{t('common.loading')}</p>
               </div>
             )}
           </div>
 
           <div style={{ textAlign: 'center' }}>
             <Link to="/treatments" className="btn btn-secondary">
-              <span>View All 40 Treatments & Conditions</span>
+              <span>{t('common.viewAll')} {t('nav.treatments')}</span>
               <ArrowRight size={15} />
             </Link>
           </div>
@@ -511,10 +519,10 @@ export default function HomePage() {
       <section className="home-viewport-section bg-white" id="doctors" aria-label="Specialist Doctors">
         <div className="container">
           <div className="section-head">
-            <span className="section-tag">Clinical Leadership</span>
-            <h2 className="section-title">Consultant Physicians & Specialists</h2>
+            <span className="section-tag">{t('home.doctorsTag')}</span>
+            <h2 className="section-title">{t('home.doctorsTitle')}</h2>
             <p className="section-subtitle">
-              Led by Dr. Narayana Murthy M.D., bringing over two decades of clinical distinction to patient care.
+              {t('home.doctorsSub')}
             </p>
           </div>
 
@@ -528,12 +536,12 @@ export default function HomePage() {
                   <div style={{ width: '60%', height: 14, background: 'var(--line)', borderRadius: 4 }} />
                 </div>
               ))
-            ) : specialists.length > 0 ? (
-              specialists.slice(0, 4).map((doc) => (
+            ) : displayedSpecialists.length > 0 ? (
+              displayedSpecialists.slice(0, 4).map((doc) => (
                 <div key={doc.id} className="specialist-card" style={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
                   <div style={{ width: '38%', minHeight: 220, position: 'relative' }}>
                     <img
-                      src={doc.image}
+                      src={doc.image || '/image.png'}
                       alt={doc.name}
                       style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                     />
@@ -554,14 +562,14 @@ export default function HomePage() {
               ))
             ) : (
               <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '36px 0', color: 'var(--ink-soft)' }}>
-                <p>Specialist medical roster is synchronized live from hospital directory. None currently listed.</p>
+                <p>{t('common.loading')}</p>
               </div>
             )}
           </div>
 
           <div style={{ textAlign: 'center' }}>
             <Link to="/doctors" className="btn btn-secondary">
-              <span>View All Specialist Doctors & OPD Schedules</span>
+              <span>{t('common.viewAll')} {t('nav.doctors')}</span>
               <ArrowRight size={15} />
             </Link>
           </div>
@@ -572,10 +580,10 @@ export default function HomePage() {
       <section className="home-viewport-section bg-soft" id="products" aria-label="Healthcare Products & Packages">
         <div className="container">
           <div className="section-head">
-            <span className="section-tag">Healthcare Catalog</span>
-            <h2 className="section-title">Products</h2>
+            <span className="section-tag">{t('home.productsTag')}</span>
+            <h2 className="section-title">{t('home.productsTitle')}</h2>
             <p className="section-subtitle">
-              Curated clinical healthcare packages, diabetic supplies, and diagnostic profiling tests designed for comprehensive wellness.
+              {t('home.productsSub')}
             </p>
           </div>
 
@@ -588,12 +596,12 @@ export default function HomePage() {
                   <div style={{ width: '40%', height: 18, background: 'var(--line)', borderRadius: 4 }} />
                 </div>
               ))
-            ) : products.length > 0 ? (
-              products.slice(0, 6).map((pkg) => (
+            ) : displayedProducts.length > 0 ? (
+              displayedProducts.slice(0, 6).map((pkg) => (
                 <div key={pkg.id} className="card" style={{ padding: 22, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                   <div>
                     <div style={{ width: '100%', height: 160, borderRadius: 12, overflow: 'hidden', marginBottom: 14 }}>
-                      <img src={pkg.image} alt={pkg.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      <img src={pkg.image || '/image.png'} alt={pkg.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </div>
                     <h3 style={{ fontSize: 17, marginBottom: 8, color: 'var(--ink)' }}>{pkg.name}</h3>
                     <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 14 }}>
@@ -614,7 +622,7 @@ export default function HomePage() {
                     </ul>
 
                     <Link to="/products" className="btn btn-outline btn-sm" style={{ width: '100%', justifyContent: 'center' }}>
-                      <span>View Package & Inquire</span>
+                      <span>{t('common.viewDetails')}</span>
                       <ArrowRight size={13} />
                     </Link>
                   </div>
@@ -622,14 +630,14 @@ export default function HomePage() {
               ))
             ) : (
               <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '36px 0', color: 'var(--ink-soft)' }}>
-                <p>Health checkup packages are synchronized live from database catalog. None currently listed.</p>
+                <p>{t('common.loading')}</p>
               </div>
             )}
           </div>
 
           <div style={{ textAlign: 'center' }}>
             <Link to="/products" className="btn btn-secondary">
-              <span>View All Products</span>
+              <span>{t('common.viewAll')} {t('nav.products')}</span>
               <ArrowRight size={15} />
             </Link>
           </div>
@@ -640,10 +648,10 @@ export default function HomePage() {
       <section className="home-viewport-section bg-white" id="insights" aria-label="Medical Insights & Health Blogs">
         <div className="container">
           <div className="section-head">
-            <span className="section-tag">Clinical Insights</span>
-            <h2 className="section-title">Health Articles & Medical Advice</h2>
+            <span className="section-tag">{t('home.blogsTag')}</span>
+            <h2 className="section-title">{t('home.blogsTitle')}</h2>
             <p className="section-subtitle">
-              Expert patient guides on diabetes lifestyle management, hemoglobin diagnostics, and transfusion safety.
+              {t('home.blogsSub')}
             </p>
           </div>
 
@@ -657,11 +665,11 @@ export default function HomePage() {
                   <div style={{ width: '100%', height: 14, background: 'var(--line)', borderRadius: 4 }} />
                 </div>
               ))
-            ) : blogs.length > 0 ? (
-              blogs.slice(0, 6).map((blog) => (
+            ) : displayedBlogs.length > 0 ? (
+              displayedBlogs.slice(0, 6).map((blog) => (
                 <div key={blog.id} className="card" style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column', height: '100%' }}>
                   <div style={{ width: '100%', height: 160, overflow: 'hidden' }}>
-                    <img src={blog.coverImage} alt={blog.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img src={blog.coverImage || '/image.png'} alt={blog.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
                   <div style={{ padding: 20, flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                     <div>
@@ -675,7 +683,7 @@ export default function HomePage() {
                       </p>
                     </div>
                     <Link to={`/insights/${blog.slug}`} className="btn btn-outline btn-sm" style={{ alignSelf: 'flex-start' }}>
-                      <span>Read Article</span>
+                      <span>{t('common.readMore')}</span>
                       <ArrowRight size={13} />
                     </Link>
                   </div>
@@ -683,14 +691,14 @@ export default function HomePage() {
               ))
             ) : (
               <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '36px 0', color: 'var(--ink-soft)' }}>
-                <p>Clinical articles and research insights are loaded live from hospital archive. None currently listed.</p>
+                <p>{t('common.loading')}</p>
               </div>
             )}
           </div>
 
           <div style={{ textAlign: 'center' }}>
             <Link to="/insights" className="btn btn-secondary">
-              <span>View All Health Articles & Guides</span>
+              <span>{t('common.viewAll')} {t('nav.insights')}</span>
               <ArrowRight size={15} />
             </Link>
           </div>
@@ -701,40 +709,40 @@ export default function HomePage() {
       <section className="home-viewport-section bg-soft" id="contact" aria-label="Contact and Appointment Booking">
         <div className="container">
           <div className="section-head">
-            <span className="section-tag">Direct Outpatient Scheduling</span>
-            <h2 className="section-title">Schedule Your Consultation or Reach Out</h2>
+            <span className="section-tag">{t('home.bookWidgetTag')}</span>
+            <h2 className="section-title">{t('home.bookWidgetTitle')}</h2>
             <p className="section-subtitle">
-              Located on Wyra Road, Khammam. Walk-ins are welcomed during clinical OPD hours.
+              {t('home.bookWidgetSub')}
             </p>
           </div>
 
           <div className="grid-2" style={{ gap: 32, alignItems: 'start' }}>
             {/* BOOKING FORM CARD */}
             <div className="card card-responsive" style={{ border: '1.5px solid var(--red-100)' }}>
-              <h3 style={{ fontSize: 20, marginBottom: 6 }}>Book an OPD Token</h3>
+              <h3 style={{ fontSize: 20, marginBottom: 6 }}>{t('nav.bookAppointment')}</h3>
               <p style={{ fontSize: 13, color: 'var(--ink-soft)', marginBottom: 20 }}>
-                Submit your details to reserve a direct doctor consultation token.
+                {t('home.bookWidgetSub')}
               </p>
 
               {bookingSuccess ? (
                 <div style={{ background: 'var(--green-bg)', padding: 24, borderRadius: 14, textAlign: 'center', border: '1px solid #c2e8d9' }}>
                   <CheckCircle size={44} style={{ color: 'var(--green)', margin: '0 auto 12px' }} />
-                  <h3 style={{ color: 'var(--green)', fontSize: 18, marginBottom: 8 }}>Appointment Registered!</h3>
+                  <h3 style={{ color: 'var(--green)', fontSize: 18, marginBottom: 8 }}>{t('home.bookingSuccessTitle')}</h3>
                   <p style={{ fontSize: 13.5, color: 'var(--ink)', marginBottom: 14 }}>
                     Tracking Code: <strong style={{ fontSize: 16, color: 'var(--red-700)' }}>{bookingSuccess.apptCode}</strong>
                   </p>
                   <p style={{ fontSize: 12.5, color: 'var(--ink-soft)', marginBottom: 18 }}>
-                    Our patient care coordinator will call {bookingSuccess.phone} to confirm your appointment time.
+                    {t('home.bookingSuccessMsg')}
                   </p>
                   <button type="button" className="btn btn-secondary btn-sm" onClick={() => setBookingSuccess(null)}>
-                    Book Another Appointment
+                    {t('common.bookNow')}
                   </button>
                 </div>
               ) : (
                 <form onSubmit={handleBookingSubmit}>
                   <div className="grid-2">
                     <div className="form-group">
-                      <label className="form-label">Patient Full Name *</label>
+                      <label className="form-label">{t('home.patientName')} *</label>
                       <input
                         type="text"
                         className="form-control"
@@ -746,7 +754,7 @@ export default function HomePage() {
                     </div>
 
                     <div className="form-group">
-                      <label className="form-label">Phone Number *</label>
+                      <label className="form-label">{t('home.phone')} *</label>
                       <input
                         type="tel"
                         className="form-control"
@@ -760,7 +768,7 @@ export default function HomePage() {
 
                   <div className="grid-2">
                     <div className="form-group">
-                      <label className="form-label">Preferred Date *</label>
+                      <label className="form-label">{t('home.preferredDate')} *</label>
                       <input
                         type="date"
                         className="form-control"
@@ -772,7 +780,7 @@ export default function HomePage() {
                     </div>
 
                     <div className="form-group">
-                      <label className="form-label">Department / Specialty</label>
+                      <label className="form-label">{t('home.specialty')}</label>
                       <select
                         className="form-control"
                         value={booking.specialty}
@@ -788,7 +796,7 @@ export default function HomePage() {
                   </div>
 
                   <div className="form-group">
-                    <label className="form-label">Symptoms / Reason for Visit (Optional)</label>
+                    <label className="form-label">{t('home.reason')} (Optional)</label>
                     <textarea
                       className="form-control"
                       rows="2"
@@ -805,7 +813,7 @@ export default function HomePage() {
                     disabled={bookingLoading}
                   >
                     <Calendar size={16} />
-                    <span>{bookingLoading ? 'Registering Booking...' : 'Confirm Appointment Request'}</span>
+                    <span>{bookingLoading ? 'Registering Booking...' : t('home.bookSubmit')}</span>
                   </button>
                 </form>
               )}
@@ -813,16 +821,16 @@ export default function HomePage() {
 
             {/* LOCATION & CONTACT DETAILS CARD */}
             <div className="card card-responsive">
-              <h3 style={{ fontSize: 20, marginBottom: 14 }}>Hospital Information</h3>
+              <h3 style={{ fontSize: 20, marginBottom: 14 }}>{t('brand.name')}</h3>
 
               <div style={{ display: 'flex', gap: 14, marginBottom: 18 }}>
                 <div style={{ width: 40, height: 40, borderRadius: 10, background: 'var(--red-50)', color: 'var(--red-700)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <MapPin size={20} />
                 </div>
                 <div>
-                  <strong style={{ fontSize: 14, display: 'block', color: 'var(--ink)' }}>Hospital Address</strong>
+                  <strong style={{ fontSize: 14, display: 'block', color: 'var(--ink)' }}>{t('footer.address')}</strong>
                   <p style={{ fontSize: 13, color: 'var(--ink-soft)', margin: '4px 0 0', lineHeight: 1.5 }}>
-                    Wyra Road, opposite Old LIC Office, Nehru Nagar, Khammam, Telangana 507001
+                    {t('brand.tagline')}
                   </p>
                 </div>
               </div>
@@ -832,7 +840,7 @@ export default function HomePage() {
                   <Phone size={20} />
                 </div>
                 <div>
-                  <strong style={{ fontSize: 14, display: 'block', color: 'var(--ink)' }}>Contact & Emergency Hotline</strong>
+                  <strong style={{ fontSize: 14, display: 'block', color: 'var(--ink)' }}>{t('footer.emergencyContact')}</strong>
                   <p style={{ fontSize: 13, color: 'var(--ink-soft)', margin: '4px 0 0' }}>
                     Emergency & Transfusions: <a href="tel:+918328581019" style={{ color: 'var(--red-700)', fontWeight: 600 }}>+91 83285 81019</a>
                   </p>
@@ -847,7 +855,7 @@ export default function HomePage() {
                   <Clock size={20} />
                 </div>
                 <div>
-                  <strong style={{ fontSize: 14, display: 'block', color: 'var(--ink)' }}>Operating Timings</strong>
+                  <strong style={{ fontSize: 14, display: 'block', color: 'var(--ink)' }}>{t('common.consultationHours')}</strong>
                   <p style={{ fontSize: 13, color: 'var(--ink-soft)', margin: '4px 0 0' }}>
                     Outpatient (OPD): Mon - Sat: 11:00 AM - 5:00 PM
                   </p>
@@ -858,7 +866,7 @@ export default function HomePage() {
               </div>
 
               <Link to="/contact" className="btn btn-outline" style={{ width: '100%', justifyContent: 'center' }}>
-                <span>View Full Contact Page & Directions</span>
+                <span>{t('common.viewDetails')} & Directions</span>
                 <ArrowRight size={14} />
               </Link>
             </div>

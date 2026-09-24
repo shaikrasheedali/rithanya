@@ -305,6 +305,8 @@ CREATE TABLE `ProductPackage` (
     `features` JSON NULL,
     `tag` VARCHAR(191) NULL,
     `image` VARCHAR(1000) NOT NULL,
+    `videoUrl` VARCHAR(1000) NULL,
+    `content` LONGTEXT NULL,
     `stock` INTEGER NOT NULL DEFAULT 50,
     `inStock` BOOLEAN NOT NULL DEFAULT true,
     `status` VARCHAR(191) NOT NULL DEFAULT 'active',

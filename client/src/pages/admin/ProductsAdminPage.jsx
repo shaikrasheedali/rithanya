@@ -25,7 +25,7 @@ export default function ProductsAdminPage() {
     summary: '',
     features: 'Accurate Digital Sensors, Memory Storage, Clinical Grade Calibration',
     tag: 'Hospital Certified',
-    image: '/image.png',
+    image: '',
     videoUrl: '',
     content: ''
   });
@@ -57,7 +57,7 @@ export default function ProductsAdminPage() {
         summary: item.summary || '',
         features: Array.isArray(item.features) ? item.features.join(', ') : (item.features || ''),
         tag: item.tag || '',
-        image: item.image || '/image.png',
+        image: item.image || '',
         videoUrl: item.videoUrl || '',
         content: item.content || ''
       });
@@ -73,7 +73,7 @@ export default function ProductsAdminPage() {
         summary: '',
         features: 'Accurate Digital Sensors, Memory Storage, Clinical Grade Calibration',
         tag: 'Hospital Certified',
-        image: '/image.png',
+        image: '',
         videoUrl: '',
         content: ''
       });

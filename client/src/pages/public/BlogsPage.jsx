@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Clock, User, ArrowRight, Tag } from 'lucide-react';
 import { apiRequest } from '../../utils/api';
+import { useDynamicTranslation } from '../../utils/dynamicTranslator';
 
 export default function BlogsPage() {
+  const { t, locItems } = useDynamicTranslation();
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -21,22 +23,26 @@ export default function BlogsPage() {
     loadBlogs();
   }, []);
 
+  const displayedBlogs = locItems(blogs);
+
   return (
     <div className="blogs-page" style={{ padding: '60px 0 80px' }}>
       <div className="container">
         <div className="section-head">
-          <span className="section-tag">Clinical Education</span>
-          <h1 className="section-title">Health Library & Clinical Insights</h1>
+          <span className="section-tag">{t('home.insightsTag', 'Clinical Education')}</span>
+          <h1 className="section-title">{t('home.insightsTitle', 'Health Library & Clinical Insights')}</h1>
           <p className="section-subtitle">
-            Evidence-backed articles by Dr. Narayana Murthy on practical diabetes management, thalassemia day-care protocols, and lifestyle longevity.
+            {t('home.insightsSub', 'Evidence-backed articles by Dr. Narayana Murthy on practical diabetes management, thalassemia day-care protocols, and lifestyle longevity.')}
           </p>
         </div>
 
         {loading ? (
-          <div style={{ textAlign: 'center', padding: 60 }}>Loading articles...</div>
+          <div style={{ textAlign: 'center', padding: 60, color: 'var(--ink-soft)' }}>
+            {t('common.loading', 'Loading articles...')}
+          </div>
         ) : (
           <div className="grid-3">
-            {blogs.map((blog) => (
+            {displayedBlogs.map((blog) => (
               <article key={blog.id} className="card card-clickable" style={{ display: 'flex', flexDirection: 'column' }}>
                 <div className="card-image-wrap">
                   <img src={blog.coverImage} alt={blog.title} />
@@ -53,7 +59,7 @@ export default function BlogsPage() {
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--line)', paddingTop: 14 }}>
                     <span style={{ fontSize: 12, color: 'var(--ink-soft)' }}>{blog.author}</span>
                     <Link to={`/insights/${blog.slug}`} className="btn btn-outline btn-sm">
-                      <span>Read Article</span>
+                      <span>{t('home.readArticle', 'Read Article')}</span>
                       <ArrowRight size={14} />
                     </Link>
                   </div>
