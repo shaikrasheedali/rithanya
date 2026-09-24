@@ -802,18 +802,22 @@
    FLOATING DYNAMIC ISLAND NAVBAR - RESPONSIVE BREAKPOINTS
    ========================================================================== */
 
-/* 1. Large Desktops & Wide Laptops (1241px - 1380px) */
+/* 1. Large Desktops & Wide Laptops (1261px - 1380px) */
 @media (max-width: 1380px) {
   .brand-subtitle {
     display: none !important;
+  }
+  .brand-title {
+    font-size: 15px !important;
   }
   .island-nav-links {
     gap: 1px !important;
     flex-wrap: nowrap !important;
   }
   .island-nav-link {
-    padding: 6px 7px !important;
-    font-size: 12.5px !important;
+    padding: 5px 6px !important;
+    font-size: 12px !important;
+    letter-spacing: -0.2px;
   }
   .island-btn-phone .phone-text {
     display: none !important;
@@ -826,8 +830,8 @@
   }
 }
 
-/* 2. Tablets, iPads & Compact Laptops (769px - 1240px) */
-@media (max-width: 1240px) {
+/* 2. Tablets, iPads & Compact Laptops (769px - 1260px) */
+@media (max-width: 1260px) {
   .island-nav-links {
     display: none !important;
   }
@@ -999,6 +1003,7 @@
   }
   .island-brand {
     gap: 7px !important;
+    min-width: 0;
   }
   .island-brand-icon {
     width: 32px !important;
@@ -1007,6 +1012,10 @@
   }
   .brand-title {
     font-size: 13.5px !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap !important;
+    max-width: min(160px, 45vw);
   }
   .island-actions {
     gap: 5px !important;
@@ -1037,6 +1046,7 @@
   .island-brand {
     gap: 6px !important;
     max-width: 140px;
+    min-width: 0;
   }
   .island-brand-icon {
     width: 28px !important;
@@ -1048,6 +1058,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap !important;
+    max-width: min(130px, 40vw);
   }
   .island-actions {
     gap: 4px !important;
@@ -1060,6 +1071,38 @@
   .lang-picker-btn {
     padding: 4px 6px !important;
     font-size: 11px !important;
+  }
+}
+
+/* 7. Ultra-Compact Screens (up to 330px - e.g. 320px viewport) */
+@media (max-width: 330px) {
+  .floating-island {
+    padding: 4px 6px !important;
+    gap: 3px !important;
+  }
+  .island-brand {
+    gap: 4px !important;
+    max-width: 110px;
+  }
+  .island-brand-icon {
+    width: 26px !important;
+    height: 26px !important;
+  }
+  .brand-title {
+    font-size: 11.5px !important;
+    max-width: 75px !important;
+  }
+  .island-actions {
+    gap: 3px !important;
+  }
+  .island-btn-phone,
+  .island-menu-toggle {
+    width: 28px !important;
+    height: 28px !important;
+  }
+  .lang-picker-btn {
+    padding: 3px 5px !important;
+    font-size: 10.5px !important;
   }
 }
 

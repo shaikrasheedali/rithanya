@@ -133,7 +133,7 @@ export default function ContactPage() {
                   <input
                     type="text"
                     className="form-control"
-                    placeholder="Your Name"
+                    placeholder={loc('Your Name')}
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                     required
@@ -168,7 +168,7 @@ export default function ContactPage() {
                   <textarea
                     className="form-control"
                     rows="4"
-                    placeholder="Please specify your query..."
+                    placeholder={loc('Please specify your query...')}
                     value={form.message}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
                   />

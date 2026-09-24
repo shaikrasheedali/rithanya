@@ -7,7 +7,6 @@ import {
   ShieldCheck,
   Menu,
   X,
-  Calendar,
   Home,
   Info,
   Stethoscope,

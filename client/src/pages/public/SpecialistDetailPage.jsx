@@ -199,7 +199,7 @@ export default function SpecialistDetailPage() {
                 }}
               >
                 <UserCheck size={12} />
-                <span>Reg: {currentDoctor.registrationNumber}</span>
+                <span>{loc('Regd:')} {currentDoctor.registrationNumber}</span>
               </div>
             )}
           </div>
@@ -226,7 +226,7 @@ export default function SpecialistDetailPage() {
                   }}
                 >
                   <Award size={13} />
-                  {currentDoctor.experience} {t('common.experience', 'Experience')}
+                  {loc(currentDoctor.experience)}
                 </span>
               )}
             </div>
@@ -367,7 +367,7 @@ export default function SpecialistDetailPage() {
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="e.g. Ramesh Kumar"
+                      placeholder={loc("e.g. Ramesh Kumar")}
                       value={bookingForm.patientName}
                       onChange={(e) => setBookingForm({ ...bookingForm, patientName: e.target.value })}
                       required
@@ -379,7 +379,7 @@ export default function SpecialistDetailPage() {
                     <input
                       type="tel"
                       className="form-control"
-                      placeholder="10-digit mobile number"
+                      placeholder={loc("10-digit mobile number")}
                       value={bookingForm.phone}
                       onChange={(e) => setBookingForm({ ...bookingForm, phone: e.target.value })}
                       required
@@ -415,7 +415,7 @@ export default function SpecialistDetailPage() {
                     <textarea
                       className="form-control"
                       rows={2}
-                      placeholder="e.g. High blood sugar readings, chronic headache..."
+                      placeholder={loc("e.g. High blood sugar readings, chronic headache...")}
                       value={bookingForm.notes}
                       onChange={(e) => setBookingForm({ ...bookingForm, notes: e.target.value })}
                     />

@@ -128,7 +128,11 @@ const resources = {
         specialties: 'Clinical Specialties',
         emergencyContact: '24/7 Emergency & Blood Bank',
         address: 'Nehru Road, Opp. Old L.I.C. Office, Khammam, Telangana 507001',
-        rights: 'All Rights Reserved. Rithanya Hospital & Daycare Center.'
+        rights: 'All Rights Reserved. Rithanya Hospital & Daycare Center.',
+        privacyNotice: 'Privacy Notice',
+        terms: 'Terms of Clinical Service',
+        patientRights: 'Patient Rights & Facilities',
+        requestErasure: 'Request Erasure (DPDP Act)'
       },
       cart: {
         viewCart: 'View Cart',
@@ -317,7 +321,11 @@ const resources = {
         specialties: 'వైద్య విభాగాలు',
         emergencyContact: '24/7 అత్యవసర సేవలు & బ్లడ్ బ్యాంక్',
         address: 'నెహ్రూరోడ్, పాత ఎల్.ఐ.సి. ఆఫీస్ ఎదురుగా, ఖమ్మం, తెలంగాణ 507001',
-        rights: 'సర్వహక్కులు ప్రత్యేకించబడ్డాయి. రితన్య హాస్పిటల్ & డేకేర్ సెంటర్.'
+        rights: 'సర్వహక్కులు ప్రత్యేకించబడ్డాయి. రితన్య హాస్పిటల్ & డేకేర్ సెంటర్.',
+        privacyNotice: 'గోప్యతా విధానం (Privacy Notice)',
+        terms: 'వైద్య సేవా నిబంధనలు (Terms of Service)',
+        patientRights: 'రోగుల హక్కులు & సదుపాయాలు',
+        requestErasure: 'డేటా తొలగింపు అభ్యర్థన (DPDP Act)'
       },
       cart: {
         viewCart: 'కార్ట్ చూడండి',
@@ -506,7 +514,11 @@ const resources = {
         specialties: 'विशेषज्ञताएं',
         emergencyContact: '24/7 आपातकालीन सेवा एवं ब्लड बैंक',
         address: 'नेहरू रोड, पुरानी एल.आई.सी. ऑफिस के सामने, खम्मम, तेलंगाना 507001',
-        rights: 'सर्वाधिकार सुरक्षित। रितन्या हॉस्पिटल एवं डेकेयर सेंटर।'
+        rights: 'सर्वाधिकार सुरक्षित। रितन्या हॉस्पिटल एवं डेकेयर सेंटर।',
+        privacyNotice: 'गोपनीयता नीति (Privacy Notice)',
+        terms: 'चिकित्सा सेवा की शर्तें (Terms of Service)',
+        patientRights: 'मरीजों के अधिकार एवं सुविधाएं',
+        requestErasure: 'डेटा हटाने का अनुरोध (DPDP Act)'
       },
       cart: {
         viewCart: 'कार्ट देखें',

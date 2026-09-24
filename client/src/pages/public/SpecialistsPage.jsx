@@ -109,7 +109,7 @@ export default function SpecialistsPage() {
                               }}
                             >
                               <Award size={13} />
-                              {doc.experience} Clinical Experience
+                              {loc(doc.experience)}
                             </span>
                           )}
                         </div>
@@ -140,7 +140,7 @@ export default function SpecialistsPage() {
                           <GraduationCap size={18} style={{ color: 'var(--red-700)', flexShrink: 0, marginTop: 2 }} />
                           <div>
                             <span style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--ink-soft)', fontWeight: 700, display: 'block', marginBottom: 2 }}>
-                              Qualifications & Fellowships
+                              {loc('Qualifications & Fellowships')}
                             </span>
                             <p style={{ fontSize: 13, color: 'var(--ink)', lineHeight: 1.5, margin: 0, fontWeight: 500 }}>
                               {doc.qualifications}
@@ -165,18 +165,18 @@ export default function SpecialistsPage() {
                       >
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--ink-soft)' }}>
                           <Clock size={16} style={{ color: 'var(--red-700)', flexShrink: 0 }} />
-                          <span><strong>Consultation Hours:</strong> {doc.opdTimings}</span>
+                          <span><strong>{loc('Consultation Hours')}:</strong> {doc.opdTimings}</span>
                         </div>
 
                         <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
                           <Link to={profileUrl} className="btn btn-primary">
-                            <span>View Full Profile & Credentials</span>
+                            <span>{loc('View Full Profile & Credentials')}</span>
                             <ArrowRight size={16} />
                           </Link>
 
                           <Link to={`${profileUrl}#book-consultation`} className="btn btn-secondary">
                             <Calendar size={16} />
-                            <span>Book Consultation</span>
+                            <span>{loc('Book Consultation')}</span>
                           </Link>
 
                           <a href="tel:8328581019" className="btn btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13 }}>

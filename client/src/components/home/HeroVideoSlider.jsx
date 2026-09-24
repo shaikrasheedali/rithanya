@@ -14,6 +14,7 @@ import {
   ShieldCheck,
   Droplet
 } from 'lucide-react';
+import useDynamicTranslation from '../../utils/dynamicTranslator';
 
 // Register GSAP CustomEase plugin
 gsap.registerPlugin(CustomEase);
@@ -96,6 +97,7 @@ const SLIDES = [
 const AUTO_ADVANCE_SECONDS = 6;
 
 export default function HeroVideoSlider() {
+  const { loc } = useDynamicTranslation();
   const [current, setCurrent] = useState(0);
   const [loadingMap, setLoadingMap] = useState({ 0: false, 1: true, 2: true, 3: true });
   const [loadedVideos, setLoadedVideos] = useState({ 0: true });
@@ -366,32 +368,32 @@ export default function HeroVideoSlider() {
                 <div className="featured-hero__animation__text-container">
                   <div className="hero-slide-badge">
                     <Icon size={14} />
-                    <span>{slide.badge}</span>
+                    <span>{loc(slide.badge)}</span>
                   </div>
 
                   <h1 className="featured-hero__heading hospital-hero__heading">
-                    {slide.heading}
+                    {loc(slide.heading)}
                   </h1>
 
                   <p className="featured-hero__subheading hospital-hero__subheading">
-                    {slide.subheading}
+                    {loc(slide.subheading)}
                   </p>
 
                   <div className="hero-slide-actions">
                     {slide.primaryCta.href.startsWith('#') ? (
                       <a href={slide.primaryCta.href} className="featured-hero__cta hospital-hero__cta-primary">
                         <Calendar size={18} />
-                        <span>{slide.primaryCta.label}</span>
+                        <span>{loc(slide.primaryCta.label)}</span>
                       </a>
                     ) : (
                       <Link to={slide.primaryCta.href} className="featured-hero__cta hospital-hero__cta-primary">
                         <Calendar size={18} />
-                        <span>{slide.primaryCta.label}</span>
+                        <span>{loc(slide.primaryCta.label)}</span>
                       </Link>
                     )}
 
                     <Link to={slide.secondaryCta.href} className="hospital-hero__cta-secondary">
-                      <span>{slide.secondaryCta.label}</span>
+                      <span>{loc(slide.secondaryCta.label)}</span>
                       <ArrowRight size={16} />
                     </Link>
                   </div>
