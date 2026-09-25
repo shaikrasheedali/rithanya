@@ -32,7 +32,7 @@ export default function AboutPage() {
             {t('aboutPage.title', 'Excellence in Clinical Medicine, Guided by Human Compassion')}
           </h1>
           <p className="section-subtitle" style={{ maxWidth: 840, margin: '0 auto', fontSize: 16 }}>
-            {t('aboutPage.sub', 'Rithanya Hospital was established on Nehru Road, Khammam, to bring advanced, ethical internal medicine, specialized Diabetology, and a life-sustaining 24/7 Daycare Transfusion Centre to the community.')}
+            {t('aboutPage.sub', 'Rithanya Hospital was established on Nehru nagar Road, Khammam, to bring advanced, ethical internal medicine, specialized Diabetology, and a life-sustaining 24/7 Daycare Transfusion Centre to the community.')}
           </p>
         </div>
 
@@ -60,7 +60,7 @@ export default function AboutPage() {
                   {t('aboutPage.foundationTitle', 'A Trusted Healing Haven in the Heart of Khammam')}
                 </h2>
                 <p style={{ color: 'var(--ink-soft)', lineHeight: 1.8, fontSize: 15, marginBottom: 16 }}>
-                  {t('aboutPage.foundationP1', 'Located opposite the Old L.I.C. Office on Nehru Road, Rithanya Hospital combines modern diagnostic capabilities with a warm, patient-first clinical environment. Driven by a deep commitment to affordable and transparent healthcare, the hospital has grown into a vital clinical anchor for Khammam and surrounding rural and semi-urban communities.')}
+                  {t('aboutPage.foundationP1', 'Located opposite the Old L.I.C. Office on Nehru nagar Road, Rithanya Hospital combines modern diagnostic capabilities with a warm, patient-first clinical environment. Driven by a deep commitment to affordable and transparent healthcare, the hospital has grown into a vital clinical anchor for Khammam and surrounding rural and semi-urban communities.')}
                 </p>
                 <p style={{ color: 'var(--ink-soft)', lineHeight: 1.8, fontSize: 15, marginBottom: 20 }}>
                   {t('aboutPage.foundationP2', 'Our specialized Daycare Transfusion Unit was specifically established to address the acute challenges faced by children and families battling Beta Thalassemia Major and Sickle Cell Anemia. With complete Aarogyasri cashless coverage and an in-house 24/7 blood bank, young warriors receive scheduled, infection-controlled transfusions with absolute safety and peace of mind.')}
@@ -90,122 +90,313 @@ export default function AboutPage() {
                   style={{ width: '100%', height: '100%', maxHeight: 380, objectFit: 'cover', display: 'block' }}
                 />
                 <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%)', padding: '16px 20px', color: '#fff' }}>
-                  <p style={{ fontSize: 14, fontWeight: 700, margin: 0 }}>{loc('Nehru Road Campus • Khammam')}</p>
+                  <p style={{ fontSize: 14, fontWeight: 700, margin: 0 }}>{loc('Nehru nagar Road Campus • Khammam')}</p>
                   <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.85)', margin: '2px 0 0' }}>{loc('Diabetology, Daycare Transfusion & 24/7 Diagnostics')}</p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Founding Leadership Showcase */}
-          <div style={{ marginTop: 32 }}>
-            <div style={{ textAlign: 'center', marginBottom: 28 }}>
+          {/* Founding Leadership Showcase - Full Viewport Sections */}
+          <div style={{ marginTop: 20, marginBottom: 80 }}>
+            <div style={{ textAlign: 'center', marginBottom: 36 }}>
               <span className="section-tag">{t('aboutPage.leadershipTag', 'Institutional Leadership')}</span>
-              <h3 style={{ fontSize: 24, fontWeight: 800, color: 'var(--ink)' }}>
+              <h2 style={{ fontSize: 'clamp(26px, 3.5vw, 36px)', fontWeight: 800, color: 'var(--ink)', marginBottom: 8 }}>
                 {t('aboutPage.leadershipTitle', 'Our Founding Visionaries')}
-              </h3>
-              <p style={{ fontSize: 14.5, color: 'var(--ink-soft)', maxWidth: 640, margin: '4px auto 0' }}>
+              </h2>
+              <p style={{ fontSize: 15, color: 'var(--ink-soft)', maxWidth: 680, margin: '0 auto' }}>
                 {t('aboutPage.leadershipSub', 'Dedicated senior clinical practitioners directing every medical and ethical protocol at Rithanya Hospital.')}
               </p>
             </div>
 
-            <div className="grid-2" style={{ gap: 24 }}>
-              {/* Founder: Dr. D. Narayana Murthy */}
+            {/* FOUNDER 1: DR. D. NARAYANA MURTHY */}
+            <div
+              style={{
+                width: '100vw',
+                position: 'relative',
+                left: '50%',
+                right: '50%',
+                marginLeft: '-50vw',
+                marginRight: '-50vw',
+                minHeight: 'calc(100vh - 80px)',
+                background: '#ffffff',
+                borderTop: '1.5px solid var(--line)',
+                borderBottom: '1.5px solid var(--line)',
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 540px), 1fr))',
+                alignItems: 'stretch',
+                overflow: 'hidden',
+                marginBottom: 60,
+                boxShadow: '0 10px 40px rgba(0, 0, 0, 0.03)'
+              }}
+            >
+              {/* Left Half: Full Fill Photo */}
               <div
-                className="card"
                 style={{
-                  padding: 24,
-                  border: '1.5px solid var(--line)',
-                  borderRadius: 20,
+                  position: 'relative',
+                  width: '100%',
+                  minHeight: 'clamp(440px, 60vh, 100%)',
+                  background: 'linear-gradient(180deg, #fdfbfb 0%, #f4eff1 100%)',
+                  overflow: 'hidden',
                   display: 'flex',
-                  gap: 20,
-                  alignItems: 'center',
-                  background: '#ffffff',
-                  boxShadow: '0 8px 24px rgba(0,0,0,0.03)'
+                  alignItems: 'stretch'
                 }}
               >
+                <img
+                  src="/Dr Narayana Murthy-Rithanya Hospital-Khammam.png"
+                  alt="Dr. D. Narayana Murthy"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    objectPosition: 'top center',
+                    display: 'block'
+                  }}
+                />
                 <div
                   style={{
-                    width: 130,
-                    height: 150,
+                    position: 'absolute',
+                    bottom: 24,
+                    left: 24,
+                    right: 24,
+                    background: 'rgba(255, 255, 255, 0.95)',
+                    backdropFilter: 'blur(10px)',
+                    padding: '16px 22px',
                     borderRadius: 16,
-                    overflow: 'hidden',
-                    flexShrink: 0,
-                    background: '#f6f2f4',
-                    border: '1px solid var(--line)'
+                    border: '1px solid var(--red-200)',
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.1)'
                   }}
                 >
-                  <img
-                    src="/Dr Narayana Murthy-Rithanya Hospital-Khammam.png"
-                    alt="Dr. D. Narayana Murthy"
-                    style={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'bottom center' }}
-                  />
-                </div>
-                <div>
-                  <span className="badge badge-red" style={{ marginBottom: 6, fontSize: 11 }}>
+                  <span className="badge badge-red" style={{ fontSize: 11, marginBottom: 4 }}>
                     {t('aboutPage.drNarayanaRole', 'Founder & Chief Physician')}
                   </span>
-                  <h4 style={{ fontSize: 18, fontWeight: 800, color: 'var(--ink)', margin: '0 0 4px' }}>
+                  <h4 style={{ margin: '4px 0 2px', fontSize: 19, fontWeight: 800, color: 'var(--ink)' }}>
                     {loc('Dr. D. Narayana Murthy')}
                   </h4>
-                  <p style={{ fontSize: 13, color: 'var(--red-700)', fontWeight: 700, margin: '0 0 8px' }}>
-                    డా॥ డి. నారాయణమూర్తి (Reg. 81187)
+                  <p style={{ margin: 0, fontSize: 13, color: 'var(--red-700)', fontWeight: 700 }}>
+                    డా॥ డి. నారాయణమూర్తి • Regd. No. 81187
                   </p>
-                  <p style={{ fontSize: 12, color: 'var(--ink-soft)', lineHeight: 1.5, margin: '0 0 10px' }}>
-                    {loc('MD (General Physician SVIMS) • Ex. Senior Resident (SVIMS) • Ex. Resident (JIPMER) • Fellowship in Clinical Endocrinology & Diabetes RCP (London) • Fellowship in Diabetes & Renal Management RCP (London)')}
-                  </p>
-                  <Link to="/doctors/dr-d-narayana-murthy" className="btn btn-outline btn-sm" style={{ padding: '4px 12px', fontSize: 12 }}>
-                    <span>{t('aboutPage.viewDocProfile', 'View Doctor Profile')}</span>
-                  </Link>
                 </div>
               </div>
 
-              {/* Co-Founder: Dr. A. Lakshmi Deepa */}
+              {/* Right Half: Comprehensive Overview */}
               <div
-                className="card"
                 style={{
-                  padding: 24,
-                  border: '1.5px solid var(--line)',
-                  borderRadius: 20,
+                  padding: 'clamp(32px, 6vw, 64px)',
                   display: 'flex',
-                  gap: 20,
-                  alignItems: 'center',
-                  background: '#ffffff',
-                  boxShadow: '0 8px 24px rgba(0,0,0,0.03)'
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  background: '#ffffff'
                 }}
               >
+                <span style={{ fontSize: 12, fontWeight: 800, textTransform: 'uppercase', letterSpacing: 1.5, color: 'var(--red-700)', marginBottom: 8, display: 'block' }}>
+                  {t('aboutPage.drNarayanaRole', 'Founder & Chief Physician')}
+                </span>
+
+                <h3 style={{ fontSize: 'clamp(26px, 3.5vw, 36px)', fontWeight: 800, color: 'var(--ink)', lineHeight: 1.2, marginBottom: 8 }}>
+                  {loc('Dr. D. Narayana Murthy, MD')}
+                </h3>
+
+                <p style={{ fontSize: 15, color: 'var(--red-700)', fontWeight: 700, marginBottom: 18 }}>
+                  డా॥ డి. నారాయణమూర్తి (APMC/TSMC Regn. 81187)
+                </p>
+
+                {/* Credentials Banner */}
                 <div
                   style={{
-                    width: 130,
-                    height: 150,
+                    background: 'var(--canvas)',
+                    border: '1.5px solid var(--line)',
                     borderRadius: 16,
-                    overflow: 'hidden',
-                    flexShrink: 0,
-                    background: '#f6f2f4',
-                    border: '1px solid var(--line)'
+                    padding: '16px 20px',
+                    marginBottom: 24
                   }}
                 >
-                  <img
-                    src="/Dr A Laxmi Dipa-Rithanya Hospital-Khammam.png"
-                    alt="Dr. A. Lakshmi Deepa"
-                    style={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'bottom center' }}
-                  />
+                  <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                    <Award size={20} style={{ color: 'var(--red-700)', flexShrink: 0, marginTop: 2 }} />
+                    <p style={{ fontSize: 13.5, color: 'var(--ink)', lineHeight: 1.6, margin: 0, fontWeight: 600 }}>
+                      {loc('MD (General Physician SVIMS) • Ex. Senior Resident (SVIMS) • Ex. Resident (JIPMER) • Fellowship in Clinical Endocrinology & Diabetes RCP (London) • Fellowship in Diabetes & Renal Management RCP (London)')}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <span className="badge badge-red" style={{ marginBottom: 6, fontSize: 11 }}>
+
+                {/* Clinical Overview Paragraphs */}
+                <p style={{ fontSize: 15, color: 'var(--ink-soft)', lineHeight: 1.8, marginBottom: 16 }}>
+                  {loc('Renowned senior physician in Khammam known for compassionate patient care, accurate differential diagnosis, and evidence-backed diabetes management programs.')}
+                </p>
+                <p style={{ fontSize: 14.5, color: 'var(--ink-soft)', lineHeight: 1.8, marginBottom: 24 }}>
+                  {loc('Directs all inpatient, emergency, and 24/7 Daycare Transfusion protocols at Rithanya Hospital, guaranteeing scientific rigor without irrational polypharmacy.')}
+                </p>
+
+                {/* Key Highlights Checklist */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 32 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: 'var(--ink)' }}>
+                    <CheckCircle size={16} style={{ color: 'var(--green)', flexShrink: 0 }} />
+                    <span>{loc('Over 22+ Years of tertiary clinical and diabetic excellence')}</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: 'var(--ink)' }}>
+                    <CheckCircle size={16} style={{ color: 'var(--green)', flexShrink: 0 }} />
+                    <span>{loc('Director of Rithanya 24 Hours Blood Bank on Nehru nagar Road')}</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: 'var(--ink)' }}>
+                    <CheckCircle size={16} style={{ color: 'var(--green)', flexShrink: 0 }} />
+                    <span>{loc('Lead clinician for Thalassemia Daycare Transfusions & HPLC testing')}</span>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', alignItems: 'center' }}>
+                  <Link to="/doctors/dr-d-narayana-murthy" className="btn btn-primary" style={{ padding: '10px 22px' }}>
+                    <span>{t('aboutPage.viewDocProfile', 'View Doctor Profile')}</span>
+                  </Link>
+                  <Link to="/contact#appointment" className="btn btn-secondary" style={{ padding: '10px 20px' }}>
+                    <Calendar size={15} />
+                    <span>{t('aboutPage.bookAppointmentBtn', 'Book Consultation')}</span>
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            {/* FOUNDER 2: DR. A. LAKSHMI DEEPA */}
+            <div
+              style={{
+                width: '100vw',
+                position: 'relative',
+                left: '50%',
+                right: '50%',
+                marginLeft: '-50vw',
+                marginRight: '-50vw',
+                minHeight: 'calc(100vh - 80px)',
+                background: '#ffffff',
+                borderTop: '1.5px solid var(--line)',
+                borderBottom: '1.5px solid var(--line)',
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 540px), 1fr))',
+                alignItems: 'stretch',
+                overflow: 'hidden',
+                boxShadow: '0 10px 40px rgba(0, 0, 0, 0.03)'
+              }}
+            >
+              {/* Left Half: Full Fill Photo */}
+              <div
+                style={{
+                  position: 'relative',
+                  width: '100%',
+                  minHeight: 'clamp(440px, 60vh, 100%)',
+                  background: 'linear-gradient(180deg, #fdfbfb 0%, #f4eff1 100%)',
+                  overflow: 'hidden',
+                  display: 'flex',
+                  alignItems: 'stretch'
+                }}
+              >
+                <img
+                  src="/Dr A Laxmi Dipa-Rithanya Hospital-Khammam.png"
+                  alt="Dr. A. Lakshmi Deepa"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    objectPosition: 'top center',
+                    display: 'block'
+                  }}
+                />
+                <div
+                  style={{
+                    position: 'absolute',
+                    bottom: 24,
+                    left: 24,
+                    right: 24,
+                    background: 'rgba(255, 255, 255, 0.95)',
+                    backdropFilter: 'blur(10px)',
+                    padding: '16px 22px',
+                    borderRadius: 16,
+                    border: '1px solid var(--red-200)',
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.1)'
+                  }}
+                >
+                  <span className="badge badge-red" style={{ fontSize: 11, marginBottom: 4 }}>
                     {t('aboutPage.drDeepaRole', 'Co-Founder & Consultant')}
                   </span>
-                  <h4 style={{ fontSize: 18, fontWeight: 800, color: 'var(--ink)', margin: '0 0 4px' }}>
+                  <h4 style={{ margin: '4px 0 2px', fontSize: 19, fontWeight: 800, color: 'var(--ink)' }}>
                     {loc('Dr. A. Lakshmi Deepa')}
                   </h4>
-                  <p style={{ fontSize: 13, color: 'var(--red-700)', fontWeight: 700, margin: '0 0 8px' }}>
-                    డా॥ ఎ. లక్ష్మీదీప (Reg. 19422)
+                  <p style={{ margin: 0, fontSize: 13, color: 'var(--red-700)', fontWeight: 700 }}>
+                    డా॥ ఎ. లక్ష్మీదీప • Regd. No. 19422
                   </p>
-                  <p style={{ fontSize: 12, color: 'var(--ink-soft)', lineHeight: 1.5, margin: '0 0 10px' }}>
-                    {loc("M.B.B.S. • Gynecologist & Women's Health Specialist (స్త్రీల వైద్య నిపుణులు) • Focused on comprehensive maternal care, adolescent wellness, and endocrine health.")}
-                  </p>
-                  <Link to="/doctors/dr-a-lakshmi-deepa" className="btn btn-outline btn-sm" style={{ padding: '4px 12px', fontSize: 12 }}>
+                </div>
+              </div>
+
+              {/* Right Half: Comprehensive Overview */}
+              <div
+                style={{
+                  padding: 'clamp(32px, 6vw, 64px)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  background: '#ffffff'
+                }}
+              >
+                <span style={{ fontSize: 12, fontWeight: 800, textTransform: 'uppercase', letterSpacing: 1.5, color: 'var(--red-700)', marginBottom: 8, display: 'block' }}>
+                  {t('aboutPage.drDeepaRole', 'Co-Founder & Consultant')}
+                </span>
+
+                <h3 style={{ fontSize: 'clamp(26px, 3.5vw, 36px)', fontWeight: 800, color: 'var(--ink)', lineHeight: 1.2, marginBottom: 8 }}>
+                  {loc('Dr. A. Lakshmi Deepa, MBBS')}
+                </h3>
+
+                <p style={{ fontSize: 15, color: 'var(--red-700)', fontWeight: 700, marginBottom: 18 }}>
+                  డా॥ ఎ. లక్ష్మీదీప (Regn. 19422)
+                </p>
+
+                {/* Credentials Banner */}
+                <div
+                  style={{
+                    background: 'var(--canvas)',
+                    border: '1.5px solid var(--line)',
+                    borderRadius: 16,
+                    padding: '16px 20px',
+                    marginBottom: 24
+                  }}
+                >
+                  <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                    <Award size={20} style={{ color: 'var(--red-700)', flexShrink: 0, marginTop: 2 }} />
+                    <p style={{ fontSize: 13.5, color: 'var(--ink)', lineHeight: 1.6, margin: 0, fontWeight: 600 }}>
+                      {loc("M.B.B.S. • Gynecologist & Women's Health Specialist (స్త్రీల వైద్య నిపుణులు) • Focused on comprehensive maternal care, adolescent wellness, and endocrine health.")}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Clinical Overview Paragraphs */}
+                <p style={{ fontSize: 15, color: 'var(--ink-soft)', lineHeight: 1.8, marginBottom: 16 }}>
+                  {loc("Dr. A. Lakshmi Deepa is an experienced and compassionate Women's Health Specialist and Gynecologist. Dedicated to empowering women through proactive preventive care, adolescent health, maternal wellness, and management of complex gynecological disorders.")}
+                </p>
+                <p style={{ fontSize: 14.5, color: 'var(--ink-soft)', lineHeight: 1.8, marginBottom: 24 }}>
+                  {loc('Provides empathetic, confidential consultations in Khammam covering prenatal guidance, PCOS regulation, infertility workups, and perimenopausal wellbeing.')}
+                </p>
+
+                {/* Key Highlights Checklist */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 32 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: 'var(--ink)' }}>
+                    <CheckCircle size={16} style={{ color: 'var(--green)', flexShrink: 0 }} />
+                    <span>{loc('16+ Years of compassionate clinical care in women’s health')}</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: 'var(--ink)' }}>
+                    <CheckCircle size={16} style={{ color: 'var(--green)', flexShrink: 0 }} />
+                    <span>{loc('Comprehensive antenatal, adolescent, and perimenopausal support')}</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: 'var(--ink)' }}>
+                    <CheckCircle size={16} style={{ color: 'var(--green)', flexShrink: 0 }} />
+                    <span>{loc('Holistic lifestyle and endocrine care for adolescent wellness & PCOS')}</span>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', alignItems: 'center' }}>
+                  <Link to="/doctors/dr-a-lakshmi-deepa" className="btn btn-primary" style={{ padding: '10px 22px' }}>
                     <span>{t('aboutPage.viewDocProfile', 'View Doctor Profile')}</span>
+                  </Link>
+                  <Link to="/contact#appointment" className="btn btn-secondary" style={{ padding: '10px 20px' }}>
+                    <Calendar size={15} />
+                    <span>{t('aboutPage.bookAppointmentBtn', 'Book Consultation')}</span>
                   </Link>
                 </div>
               </div>
@@ -385,11 +576,19 @@ export default function AboutPage() {
               boxShadow: '0 20px 48px rgba(169, 17, 41, 0.25)'
             }}
           >
-            <h3 style={{ fontSize: 'clamp(22px, 3.5vw, 28px)', fontWeight: 800, marginBottom: 12 }}>
+            <h3
+              style={{
+                fontSize: 'clamp(22px, 3.5vw, 28px)',
+                fontWeight: 800,
+                marginBottom: 12,
+                color: '#ffffff',
+                textShadow: '0 0 16px rgba(255, 255, 255, 0.55), 0 2px 8px rgba(0, 0, 0, 0.4)'
+              }}
+            >
               {t('aboutPage.visitTitle', 'Visit Rithanya Hospital in Khammam')}
             </h3>
             <p style={{ fontSize: 15, color: 'rgba(255, 255, 255, 0.88)', maxWidth: 640, margin: '0 auto 24px', lineHeight: 1.6 }}>
-              {t('aboutPage.visitAddress', 'Nehru Road, Opposite Old L.I.C. Office, Khammam, Telangana 507001')}
+              {t('aboutPage.visitAddress', 'Nehru nagar Road, Opposite Old L.I.C. Office, Khammam, Telangana 507001')}
             </p>
 
             <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>

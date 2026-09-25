@@ -14,7 +14,7 @@ const DEFAULT_TREATMENT_IMAGES = [
 ];
 
 export default function TreatmentsPage() {
-  const { t, locItems } = useDynamicTranslation();
+  const { t, loc, locItems } = useDynamicTranslation();
   const [treatments, setTreatments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -114,7 +114,7 @@ export default function TreatmentsPage() {
             <input
               type="text"
               className="form-control"
-              placeholder={t('common.search', 'Search clinical treatments...')}
+              placeholder={t('common.searchTreatments', 'Search clinical treatments...')}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               style={{ paddingLeft: 38, borderRadius: 20, fontSize: 13 }}
@@ -194,7 +194,7 @@ export default function TreatmentsPage() {
                           boxShadow: '0 2px 8px rgba(0,0,0,0.12)'
                         }}
                       >
-                        Draft
+                        {loc('Draft')}
                       </div>
                     )}
 
@@ -236,7 +236,7 @@ export default function TreatmentsPage() {
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--line)', paddingTop: 14, marginTop: 'auto', gap: 10 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 5, color: 'var(--red-700)', fontSize: 12, fontWeight: 600 }}>
                         <Stethoscope size={14} />
-                        <span>{item.doctorName ? item.doctorName.split('(')[0].trim() : 'Dr. Narayana Murthy'}</span>
+                        <span>{loc(item.doctorName ? item.doctorName.split('(')[0].trim() : 'Dr. Narayana Murthy')}</span>
                       </div>
 
                       <Link
@@ -244,7 +244,7 @@ export default function TreatmentsPage() {
                         className="btn btn-outline btn-sm"
                         style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
                       >
-                        <span>View Protocol</span>
+                        <span>{t('home.viewProtocol', loc('View Protocol'))}</span>
                         <ArrowRight size={14} />
                       </Link>
                     </div>

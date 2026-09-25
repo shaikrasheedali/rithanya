@@ -7,7 +7,7 @@ const resources = {
       brand: {
         name: 'Rithanya Hospital',
         subtitle: 'Diabetology & Thalassemia Daycare',
-        tagline: 'Nehru Road, Opp. Old L.I.C. Office, Khammam'
+        tagline: 'Nehru nagar Road, Opp. Old L.I.C. Office, Khammam'
       },
       nav: {
         home: 'Home',
@@ -16,7 +16,7 @@ const resources = {
         treatments: 'Treatments',
         doctors: 'Doctors',
         products: 'Products',
-        gallery: 'Media Gallery',
+        gallery: 'Gallery',
         insights: 'Insights',
         contact: 'Contact',
         bookAppointment: 'Book Appointment',
@@ -55,7 +55,7 @@ const resources = {
       },
       home: {
         aboutTag: 'Rithanya Hospital • Advanced Clinical Care',
-        aboutTitle: 'Nehru Road, Opposite Old L.I.C. Office, Khammam',
+        aboutTitle: 'Nehru nagar Road, Opposite Old L.I.C. Office, Khammam',
         aboutSub: '24/7 Emergency Services • Rithanya Blood Bank 24 Hours',
         aboutDesc: 'Founded by Dr. D. Narayana Murthy (MD SVIMS, Diabetologist & General Physician) and Dr. A. Lakshmi Deepa (MBBS, Gynecologist & Women\'s Health Specialist), Rithanya Hospital combines tertiary clinical expertise, round-the-clock emergency care, automated HPLC diagnostics, and dedicated daycare blood transfusions.',
         emergencyCardTitle: '24/7 Emergency Services',
@@ -97,7 +97,9 @@ const resources = {
         reason: 'Reason for Consultation',
         bookSubmit: 'Confirm Appointment Request',
         bookingSuccessTitle: 'Appointment Request Submitted!',
-        bookingSuccessMsg: 'Our hospital coordinator will call you shortly to confirm your consultation schedule.'
+        bookingSuccessMsg: 'Our hospital coordinator will call you shortly to confirm your consultation schedule.',
+        readArticle: 'Read Article',
+        viewProtocol: 'View Protocol'
       },
       common: {
         telugu: 'తెలుగు',
@@ -119,6 +121,7 @@ const resources = {
         certified: 'Certified',
         availableUnits: 'Available Units',
         all: 'All',
+        searchTreatments: 'Search clinical treatments...',
         loading: 'Loading clinical records...'
       },
       footer: {
@@ -127,7 +130,7 @@ const resources = {
         quickLinks: 'Quick Links',
         specialties: 'Clinical Specialties',
         emergencyContact: '24/7 Emergency & Blood Bank',
-        address: 'Nehru Road, Opp. Old L.I.C. Office, Khammam, Telangana 507001',
+        address: 'Nehru nagar Road, Opp. Old L.I.C. Office, Khammam, Telangana 507001',
         rights: 'All Rights Reserved. Rithanya Hospital & Daycare Center.',
         privacyNotice: 'Privacy Notice',
         terms: 'Terms of Clinical Service',
@@ -160,10 +163,10 @@ const resources = {
       aboutPage: {
         tag: 'Rithanya Hospital • Advanced Clinical Care',
         title: 'Excellence in Clinical Medicine, Guided by Human Compassion',
-        sub: 'Rithanya Hospital was established on Nehru Road, Khammam, to bring advanced, ethical internal medicine, specialized Diabetology, and a life-sustaining 24/7 Daycare Transfusion Centre to the community.',
+        sub: 'Rithanya Hospital was established on Nehru nagar Road, Khammam, to bring advanced, ethical internal medicine, specialized Diabetology, and a life-sustaining 24/7 Daycare Transfusion Centre to the community.',
         foundationBadge: 'Our Foundation & Legacy',
         foundationTitle: 'A Trusted Healing Haven in the Heart of Khammam',
-        foundationP1: 'Located opposite the Old L.I.C. Office on Nehru Road, Rithanya Hospital combines modern diagnostic capabilities with a warm, patient-first clinical environment. Driven by a deep commitment to affordable and transparent healthcare, the hospital has grown into a vital clinical anchor for Khammam and surrounding communities.',
+        foundationP1: 'Located opposite the Old L.I.C. Office on Nehru nagar Road, Rithanya Hospital combines modern diagnostic capabilities with a warm, patient-first clinical environment. Driven by a deep commitment to affordable and transparent healthcare, the hospital has grown into a vital clinical anchor for Khammam and surrounding communities.',
         foundationP2: 'Our specialized Daycare Transfusion Unit was specifically established to address the acute challenges faced by children and families battling Beta Thalassemia Major and Sickle Cell Anemia. With complete Aarogyasri cashless coverage and an in-house 24/7 blood bank, young warriors receive scheduled, infection-controlled transfusions with absolute safety and peace of mind.',
         stat1Label: 'Emergency & Blood Bank',
         stat2Label: 'Thalassemia & Sickle Cell',
@@ -190,7 +193,7 @@ const resources = {
         digitalTrust: 'DPDP Act 2023 Digital Trust',
         digitalTrustDesc: 'Full statutory compliance with the Digital Personal Data Protection Act 2023. Patient records, live camera consent photos, and right to data erasure are protected with institutional rigor.',
         visitTitle: 'Visit Rithanya Hospital in Khammam',
-        visitAddress: 'Nehru Road, Opposite Old L.I.C. Office, Khammam, Telangana 507001',
+        visitAddress: 'Nehru nagar Road, Opposite Old L.I.C. Office, Khammam, Telangana 507001',
         bookAppointmentBtn: 'Book Doctor Appointment'
       }
     }
@@ -200,7 +203,7 @@ const resources = {
       brand: {
         name: 'రితన్య హాస్పిటల్',
         subtitle: 'డయాబెటాలజీ & తలసేమియా డేకేర్ సెంటర్',
-        tagline: 'నెహ్రూరోడ్, పాత ఎల్.ఐ.సి. ఆఫీస్ ఎదురుగా, ఖమ్మం'
+        tagline: 'నెహ్రూ నగర్ రోడ్, పాత ఎల్.ఐ.సి. ఆఫీస్ ఎదురుగా, ఖమ్మం'
       },
       nav: {
         home: 'హోమ్',
@@ -209,7 +212,7 @@ const resources = {
         treatments: 'చికిత్సలు',
         doctors: 'వైద్యులు',
         products: 'ఉత్పత్తులు',
-        gallery: 'మీడియా గ్యాలరీ',
+        gallery: 'గ్యాలరీ',
         insights: 'ఆరోగ్య సూచనలు',
         contact: 'సంప్రదించండి',
         bookAppointment: 'అపాయింట్‌మెంట్ తీసుకోండి',
@@ -248,7 +251,7 @@ const resources = {
       },
       home: {
         aboutTag: 'రితన్య హాస్పిటల్ • అత్యాధునిక వైద్య సంరక్షణ',
-        aboutTitle: 'నెహ్రూరోడ్, పాత ఎల్.ఐ.సి. ఆఫీస్ ఎదురుగా, ఖమ్మం',
+        aboutTitle: 'నెహ్రూ నగర్ రోడ్, పాత ఎల్.ఐ.సి. ఆఫీస్ ఎదురుగా, ఖమ్మం',
         aboutSub: '24/7 అత్యవసర సేవలు • రితన్య బ్లడ్ బ్యాంక్ 24 గంటలు అందుబాటులో కలదు',
         aboutDesc: 'డాక్టర్ డి. నారాయణ మూర్తి (MD SVIMS, డయాబెటాలజిస్ట్ & జనరల్ ఫిజీషియన్) మరియు డాక్టర్ ఎ. లక్ష్మీ దీప (MBBS, DGO, గైనకాలజిస్ట్ & స్త్రీల వైద్య నిపుణులు) ఆధ్వర్యంలో ఖమ్మంలో 24 గంటల అత్యవసర వైద్యం, తలసేమియా డేకేర్ రక్త మార్పిడి మరియు ఆటోమేటెడ్ డయాగ్నోస్టిక్స్ అందుబాటులో ఉన్నాయి.',
         emergencyCardTitle: '24/7 అత్యవసర వైద్య సేవలు',
@@ -290,7 +293,9 @@ const resources = {
         reason: 'సమస్య / కన్సల్టేషన్ కారణం',
         bookSubmit: 'అపాయింట్‌మెంట్ ఖరారు చేయండి',
         bookingSuccessTitle: 'అపాయింట్‌మెంట్ నమోదు చేయబడింది!',
-        bookingSuccessMsg: 'మా హాస్పిటల్ సమన్వయకర్త కొద్దిసేపట్లో మీకు కాల్ చేసి సమయాన్ని ధృవీకరిస్తారు.'
+        bookingSuccessMsg: 'మా హాస్పిటల్ సమన్వయకర్త కొద్దిసేపట్లో మీకు కాల్ చేసి సమయాన్ని ధృవీకరిస్తారు.',
+        readArticle: 'వ్యాసం చదవండి',
+        viewProtocol: 'చికిత్స వివరాలు'
       },
       common: {
         telugu: 'తెలుగు',
@@ -312,6 +317,7 @@ const resources = {
         certified: 'సర్టిఫైడ్',
         availableUnits: 'లభ్యమయ్యే యూనిట్లు',
         all: 'అన్నీ',
+        searchTreatments: 'చికిత్సలను శోధించండి...',
         loading: 'వివరాలు లోడ్ అవుతున్నాయి...'
       },
       footer: {
@@ -320,7 +326,7 @@ const resources = {
         quickLinks: 'ముఖ్యమైన లింకులు',
         specialties: 'వైద్య విభాగాలు',
         emergencyContact: '24/7 అత్యవసర సేవలు & బ్లడ్ బ్యాంక్',
-        address: 'నెహ్రూరోడ్, పాత ఎల్.ఐ.సి. ఆఫీస్ ఎదురుగా, ఖమ్మం, తెలంగాణ 507001',
+        address: 'నెహ్రూ నగర్ రోడ్, పాత ఎల్.ఐ.సి. ఆఫీస్ ఎదురుగా, ఖమ్మం, తెలంగాణ 507001',
         rights: 'సర్వహక్కులు ప్రత్యేకించబడ్డాయి. రితన్య హాస్పిటల్ & డేకేర్ సెంటర్.',
         privacyNotice: 'గోప్యతా విధానం (Privacy Notice)',
         terms: 'వైద్య సేవా నిబంధనలు (Terms of Service)',
@@ -353,10 +359,10 @@ const resources = {
       aboutPage: {
         tag: 'రితన్య హాస్పిటల్ • రిహార్దిక సేవా సంకల్పం',
         title: 'మానవీయ విలువలతో కూడిన ఆధునిక వైద్య సేవలు',
-        sub: 'ఖమ్మం నెహ్రూ రోడ్డులో అత్యాధునిక ఇంటర్నల్ మెడిసిన్, డయాబెటాలజీ మరియు ప్రాణరక్షక 24/7 డేకేర్ బ్లడ్ ట్రాన్స్‌ఫ్యూజన్ కేంద్రాన్ని ప్రజలకు అందుబాటులోకి తెచ్చేందుకు రితన్య హాస్పిటల్ స్థాపించబడింది.',
+        sub: 'ఖమ్మం నెహ్రూ నగర్ రోడ్డులో అత్యాధునిక ఇంటర్నల్ మెడిసిన్, డయాబెటాలజీ మరియు ప్రాణరక్షక 24/7 డేకేర్ బ్లడ్ ట్రాన్స్‌ఫ్యూజన్ కేంద్రాన్ని ప్రజలకు అందుబాటులోకి తెచ్చేందుకు రితన్య హాస్పిటల్ స్థాపించబడింది.',
         foundationBadge: 'మా పునాది & విశిష్ట చరిత్ర',
         foundationTitle: 'ఖమ్మం నడిబొడ్డున విశ్వసనీయ వైద్యాలయం',
-        foundationP1: 'నెహ్రూ రోడ్డులో పాత ఎల్.ఐ.సి. ఆఫీస్ ఎదురుగా ఉన్న రితన్య హాస్పిటల్, అధునాతన రోగనిర్ధారణ సదుపాయాలు మరియు రోగి-కేంద్రీకృత వాతావరణాన్ని అందిస్తోంది. సరసమైన మరియు పారదర్శకమైన వైద్య సేవలతో ఖమ్మం ప్రజలకు ఆరోగ్య భరోసాగా నిలిచింది.',
+        foundationP1: 'నెహ్రూ నగర్ రోడ్డులో పాత ఎల్.ఐ.సి. ఆఫీస్ ఎదురుగా ఉన్న రితన్య హాస్పిటల్, అధునాతన రోగనిర్ధారణ సదుపాయాలు మరియు రోగి-కేంద్రీకృత వాతావరణాన్ని అందిస్తోంది. సరసమైన మరియు పారదర్శకమైన వైద్య సేవలతో ఖమ్మం ప్రజలకు ఆరోగ్య భరోసాగా నిలిచింది.',
         foundationP2: 'తలసేమియా మేజర్ మరియు సికిల్ సెల్ ఎనీమియాతో పోరాడుతున్న చిన్నారులకు సురక్షితమైన డేకేర్ రక్త మార్పిడి అందించడానికి మా కేంద్రం ప్రత్యేకించబడింది. ఆరోగ్యశ్రీ ఉచిత పథకం మరియు 24/7 బ్లడ్ బ్యాంక్ ద్వారా చిన్నారులకు సురక్షిత రక్తమార్పిడి జరుగుతోంది.',
         stat1Label: 'అత్యవసర సేవలు & బ్లడ్ బ్యాంక్',
         stat2Label: 'తలసేమియా & సికిల్ సెల్ ఉచిత చికిత్స',
@@ -383,7 +389,7 @@ const resources = {
         digitalTrust: 'DPDP చట్టం 2023 డేటా గోప్యత',
         digitalTrustDesc: 'డిజిటల్ పర్సనల్ డేటా ప్రొటెక్షన్ యాక్ట్ 2023 నిబంధనలకు అనుగుణంగా రోగుల సమాచారం మరియు కెమెరా సమ్మతి ఫోటోలు అత్యంత పటిష్టంగా భద్రపరచబడతాయి.',
         visitTitle: 'ఖమ్మంలో రితన్య హాస్పిటల్‌ను సందర్శించండి',
-        visitAddress: 'నెహ్రూరోడ్, పాత ఎల్.ఐ.సి. ఆఫీస్ ఎదురుగా, ఖమ్మం, తెలంగాణ 507001',
+        visitAddress: 'నెహ్రూ నగర్ రోడ్, పాత ఎల్.ఐ.సి. ఆఫీస్ ఎదురుగా, ఖమ్మం, తెలంగాణ 507001',
         bookAppointmentBtn: 'వైద్యుల అపాయింట్‌మెంట్ బుక్ చేయండి'
       }
     }
@@ -393,7 +399,7 @@ const resources = {
       brand: {
         name: 'रितन्या हॉस्पिटल',
         subtitle: 'डायबेटोलॉजी एवं थैलेसीमिया डेकेयर सेंटर',
-        tagline: 'नेहरू रोड, पुरानी एल.आई.सी. ऑफिस के सामने, खम्मम'
+        tagline: 'नेहरू नगर रोड, पुरानी एल.आई.सी. ऑफिस के सामने, खम्मम'
       },
       nav: {
         home: 'होम',
@@ -402,7 +408,7 @@ const resources = {
         treatments: 'उपचार',
         doctors: 'डॉक्टर',
         products: 'उत्पाद',
-        gallery: 'मीडिया गैलरी',
+        gallery: 'गैलरी',
         insights: 'स्वास्थ्य सुझाव',
         contact: 'संपर्क करें',
         bookAppointment: 'अपॉइंटमेंट लें',
@@ -441,7 +447,7 @@ const resources = {
       },
       home: {
         aboutTag: 'रितन्या हॉस्पिटल • उन्नत नैदानिक देखभाल',
-        aboutTitle: 'नेहरू रोड, पुरानी एल.आई.सी. ऑफिस के सामने, खम्मम',
+        aboutTitle: 'नेहरू नगर रोड, पुरानी एल.आई.सी. ऑफिस के सामने, खम्मम',
         aboutSub: '24/7 आपातकालीन सेवाएं • रितन्या ब्लड बैंक 24 घंटे उपलब्ध',
         aboutDesc: 'डॉ. डी. नारायण मूर्ति (MD SVIMS, मधुमेह एवं जनरल फिजिशियन) और डॉ. ए. लक्ष्मी दीपा (MBBS, DGO, स्त्री रोग विशेषज्ञ) द्वारा स्थापित, खम्मम में 24 घंटे आपातकालीन सेवा, थैलेसीमिया डेकेयर रक्त आधान एवं स्वचालित डायग्नोस्टिक्स उपलब्ध हैं।',
         emergencyCardTitle: '24/7 आपातकालीन सेवाएं',
@@ -483,7 +489,9 @@ const resources = {
         reason: 'परामर्श का कारण',
         bookSubmit: 'अपॉइंटमेंट अनुरोध भेजें',
         bookingSuccessTitle: 'अपॉइंटमेंट अनुरोध प्राप्त हुआ!',
-        bookingSuccessMsg: 'हमारे अस्पताल समन्वयक शीघ्र ही कॉल करके आपका समय सुनिश्चित करेंगे।'
+        bookingSuccessMsg: 'हमारे अस्पताल समन्वयक शीघ्र ही कॉल करके आपका समय सुनिश्चित करेंगे.',
+        readArticle: 'लेख पढ़ें',
+        viewProtocol: 'प्रोटोकॉल देखें'
       },
       common: {
         telugu: 'తెలుగు',
@@ -505,6 +513,7 @@ const resources = {
         certified: 'प्रमाणित',
         availableUnits: 'उपलब्ध इकाइयाँ',
         all: 'सभी',
+        searchTreatments: 'उपचार व सेवाएं खोजें...',
         loading: 'रिकॉर्ड लोड हो रहे हैं...'
       },
       footer: {
@@ -513,7 +522,7 @@ const resources = {
         quickLinks: 'महत्वपूर्ण लिंक',
         specialties: 'विशेषज्ञताएं',
         emergencyContact: '24/7 आपातकालीन सेवा एवं ब्लड बैंक',
-        address: 'नेहरू रोड, पुरानी एल.आई.सी. ऑफिस के सामने, खम्मम, तेलंगाना 507001',
+        address: 'नेहरू नगर रोड, पुरानी एल.आई.सी. ऑफिस के सामने, खम्मम, तेलंगाना 507001',
         rights: 'सर्वाधिकार सुरक्षित। रितन्या हॉस्पिटल एवं डेकेयर सेंटर।',
         privacyNotice: 'गोपनीयता नीति (Privacy Notice)',
         terms: 'चिकित्सा सेवा की शर्तें (Terms of Service)',
@@ -546,10 +555,10 @@ const resources = {
       aboutPage: {
         tag: 'रितन्या हॉस्पिटल • उन्नत नैदानिक देखभाल',
         title: 'मानवीय संवेदनाओं के साथ उन्नत चिकित्सा उत्कृष्टता',
-        sub: 'खम्मम के नेहरू रोड पर अत्याधुनिक इंटरनल मेडिसिन, विशेष डायबेटोलॉजी और जीवन रक्षक 24/7 डेकेयर ब्लड ट्रांसफ्यूजन सेंटर प्रदान करने हेतु रितन्या हॉस्पिटल की स्थापना की गई।',
+        sub: 'खम्मम के नेहरू नगर रोड पर अत्याधुनिक इंटरनल मेडिसिन, विशेष डायबेटोलॉजी और जीवन रक्षक 24/7 डेकेयर ब्लड ट्रांसफ्यूजन सेंटर प्रदान करने हेतु रितन्या हॉस्पिटल की स्थापना की गई।',
         foundationBadge: 'हमारी नींव एवं विरासत',
         foundationTitle: 'खम्मम के केंद्र में एक विश्वसनीय आरोग्य धाम',
-        foundationP1: 'नेहरू रोड पर पुरानी एल.आई.सी. ऑफिस के सामने स्थित रितन्या हॉस्पिटल, आधुनिक नैदानिक सुविधाओं और रोगी-केंद्रित वातावरण का संगम है। पारदर्शी और किफायती स्वास्थ्य सेवाओं के प्रति समर्पित यह अस्पताल खम्मम और आसपास के क्षेत्रों के लिए एक मजबूत संबल बन चुका है।',
+        foundationP1: 'नेहरू नगर रोड पर पुरानी एल.आई.सी. ऑफिस के सामने स्थित रितन्या हॉस्पिटल, आधुनिक नैदानिक सुविधाओं और रोगी-केंद्रित वातावरण का संगम है। पारदर्शी और किफायती स्वास्थ्य सेवाओं के प्रति समर्पित यह अस्पताल खम्मम और आसपास के क्षेत्रों के लिए एक मजबूत संबल बन चुका है।',
         foundationP2: 'हमारा विशेष डेकेयर ट्रांसफ्यूजन यूनिट थैलेसीमिया मेजर और सिकल सेल एनीमिया से जूझ रहे बच्चों की सेवा हेतु विशेष रूप से स्थापित किया गया है। संपूर्ण आरोग्यश्री कैशलेस सुविधा और 24/7 इन-हाउस ब्लड बैंक के साथ, बच्चों को सुरक्षित और संक्रमण-मुक्त रक्त आधान प्रदान किया जाता है।',
         stat1Label: 'आपातकालीन सेवाएं एवं ब्लड बैंक',
         stat2Label: 'थैलेसीमिया एवं सिकल सेल निःशुल्क उपचार',
@@ -576,7 +585,7 @@ const resources = {
         digitalTrust: 'DPDP अधिनियम 2023 डेटा सुरक्षा',
         digitalTrustDesc: 'डिजिटल पर्सनल डेटा प्रोटेक्शन एक्ट 2023 के पूर्ण अनुपालन के साथ मरीजों के रिकॉर्ड और सहमति फोटो सुरक्षित रखे जाते हैं।',
         visitTitle: 'खम्मम में रितन्या हॉस्पिटल पधारें',
-        visitAddress: 'नेहरू रोड, पुरानी एल.आई.सी. ऑफिस के सामने, खम्मम, तेलंगाना 507001',
+        visitAddress: 'नेहरू नगर रोड, पुरानी एल.आई.सी. ऑफिस के सामने, खम्मम, तेलंगाना 507001',
         bookAppointmentBtn: 'डॉक्टर से अपॉइंटमेंट लें'
       }
     }

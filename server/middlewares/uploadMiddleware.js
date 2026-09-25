@@ -19,18 +19,18 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-  const allowed = /jpeg|jpg|png|webp|svg|pdf/;
-  const ext = path.extname(file.originalname).toLowerCase();
+  const allowed = /jpeg|jpg|png|webp|svg|gif|mp4|webm|ogg|mov|m4v|mkv|pdf/;
+  const ext = path.extname(file.originalname).toLowerCase().replace('.', '');
   if (allowed.test(ext)) {
     cb(null, true);
   } else {
-    cb(new Error('Only image files (jpeg, jpg, png, webp, svg) and PDF are allowed.'));
+    cb(new Error('Only image files (jpg, png, webp, svg, gif), video files (mp4, webm, ogg, mov, m4v), and PDF are allowed.'));
   }
 };
 
 const upload = multer({
   storage,
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+  limits: { fileSize: 100 * 1024 * 1024 }, // 100MB limit to comfortably allow video uploads
   fileFilter
 });
 

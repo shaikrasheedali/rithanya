@@ -57,6 +57,170 @@ const TRANSLATION_MAP = {
     hi: 'वरिष्ठ परामर्शदाता मधुमेह रोग विशेषज्ञ'
   },
 
+  // Gallery & Media Labels
+  'Gallery': {
+    te: 'గ్యాలరీ',
+    hi: 'गैलरी'
+  },
+  'Hospital Infrastructure & Facilities': {
+    te: 'హాస్పిటల్ మౌలిక సదుపాయాలు & సదుపాయాలు',
+    hi: 'अस्पताल के बुनियादी ढांचे और सुविधाएं'
+  },
+  'All Media': {
+    te: 'అన్ని మీడియా',
+    hi: 'सभी मीडिया'
+  },
+  'Facility Photos': {
+    te: 'హాస్పిటల్ ఫోటోలు',
+    hi: 'परिसर की तस्वीरें'
+  },
+  'Videos & Social Media': {
+    te: 'వీడియోలు & సోషల్ మీడియా',
+    hi: 'वीडियो एवं सोशल मीडिया'
+  },
+  'Photos & Videos': {
+    te: 'ఫోటోలు & వీడియోలు',
+    hi: 'तस्वीरें एवं वीडियो'
+  },
+  'Carousel': {
+    te: 'క్యారౌసెల్',
+    hi: 'हिंडोला (कैरोज़ल)'
+  },
+  'Single Video': {
+    te: 'సింగిల్ వీడియో',
+    hi: 'एकल वीडियो'
+  },
+  'Single Image': {
+    te: 'సింగిల్ చిత్రం',
+    hi: 'एकल छवि'
+  },
+  'Open on Social Platform': {
+    te: 'సోషల్ ప్లాట్‌ఫారమ్‌లో చూడండి',
+    hi: 'सोशल प्लेटफॉर्म पर देखें'
+  },
+  'Loading hospital gallery items...': {
+    te: 'హాస్పిటల్ గ్యాలరీ అంశాలు లోడ్ అవుతున్నాయి...',
+    hi: 'अस्पताल गैलरी लोड हो रही है...'
+  },
+  'No media items found in this section.': {
+    te: 'ఈ విభాగంలో మీడియా అంశాలేవీ కనుగొనబడలేదు.',
+    hi: 'इस अनुभाग में कोई मीडिया आइटम नहीं मिला।'
+  },
+  'Photo': {
+    te: 'ఫోటో',
+    hi: 'फोटो'
+  },
+  'Video': {
+    te: 'వీడియో',
+    hi: 'वीडियो'
+  },
+
+  
+  // Database Treatment Title Exact Matches (including Telugu parentheticals)
+  'Malaria (మలేరియా)': {
+    te: 'మలేరియా',
+    hi: 'मलेरिया'
+  },
+  'Dengue (డెంగ్యూ)': {
+    te: 'డెంగ్యూ',
+    hi: 'डेंगू'
+  },
+  'Dizziness / Vertigo (తల తిరుగుట)': {
+    te: 'తల తిరుగుట (వెర్టిగో)',
+    hi: 'चक्कर आना (वर्टिगो)'
+  },
+  'Muscle Cramps/Pains in Sleep (నిద్రలో కండరాల నొప్పులు)': {
+    te: 'నిద్రలో కండరాల నొప్పులు',
+    hi: 'नींद में मांसपेशियों में ऐंठन और दर्द'
+  },
+  'Asthma (అస్తమా (ఉబ్బసం))': {
+    te: 'అస్తమా (ఉబ్బసం)',
+    hi: 'अस्थमा (दमा)'
+  },
+  'BP / Hypertension (బి.పి.)': {
+    te: 'బి.పి. / అధిక రక్తపోటు',
+    hi: 'बीपी / उच्च रक्तचाप (हाइपरटेंशन)'
+  },
+  'Nerve Weakness (నరముల బలహీనత)': {
+    te: 'నరముల బలహీనత',
+    hi: 'नसों की कमजोरी (न्यूरोपैथी)'
+  },
+  'Headache (తలనొప్పి)': {
+    te: 'తలనొప్పి',
+    hi: 'सिरदर्द'
+  },
+  'Constipation (మలబద్ధకం)': {
+    te: 'మలబద్ధకం',
+    hi: 'कब्ज (कॉन्स्टिपेशन)'
+  },
+  'Erectile Dysfunction (అంగస్తంభన లేకపోవడం)': {
+    te: 'అంగస్తంభన లోపం / లైంగిక బలహీనత',
+    hi: 'स्तंभन दोष (इरेक्टाइल डिसफंक्शन)'
+  },
+  'Forgetfulness, Anxiety (మతిమరుపు, ఆందోళన)': {
+    te: 'మతిమరుపు, ఆందోళన & డిప్రెషన్',
+    hi: 'भूलने की बीमारी एवं चिंता (एंग्जायटी)'
+  },
+  'COVID-19 (కోవిడ్-19)': {
+    te: 'కోవిడ్-19 & వైరల్ ఇన్ఫెక్షన్లు',
+    hi: 'कोविड-19 एवं वायरल संक्रमण'
+  },
+  'Numbness, Allergy (తిమ్మిర్లు, ఎలర్జీ)': {
+    te: 'తిమ్మిర్లు & అలర్జీలు',
+    hi: 'सुन्नता एवं एलर्जी'
+  },
+  'Mental / Psychological Issues (మానసిక సమస్యలు)': {
+    te: 'మానసిక సమస్యలు & ఒత్తిడి నివారణ',
+    hi: 'मानसिक एवं मनोवैज्ञानिक समस्याएं'
+  },
+  'Poisoning (పాయిజనింగ్)': {
+    te: 'విష ప్రభావం / పాయిజనింగ్ అత్యవసర చికిత్స',
+    hi: 'विषाक्तता (पॉइजनिंग) आपातकालीन उपचार'
+  },
+  'Typhoid (టైఫాయిడ్)': {
+    te: 'టైఫాయిడ్ జ్వరం',
+    hi: 'टाइफाइड बुखार'
+  },
+  'Breathlessness / Fatigue (ఆయాసం)': {
+    te: 'ఆయాసం & తీవ్ర నీరసం',
+    hi: 'सांस फूलना एवं अत्यधिक थकान'
+  },
+  'Cough, Cold (దగ్గు, జలుబు)': {
+    te: 'దగ్గు, జలుబు & శ్వాసకోశ ఇన్ఫెక్షన్లు',
+    hi: 'खांसी, जुकाम एवं श्वसन संक्रमण'
+  },
+  'Migraine Headache (మైగ్రెయిన్ తలనొప్పి)': {
+    te: 'మైగ్రెయిన్ తలనొప్పి',
+    hi: 'माइग्रेन सिरदर्द'
+  },
+  'Kidney Stones, Kidney Diseases (కిడ్నీలో రాళ్లు, కిడ్నీ వ్యాధులు)': {
+    te: 'కిడ్నీలో రాళ్లు & కిడ్నీ వ్యాధులు',
+    hi: 'गुर्दे की पथरी एवं गुर्दे के रोग'
+  },
+  'Neck Pains (మెడనొప్పులు)': {
+    te: 'మెడనొప్పులు & సర్వైకల్ స్పాండిలైటిస్',
+    hi: 'गर्दन का दर्द एवं सर्वाइकल'
+  },
+  'Thyroid (థైరాయిడ్)': {
+    te: 'థైరాయిడ్ సమస్యలు (హైపో/హైపర్ థైరాయిడిజం)',
+    hi: 'थायराइड विकार (हाइपो/हाइपर)'
+  },
+  'Sugar / Diabetes (షుగర్)': {
+    te: 'షుగర్ వ్యాధి / డయాబెటిస్ సంరక్షణ',
+    hi: 'शुगर / मधुमेह (डायबिटीज) व्यापक देखभाल'
+  },
+  'Stomach Burning / Acidity (కడుపులో మంట)': {
+    te: 'కడుపులో మంట, అసిడిటీ & గ్యాస్ సమస్యలు',
+    hi: 'पेट में जलन, एसिडिटी एवं गैस्ट्रिक समस्याएं'
+  },
+  'Phlegm / Fluid in Lungs (ఊపిరితిత్తులలో నెమ్ము)': {
+    te: 'ఊపిరితిత్తులలో నెమ్ము / కఫం',
+    hi: 'फेफड़ों में कफ / पानी का जमाव'
+  },
+  'Joint Pains (జాయింట్ నొప్పులు)': {
+    te: 'కీళ్ల నొప్పులు & ఆర్థరైటిస్',
+    hi: 'जोड़ों का दर्द एवं गठिया (आर्थराइटिस)'
+  },
   // Clinical Departments & Categories
   'General Medicine & Diabetology': {
     te: 'జనరల్ మెడిసిన్ & డయాబెటాలజీ',
@@ -372,7 +536,7 @@ const TRANSLATION_MAP = {
     te: '24/7 డేకేర్ రక్త మార్పిడి కేంద్రం',
     hi: '24/7 डेकेयर रक्त आधान'
   },
-  'Nehru Road 24-Hour Transfusion & Thalassemia Daycare Support': {
+  'Nehru nagar Road 24-Hour Transfusion & Thalassemia Daycare Support': {
     te: 'నెహ్రూ రోడ్ 24 గంటల రక్త మార్పిడి & తలసేమియా డేకేర్ మద్దతు',
     hi: 'नेहरू रोड 24 घंटे रक्त आधान एवं थैलेसीमिया डेकेयर सहायता'
   },
@@ -450,7 +614,7 @@ const TRANSLATION_MAP = {
     te: 'ప్రత్యేక వైద్య సంరక్షణ ద్వారా మహిళల ఆరోగ్యం మరియు కుటుంబ శ్రేయస్సుకు తోడ్పాటు',
     hi: 'विशेष देखभाल के माध्यम से महिला स्वास्थ्य एवं पारिवारिक कल्याण को सहयोग'
   },
-  'Nehru Road Campus • Khammam': {
+  'Nehru nagar Road Campus • Khammam': {
     te: 'నెహ్రూ రోడ్ క్యాంపస్ • ఖమ్మం',
     hi: 'नेहरू रोड परिसर • खम्मम'
   },
@@ -814,7 +978,7 @@ const TRANSLATION_MAP = {
     te: 'రితన్య హాస్పిటల్‌లో కన్సల్టెంట్ ప్రత్యక్ష పర్యవేక్షణ',
     hi: 'रिथन्या अस्पताल में कंसल्टेंट की सीधी देखरेख'
   },
-  'Every patient consultation is personally reviewed by our lead consultants. Backed by 24/7 in-house emergency support, digital diagnostic labs, and the Rithanya 24 Hours Blood Bank on Nehru Road, Khammam.': {
+  'Every patient consultation is personally reviewed by our lead consultants. Backed by 24/7 in-house emergency support, digital diagnostic labs, and the Rithanya 24 Hours Blood Bank on Nehru nagar Road, Khammam.': {
     te: 'ప్రతి రోగి కన్సల్టేషన్‌ను మా ప్రధాన వైద్యులు స్వయంగా పర్యవేక్షిస్తారు. ఖమ్మం నెహ్రూ రోడ్డులో 24/7 ఇన్-హౌస్ అత్యవసర సహాయం, డిజిటల్ డయాగ్నోస్టిక్ ల్యాబ్స్ మరియు రితన్య 24 గంటల బ్లడ్ బ్యాంక్ అండగా ఉన్నాయి.',
     hi: 'प्रत्येक मरीज के परामर्श की समीक्षा हमारे मुख्य डॉक्टरों द्वारा व्यक्तिगत रूप से की जाती है। 24/7 इन-हाउस आपातकालीन सहायता, डिजिटल प्रयोगशालाएं और नेहरू रोड, खम्मम पर 24 घंटे ब्लड बैंक उपलब्ध है।'
   },
@@ -982,7 +1146,7 @@ const TRANSLATION_MAP = {
     te: 'మా క్లినికల్ బృందాన్ని సంప్రదించండి',
     hi: 'हमारी मेडिकल टीम से संपर्क करें'
   },
-  'Located conveniently on Nehru Road, Khammam. We are open for daily OPD consultations, routine diagnostic collection, 24/7 emergency response, and 24-hour in-house blood bank support.': {
+  'Located conveniently on Nehru nagar Road, Khammam. We are open for daily OPD consultations, routine diagnostic collection, 24/7 emergency response, and 24-hour in-house blood bank support.': {
     te: 'ఖమ్మం నెహ్రూ రోడ్‌లో సౌకర్యవంతంగా ఉంది. రోజువారీ OPD కన్సల్టేషన్‌లు, డయాగ్నోస్టిక్ కలెక్షన్, 24/7 అత్యవసర సేవలు మరియు 24 గంటల ఇన్-హౌస్ బ్లడ్ బ్యాంక్ సేవలు అందుబాటులో ఉంటాయి.',
     hi: 'नेहरू रोड, खम्मम पर स्थित। दैनिक ओपीडी परामर्श, नियमित डायग्नोस्टिक संग्रह, 24/7 आपातकालीन सेवा और 24 घंटे इन-हाउस ब्लड बैंक सहायता उपलब्ध है।'
   },
@@ -1067,6 +1231,457 @@ const TRANSLATION_MAP = {
     hi: 'पूछताछ भेजने में विफल'
   },
 
+
+  // Comprehensive Treatment Categories, Blog Sentences, 40 Summaries, UI Actions
+  "Infectious Diseases": {
+    te: "ఇన్‌ఫెక్షన్లు & అంటువ్యాధులు",
+    hi: "संक्रामक रोग"
+  },
+  "Infectious Diseases & Daycare": {
+    te: "అంటువ్యాధులు & డేకేర్ సెంటర్",
+    hi: "संक्रामक रोग एवं डेकेयर"
+  },
+  "ENT & Neurology": {
+    te: "ఈఎన్‌టీ & న్యూరాలజీ (చెవి, గొంతు & నరాలు)",
+    hi: "ईएनटी एवं न्यूरोलॉजी"
+  },
+  "Neuromuscular Medicine": {
+    te: "న్యూరోమస్కులర్ మెడిసిన్ (కండరాలు & నరాలు)",
+    hi: "न्यूरोमस्कुलर मेडिसिन"
+  },
+  "Pulmonology & Respiratory": {
+    te: "పల్మోనాలజీ & శ్వాసకోశ విభాగం",
+    hi: "श्वसन एवं फेफड़े रोग"
+  },
+  "Cardiovascular & Metabolic": {
+    te: "కార్డియోవాస్కులర్ & మెటబాలిక్ (గుండె & జీవక్రియ)",
+    hi: "हृदय एवं चयापचय रोग"
+  },
+  "Neurology & Diabetology": {
+    te: "న్యూరాలజీ & డయాబెటాలజీ (నరాలు & మధుమేహం)",
+    hi: "न्यूरोलॉजी एवं मधुमेह"
+  },
+  "Neurology": {
+    te: "న్యూరాలజీ (నరాల వ్యాధులు)",
+    hi: "न्यूरोलॉजी (तंत्रिका रोग)"
+  },
+  "Gastroenterology": {
+    te: "గ్యాస్ట్రోఎంటరాలజీ (జీర్ణకోశ వ్యాధులు)",
+    hi: "गैस्ट्रोएंटरोलॉजी (पेट व पाचन रोग)"
+  },
+  "Men's Health & Diabetology": {
+    te: "పురుషుల ఆరోగ్యం & డయాబెటాలజీ",
+    hi: "पुरुष स्वास्थ्य एवं मधुमेह"
+  },
+  "Neurology & Geriatrics": {
+    te: "న్యూరాలజీ & వృద్ధుల సంరక్షణ",
+    hi: "न्यूरोलॉजी एवं वृद्धावस्था देखभाल"
+  },
+  "Respiratory & Infectious Diseases": {
+    te: "శ్వాసకోశ & అంటువ్యాధులు",
+    hi: "श्वसन एवं संक्रामक रोग"
+  },
+  "Immunology & Allergy": {
+    te: "ఇమ్యునాలజీ & అలర్జీ",
+    hi: "इम्यूनोलॉजी एवं एलर्जी"
+  },
+  "Behavioral Health": {
+    te: "బిహేవియరల్ హెల్త్ (మానసిక ఆరోగ్యం)",
+    hi: "मानसिक एवं व्यवहार स्वास्थ्य"
+  },
+  "Emergency Toxicology": {
+    te: "ఎమర్జెన్సీ టాక్సికాలజీ (విష చికిత్స)",
+    hi: "आपातकालीन विष विज्ञान"
+  },
+  "Nephrology & Urology": {
+    te: "నెఫ్రాలజీ & యూరాలజీ (కిడ్నీ & మూత్రనాళం)",
+    hi: "नेफ्रोलॉजी एवं यूरोलॉजी"
+  },
+  "Orthopedics & Spine": {
+    te: "ఆర్థోపెడిక్స్ & వెన్నెముక సంరక్షణ",
+    hi: "ऑर्थोपेडिक्स एवं स्पाइन"
+  },
+  "Clinical Diabetology": {
+    te: "క్లినికల్ డయాబెటాలజీ (మధుమేహ వైద్యం)",
+    hi: "क्लिनिकल मधुमेह विज्ञान"
+  },
+  "Pulmonology & Critical Care": {
+    te: "పల్మోనాలజీ & క్రిటికల్ కేర్",
+    hi: "पल्मोनोलॉजी एवं क्रिटिकल केयर"
+  },
+  "Rheumatology & Orthopedics": {
+    te: "రుమటాలజీ & ఆర్థోపెడిక్స్ (కీళ్ళు & ఎముకలు)",
+    hi: "रूमेटोलॉजी एवं हड्डी रोग"
+  },
+  "Neurology & Sleep Medicine": {
+    te: "న్యూరాలజీ & నిద్ర రుగ్మతల వైద్యం",
+    hi: "न्यूरोलॉजी एवं स्लीप मेडिसिन"
+  },
+  "Emergency Cardiology": {
+    te: "ఎమర్జెన్సీ కార్డియాలజీ (అత్యవసర గుండె చికిత్స)",
+    hi: "आपातकालीन कार्डियोलॉजी"
+  },
+  "Neurology & Rehabilitation": {
+    te: "న్యూరాలజీ & పునరావాసం (రీహ్యాబిలిటేషన్)",
+    hi: "न्यूरोलॉजी एवं पुनर्वास"
+  },
+  "Hepatology & Gastroenterology": {
+    te: "హెపటాలజీ & గ్యాస్ట్రోఎంటరాలజీ (కాలేయం & జీర్ణకోశం)",
+    hi: "हेपेटोलॉजी एवं गैस्ट्रोएंटरोलॉजी"
+  },
+  "Hematology & Daycare": {
+    te: "హెమటాలజీ & డేకేర్ సెంటర్",
+    hi: "हेमेटोलॉजी एवं डेकेयर"
+  },
+  "Emergency & Critical Toxicology": {
+    te: "ఎమర్జెన్సీ & క్రిటికల్ టాక్సికాలజీ (విష చికిత్స)",
+    hi: "आपातकालीन एवं विष विज्ञान"
+  },
+  "Rheumatology & Autoimmune": {
+    te: "రుమటాలజీ & ఆటో ఇమ్యూన్ వ్యాధులు",
+    hi: "रूमेटोलॉजी एवं ऑटोइम्यून रोग"
+  },
+  "Endocrinology & Men's Health": {
+    te: "ఎండోక్రినాలజీ & పురుషుల ఆరోగ్యం",
+    hi: "एंडोक्रिनोलॉजी एवं पुरुष स्वास्थ्य"
+  },
+  "Rheumatology & Infectious Diseases": {
+    te: "రుమటాలజీ & అంటువ్యాధులు",
+    hi: "रूमेटोलॉजी एवं संक्रामक रोग"
+  },
+  "Orthopedics & Geriatrics": {
+    te: "ఆర్థోపెడిక్స్ & వృద్ధుల సంరక్షణ",
+    hi: "ऑर्थोपेडिक्स एवं वृद्धावस्था देखभाल"
+  },
+  "Urology & Infection Care": {
+    te: "యూరాలజీ & ఇన్‌ఫెక్షన్ కేర్",
+    hi: "यूरोलॉजी एवं संक्रमण देखभाल"
+  },
+  "Clinical డయాబెటాలజీ": {
+    te: "క్లినికల్ డయాబెటాలజీ (మధుమేహ వైద్యం)",
+    hi: "क्लिनिकल मधुमेह विज्ञान"
+  },
+  "Neurology & డయాబెటాలజీ": {
+    te: "న్యూరాలజీ & డయాబెటాలజీ (నరాలు & మధుమేహం)",
+    hi: "न्यूरोलॉजी एवं मधुमेह"
+  },
+  "Men's Health & డయాబెటాలజీ": {
+    te: "పురుషుల ఆరోగ్యం & డయాబెటాలజీ",
+    hi: "पुरुष स्वास्थ्य एवं मधुमेह"
+  },
+  "Infectious Diseases & డేకేర్ సెంటర్": {
+    te: "అంటువ్యాధులు & డేకేర్ సెంటర్",
+    hi: "संक्रामक रोग एवं डेकेयर"
+  },
+  "Hematology & డేకేర్ సెంటర్": {
+    te: "హెమటాలజీ & డేకేర్ సెంటర్",
+    hi: "हेमेटोलॉजी एवं डेकेयर"
+  },
+  "ఎండోక్రినాలజీ & Men's Health": {
+    te: "ఎండోక్రినాలజీ & పురుషుల ఆరోగ్యం",
+    hi: "एंडोक्रिनोलॉजी एवं पुरुष स्वास्थ्य"
+  },
+  "Diabetic & Hypertension Management at Rithanya Hospital, Khammam": {
+    te: "రితన్య హాస్పిటల్, ఖమ్మంలో మధుమేహం & రక్తపోటు సమగ్ర నిర్వహణ",
+    hi: "रिथन्या अस्पताल, खम्मम में मधुमेह एवं उच्च रक्तचाप प्रबंधन"
+  },
+  "మధుమేహం / డయాబెటిస్ and hypertension (high blood pressure) are two common health conditions that require consistent medical care, regular monitoring, and lifestyle management. When they occur together, they can increase the risk of complications affecting the heart, kidneys, eyes, nerves, and blood vessels.": {
+    te: "మధుమేహం / డయాబెటిస్ మరియు అధిక రక్తపోటు (హైపర్‌టెన్షన్) అనేవి నిరంతర వైద్య సంరక్షణ, క్రమబద్ధమైన పర్యవేక్షణ మరియు జీవనశైలి నిర్వహణ అవసరమయ్యే రెండు సాధారణ ఆరోగ్య సమస్యలు. ఇవి రెండూ కలిసి సంభవించినప్పుడు, గుండె, మూత్రపిండాలు, కళ్ళు, నరాలు మరియు రక్తనాళాలపై తీవ్రమైన సమస్యల ప్రమాదాన్ని పెంచుతాయి.",
+    hi: "मधुमेह और उच्च रक्तचाप दो सामान्य स्वास्थ्य स्थितियां हैं जिनके लिए निरंतर चिकित्सा देखभाल, नियमित निगरानी और जीवनशैली प्रबंधन की आवश्यकता होती है। जब ये एक साथ होते हैं, तो हृदय, गुर्दे, आंखें, तंत्रिकाओं और रक्त वाहिकाओं को प्रभावित करने वाली जटिलताओं के जोखिम को बढ़ा सकते हैं।"
+  },
+  "is a chronic condition in which blood glucose (blood sugar) levels become elevated because the body does not produce enough insulin, does not use insulin effectively, or both.": {
+    te: "అనేది శరీరం తగినంత ఇన్సులిన్‌ను ఉత్పత్తి చేయకపోవడం, ఇన్సులిన్‌ను సమర్థవంతంగా ఉపయోగించలేకపోవడం లేదా రెండింటి వల్ల రక్తంలో గ్లూకోజ్ (రక్తంలో చక్కెర) స్థాయిలు పెరిగే దీర్ఘకాలిక పరిస్థితి.",
+    hi: "एक क्रोनिक स्थिति है जिसमें रक्त शर्करा का स्तर बढ़ जाता है क्योंकि शरीर पर्याप्त इंसुलिन का उत्पादन नहीं करता है, इंसुलिन का प्रभावी ढंग से उपयोग नहीं करता है, या दोनों।"
+  },
+  "Over time, uncontrolled diabetes may affect blood vessels and nerves, increasing the risk of heart disease, kidney disease, vision problems, and other complications.": {
+    te: "సమయం గడిచేకొద్దీ, నియంత్రణ లేని మధుమేహం రక్తనాళాలు మరియు నరాలను ప్రభావితం చేస్తుంది, గుండె జబ్బులు, మూత్రపిండాల వ్యాధి, దృష్టి సమస్యలు మరియు ఇతర దుష్ప్రభావాల ప్రమాదాన్ని పెంచుతుంది.",
+    hi: "समय के साथ, अनियंत्रित मधुमेह रक्त वाहिकाओं और नसों को प्रभावित कर सकता है, जिससे हृदय रोग, गुर्दे की बीमारी, दृष्टि की समस्याएं और अन्य जटिलताओं का खतरा बढ़ जाता है।"
+  },
+  "management focuses on:": {
+    te: "నిర్వహణ ప్రధానంగా వీటిపై దృష్టి పెడుతుంది:",
+    hi: "प्रबंधन इन बातों पर केंद्रित है:"
+  },
+  "Monitoring blood glucose levels.": {
+    te: "రక్తంలో గ్లూకోజ్ స్థాయిలను క్రమం తప్పకుండా పర్యవేక్షించడం.",
+    hi: "रक्त शर्करा के स्तर की नियमित निगरानी करना।"
+  },
+  "Following prescribed medications or insulin treatment.": {
+    te: "వైద్యులు సూచించిన మందులు లేదా ఇన్సులిన్ చికిత్సను ఖచ్చితంగా పాటించడం.",
+    hi: "निर्धारित दवाओं या इंसुलिन उपचार का नियमित पालन करना।"
+  },
+  "Maintaining a balanced diet.": {
+    te: "సమతుల్య మరియు పోషకమైన ఆహారాన్ని తీసుకోవడం.",
+    hi: "संतुलित और पौष्टिक आहार बनाए रखना।"
+  },
+  "Engaging in suitable physical activity.": {
+    te: "తగిన శారీరక శ్రమ మరియు వ్యాయామాల్లో పాల్గొనడం.",
+    hi: "उचित शारीरिक गतिविधि और व्यायाम में संलग्न होना।"
+  },
+  "Regular medical check-ups and complication screening.": {
+    te: "క్రమబద్ధమైన వైద్య పరీక్షలు మరియు అవయవ దుష్ప్రభావాల స్క్రీనింగ్ చేయించుకోవడం.",
+    hi: "नियमित स्वास्थ्य जांच और जटिलताओं की प्रारंभिक स्क्रीनिंग कराना।"
+  },
+  "Rapid antigen testing, peripheral blood smear Giemsa stain, Artemisinin-based combination therapy (ACT), and relapse eradication.": {
+    te: "రాపిడ్ యాంటిజెన్ పరీక్ష, జిమ్సా స్టెయిన్ పెరిఫెరల్ బ్లడ్ స్మియర్, ఆర్టెమిసినిన్ ఆధారిత కాంబినేషన్ థెరపీ (ACT) మరియు వ్యాధి తిరగబెట్టకుండా సమగ్ర నివారణ.",
+    hi: "रैपिड एंटीजन परीक्षण, परिधीय रक्त स्मीयर, आर्टेमिसिनिन-आधारित संयोजन चिकित्सा (ACT) और पुनः संक्रमण उन्मूलन।"
+  },
+  "Strict hematocrit hemoconcentration tracking, precision IV fluid titration, and 24/7 in-house Rithanya Blood Bank platelet standby.": {
+    te: "హెమటోక్రిట్ రక్త సాంద్రత ఖచ్చితమైన ట్రాకింగ్, నియంత్రిత IV ఫ్లూయిడ్ టైట్రేషన్ మరియు 24/7 రితన్య బ్లడ్ బ్యాంక్ ప్లేట్‌లెట్ మద్దతు.",
+    hi: "सटीक हेमेटोक्रिट ट्रैकिंग, नियंत्रित IV फ्लुइड्स और 24/7 रिथन्या ब्लड बैंक प्लेटलेट बैकअप।"
+  },
+  "Dix-Hallpike diagnostic test, Epley canalith repositioning, vestibular suppressant titration, and orthostatic BP screening.": {
+    te: "డిక్స్-హాల్‌పైక్ నిర్ధారణ పరీక్ష, ఎప్లే కెనాలిత్ రీపొజిషనింగ్, వెస్టిబ్యులర్ థెరపీ మరియు ఆర్థోస్టాటిక్ రక్తపోటు స్క్రీనింగ్.",
+    hi: "डिक्स-हॉलपाइक परीक्षण, एपले पैंतरेबाज़ी, वेस्टिबुलर थेरेपी और ऑर्थोस्टैटिक बीपी स्क्रीनिंग।"
+  },
+  "Electrolyte optimization, correction of occult magnesium and Vitamin D3 deficiency, and peripheral circulatory support.": {
+    te: "ఎలక్ట్రోలైట్ల సమతుల్యత, మెగ్నీషియం మరియు విటమిన్ D3 లోపాల సవరణ మరియు రక్తప్రసరణ మెరుగుదల చికిత్స.",
+    hi: "इलेक्ट्रोलाइट संतुलन, मैग्नीशियम व विटामिन D3 की कमी का सुधार और रक्त परिसंचरण समर्थन।"
+  },
+  "Airway hyperresponsiveness evaluation, metered-dose inhaler spacer coaching, and step-up/step-down long-term controller therapy.": {
+    te: "శ్వాసనాళాల సున్నితత్వ పరీక్ష, సరైన ఇన్‌హేలర్ వాడకంపై శిక్షణ మరియు దీర్ఘకాలిక శ్వాసకోశ నియంత్రణ చికిత్స.",
+    hi: "वायुमार्ग संवेदनशीलता मूल्यांकन, इनहेलर स्पेसर मार्गदर्शन और दीर्घकालिक नियंत्रक उपचार।"
+  },
+  "Evidence-based blood pressure profiling, ambulatory continuous monitoring, end-organ vascular protection, and customized dietary sodium management.": {
+    te: "సాక్ష్యాధారిత రక్తపోటు ప్రొఫైలింగ్, నిరంతర ఆంబులేటరీ పర్యవేక్షణ, అవయవ రక్తనాళాల రక్షణ మరియు ఉప్పు నియంత్రణ ఆహార ప్రణాళిక.",
+    hi: "साक्ष्य-आधारित रक्तचाप प्रोफाइलिंग, निरंतर निगरानी, अंग सुरक्षा और व्यक्तिगत आहार योजना।"
+  },
+  "Quantitative biothesiometry, 10-point monofilament testing, neurotrophic pharmacological support, and diabetic foot protection.": {
+    te: "క్వాంటిటేటివ్ బయోథీసియోమెట్రీ, 10-పాయింట్ మోనోఫిలమెంట్ పరీక్ష, న్యూరోట్రోఫిక్ మందుల మద్దతు మరియు డయాబెటిక్ పాద రక్షణ.",
+    hi: "मात्रात्मक बायोथिसियोमेट्री, 10-बिंदु मोनोफिलामेंट परीक्षण, न्यूरोट्रॉफिक दवाएं और पैर सुरक्षा।"
+  },
+  "Cranial nerve neurological evaluation, exclusion of secondary hypertension or intracranial causes, and ergonomic therapy.": {
+    te: "క్రేనియల్ నరాల పరీక్ష, అధిక రక్తపోటు లేదా ఇతర తీవ్ర సమస్యల పరిశీలన మరియు ఎర్గోనామిక్ జీవనశైలి చికిత్స.",
+    hi: "कपालीय तंत्रिका मूल्यांकन, माध्यमिक कारणों का बहिष्कार और एर्गोनोमिक थेरेपी।"
+  },
+  "Dietary soluble/insoluble fiber optimization, metabolic motility evaluation (thyroid, diabetes), and safe non-habit-forming laxatives.": {
+    te: "పీచు పదార్థాల ఆహార మార్గదర్శనం, థైరాయిడ్ మరియు మధుమేహ జీర్ణకోశ పనితీరు విశ్లేషణ మరియు అలవాటుకాని సురక్షిత మందులు.",
+    hi: "आहार में फाइबर अनुकूलन, मेटाबॉलिक गतिशीलता मूल्यांकन और सुरक्षित गैर-आदतकारी दवाएं।"
+  },
+  "Discreet confidential consultation addressing endothelial function, testosterone levels, glycemic control, and safe PDE-5 inhibitors.": {
+    te: "రహస్యమైన వ్యక్తిగత సంప్రదింపులు, టెస్టోస్టెరాన్ స్థాయిలు, రక్తనాళాల పనితీరు, షుగర్ నియంత్రణ మరియు సురక్షిత వైద్య చికిత్స.",
+    hi: "गोपनीय परामर्श, टेस्टोस्टेरोन स्तर, एंडोथेलियल कार्य, रक्त शर्करा नियंत्रण और सुरक्षित उपचार।"
+  },
+  "Cognitive mental status examination (MMSE), ruling out pseudodementia from B12 deficiency, and neuro-calming therapies.": {
+    te: "కాగ్నిటివ్ మెంటల్ స్టేటస్ పరీక్ష (MMSE), విటమిన్ B12 లోపం పరిశీలన మరియు నరాల ఉపశమన చికిత్సలు.",
+    hi: "संज्ञानात्मक मानसिक स्थिति परीक्षण (MMSE), बी12 की कमी की जांच और तंत्रिका-शांत करने वाली चिकित्सा।"
+  },
+  "Rapid antigen testing, SpO2 monitoring, inflammatory marker evaluation, and evidence-based post-viral recovery rehabilitation.": {
+    te: "రాపిడ్ యాంటిజెన్ పరీక్ష, SpO2 పర్యవేక్షణ, ఇన్ఫ్లమేటరీ మార్కర్ల విశ్లేషణ మరియు పోస్ట్-వైరల్ రికవరీ పునరావాసం.",
+    hi: "रैपिड एंटीजन परीक्षण, SpO2 निगरानी, इंफ्लेमेटरी मार्कर मूल्यांकन और रिकवरी पुनर्वास।"
+  },
+  "Allergen identification, non-sedating antihistamine therapy, systemic stabilization, and cutaneous sensory nerve mapping.": {
+    te: "అలెర్జెన్ గుర్తింపు, మత్తు కలిగించని యాంటీహిస్టామైన్లు, శరీర స్థిరీకరణ మరియు చర్మ స్పర్శ నరాల మ్యాపింగ్.",
+    hi: "एलर्जेन पहचान, गैर-शामक एंटीहिस्टामाइन थेरेपी और संवेदी तंत्रिका मैपिंग।"
+  },
+  "Confidential empathetic clinical consultation, ruling out organic endocrine imbalances (Thyroid, B12), and supportive therapy.": {
+    te: "గోప్యమైన సానుభూతిపూర్వక కన్సల్టేషన్, థైరాయిడ్ మరియు B12 హార్మోన్ల అసమతుల్యత పరిశీలన మరియు మానసిక మద్దతు.",
+    hi: "गोपनीय सहानुभूतिपूर्ण परामर्श, हार्मोनल असंतुलन की जांच और सहायक चिकित्सा।"
+  },
+  "Rapid gastric decontamination, targeted antidote administration (Atropine, PAM), ICU hemodynamic resuscitation, and biochemical monitoring.": {
+    te: "తక్షణ గ్యాస్ట్రిక్ వాష్, నిర్దిష్ట విరుగుడు మందులు (Atropine, PAM), ICU అత్యవసర స్థిరీకరణ మరియు బయోకెమికల్ మానిటరింగ్.",
+    hi: "त्वरित गैस्ट्रिक परिशोधन, लक्षित मारक दवाएं (एट्रोपिन, पीएएम), आईसीयू स्थिरीकरण और निगरानी।"
+  },
+  "TyphiDot IgM antibody testing, sensitive antibiotic regimens overcoming multi-drug resistance, and enteric dietary nutrition.": {
+    te: "టైఫీడాట్ IgM యాంటీబాడీ పరీక్ష, ఖచ్చితమైన యాంటీబయాటిక్ చికిత్స మరియు జీర్ణకోశానికి అనువైన పోషకాహార మద్దతు.",
+    hi: "टाइफीडॉट आईजीएम एंटीबॉडी परीक्षण, सटीक एंटीबायोटिक उपचार और आंत्र पोषण आहार।"
+  },
+  "Multisystem workup identifying occult anemia, cardiopulmonary insufficiency, electrolyte imbalances, and metabolic decompensation.": {
+    te: "రక్తహీనత, గుండె-ఊపిరితిత్తుల పనితీరు, ఎలక్ట్రోలైట్ అసమతుల్యత మరియు మెటబాలిక్ లోపాలను గుర్తించే సమగ్ర పరీక్షలు.",
+    hi: "एनीमिया, कार्डियोपल्मोनरी कार्यप्रणाली, इलेक्ट्रोलाइट असंतुलन और मेटाबॉलिक जांच।"
+  },
+  "Targeted symptomatic relief, rational antibiotic stewardship, soothing saline nebulization, and secondary infection prevention.": {
+    te: "లక్షణాల ఉపశమనం, సరైన యాంటీబయాటిక్ వినియోగం, సెలైన్ నెబ్యులైజేషన్ మరియు ద్వితీయ ఇన్ఫెక్షన్ల నివారణ.",
+    hi: "लक्षित लक्षणात्मक राहत, उचित एंटीबायोटिक उपयोग, सलाइन नेबुलाइजेशन और संक्रमण रोकथाम।"
+  },
+  "Abortive migraine therapy (triptans), evidence-based daily prophylaxis, trigger identification diary, and dark-room rest protocols.": {
+    te: "మైగ్రెయిన్ నివారణ చికిత్స (ట్రిప్టాన్లు), రోజువారీ రోగనిరోధక మందులు, ట్రిగ్గర్ గుర్తింపు మరియు విశ్రాంతి ప్రణాళిక.",
+    hi: "माइग्रेन निवारक चिकित्सा, दैनिक प्रोफिलैक्सिस, ट्रिगर पहचान और विश्राम प्रोटोकॉल।"
+  },
+  "High-resolution renal ultrasound, eGFR kidney function monitoring, stone medical expulsive therapy, and nephroprotective care.": {
+    te: "హై-రిజల్యూషన్ కిడ్నీ అల్ట్రాసౌండ్, eGFR పనితీరు పర్యవేక్షణ, రాళ్లను కరిగించే వైద్య చికిత్స మరియు కిడ్నీ రక్షణ చర్యలు.",
+    hi: "उच्च-रिज़ॉल्यूशन रीनल अल्ट्रासाउंड, eGFR कार्यप्रणाली निगरानी, पथरी निष्कासन थेरेपी और गुर्दा सुरक्षा।"
+  },
+  "Cervical spine curvature radiography, ergonomic postural corrections, targeted muscle relaxants, and cervical isometric exercises.": {
+    te: "సర్వైకల్ స్పైన్ ఎక్స్-రే, పని కూర్చునే విధానం సవరణ, కండరాల రిలాక్సెంట్లు మరియు మెడ వ్యాయామాలు.",
+    hi: "सर्वाइकल स्पाइन रेडियोग्राफी, एर्गोनोमिक सुधार, मांसपेशी रिलैक्सेंट और गर्दन के व्यायाम।"
+  },
+  "Chemiluminescent Free T3, Free T4, TSH quantitation, personalized Levothyroxine hormone titration, and metabolic balance.": {
+    te: "ఫ్రీ T3, ఫ్రీ T4, TSH ఖచ్చితమైన ల్యాబ్ పరీక్షలు, వ్యక్తిగత లెవోథైరాక్సిన్ మోతాదు సర్దుబాటు మరియు జీవక్రియ సమతుల్యత.",
+    hi: "फ्री T3, फ्री T4, TSH सटीक जांच, लेवोथायरोक्सिन खुराक समायोजन और चयापचय संतुलन।"
+  },
+  "Gold-standard HPLC glycated hemoglobin assessment, personalized insulin & oral medication titration, and early cardio-renal microvascular protection.": {
+    te: "గోల్డ్-స్టాండర్డ్ HPLC హిమోగ్లోబిన్ పరీక్ష, వ్యక్తిగత ఇన్సులిన్ & మందుల సర్దుబాటు మరియు గుండె-కిడ్నీ రక్తనాళాల రక్షణ.",
+    hi: "गोल्ड-स्टैंडर्ड HPLC एचबीए1सी परीक्षण, व्यक्तिगत इंसुलिन व दवाएं, और हृदय-गुर्दा सूक्ष्म संवहनी सुरक्षा।"
+  },
+  "Gastric acid suppression, Helicobacter pylori screening, mucosal cytoprotection, and personalized lifestyle/dietary guidance.": {
+    te: "గ్యాస్ట్రిక్ యాసిడ్ నియంత్రణ, H. పైలోరీ బాక్టీరియా పరీక్ష, కడుపు పొరల రక్షణ మరియు జీవనశైలి/ఆహార మార్గదర్శకాలు.",
+    hi: "गैस्ट्रिक एसिड नियंत्रण, एच. पाइलोरी स्क्रीनिंग, म्यूकोसल सुरक्षा और आहार मार्गदर्शन।"
+  },
+  "Clinical pulmonary auscultation, digital chest radiography, sputum cytology, and targeted antibiotic / diuretic clearing therapy.": {
+    te: "ఊపిరితిత్తుల పరీక్ష, డిజిటల్ ఛాతీ ఎక్స్-రే, కఫం పరీక్ష మరియు టార్గెటెడ్ యాంటీబయాటిక్ / డయూరిటిక్ క్లియరెన్స్ చికిత్స.",
+    hi: "फेफड़ों का नैदानिक परीक्षण, डिजिटल छाती एक्स-रे, बलगम जांच और एंटीबायोटिक जल निकासी उपचार।"
+  },
+  "Inflammatory vs degenerative joint differentiation, synovial preservation therapies, and physical rehabilitation regimens.": {
+    te: "కీళ్ల వాపు మరియు అరుగుదల నిర్ధారణ, కీళ్ల ద్రవ సంరక్షణ చికిత్సలు మరియు ఫిజియోథెరపీ పునరావాసం.",
+    hi: "जोड़ों की सूजन व घिसाव का विभेदन, श्लेष द्रव संरक्षण और भौतिक पुनर्वास।"
+  },
+  "Sleep hygiene recalibration, obstructive sleep apnea screening, circadian rhythm support, and non-addictive sleep restoration.": {
+    te: "నిద్ర పరిశుభ్రత అలవాట్లు, స్లీప్ అప్నియా స్క్రీనింగ్, శరీర జీవ గడియార సమతుల్యత మరియు సురక్షిత నిద్ర పునరుద్ధరణ.",
+    hi: "स्लीप हाइजीन सुधार, स्लीप एपनिया स्क्रीनिंग, सर्कैडियन लय समर्थन और सुरक्षित नींद बहाली।"
+  },
+  "Rapid 10-minute ECG triage, high-sensitivity cardiac troponin testing, emergency antiplatelet loading, and acute stabilization.": {
+    te: "వేగవంతమైన 10 నిమిషాల ఈసీజీ, హై-సెన్సిటివిటీ ట్రోపోనిన్ రక్త పరీక్ష, అత్యవసర రక్తం పలచబడే మందులు మరియు స్థిరీకరణ.",
+    hi: "त्वरित 10 मिनट ईसीजी, हाई-सेंसिटिविटी कार्डियक ट्रोपोनिन परीक्षण और आपातकालीन स्थिरीकरण।"
+  },
+  "Accurate differential testing excluding Dengue/Malaria, safe antipyretic titration, oral hydration, and outpatient recovery tracking.": {
+    te: "డెంగ్యూ/మలేరియా కాదని నిర్ధారించే రక్త పరీక్షలు, సురక్షిత జ్వర నివారిణులు, ఓరల్ హైడ్రేషన్ మరియు అవుట్‌పేషెంట్ రికవరీ ట్రాకింగ్.",
+    hi: "सटीक परीक्षण, सुरक्षित बुखार नाशक दवाएं, पर्याप्त जलयोजन और बाह्य रोगी रिकवरी।"
+  },
+  "Emergency stroke risk factor stabilization, secondary prevention (antiplatelet & statins), and comprehensive neuro-physiotherapy.": {
+    te: "అత్యవసర స్ట్రోక్ నియంత్రణ, మళ్లీ రాకుండా రక్షణ (యాంటీప్లేట్‌లెట్ & స్టాటిన్స్) మరియు సమగ్ర న్యూరో-ఫిజియోథెరపీ.",
+    hi: "आपातकालीन स्ट्रोक स्थिरीकरण, माध्यमिक रोकथाम दवाएं और व्यापक न्यूरो-फिजियोथेरेपी।"
+  },
+  "Direct vs indirect bilirubin profiling, viral hepatitis serology, liver enzyme tracking, and hepatobiliary ultrasound.": {
+    te: "బిలిరుబిన్ రక్త ప్రొఫైల్, వైరల్ హెపటైటిస్ పరీక్షలు, లివర్ ఎంజైమ్‌ల ట్రాకింగ్ మరియు కాలేయ అల్ట్రాసౌండ్.",
+    hi: "बिलीरुबिन प्रोफाइलिंग, वायरल हेपेटाइटिस सीरोलॉजी, लिवर एंजाइम और अल्ट्रासाउंड।"
+  },
+  "Etiological seizure evaluation, anti-epileptic drug (AED) optimization, therapeutic drug monitoring, and patient safety protocols.": {
+    te: "మూర్ఛ కారణాల విశ్లేషణ, యాంటీ-ఎపిలెప్టిక్ ఔషధాల సమతుల్యత మరియు రోగి భద్రతా మార్గదర్శకాలు.",
+    hi: "दौरे का कारण मूल्यांकन, मिर्गी रोधी दवा समायोजन और रोगी सुरक्षा प्रोटोकॉल।"
+  },
+  "HPLC hemoglobin electrophoresis differential diagnosis, IV iron sucrose infusion, and 24/7 leukodepleted blood transfusions in Khammam.": {
+    te: "HPLC హిమోగ్లోబిన్ ఎలక్ట్రోఫోరేసిస్ నిర్ధారణ, IV ఐరన్ సుక్రోజ్ ఇన్ఫ్యూషన్ మరియు ఖమ్మంలో 24/7 ల్యూకోడెప్లీటెడ్ రక్త మార్పిడి.",
+    hi: "HPLC हीमोग्लोबिन इलेक्ट्रोफोरेसिस निदान, IV आयरन सुक्रोज इन्फ्यूजन और 24/7 रक्त आधान।"
+  },
+  "24/7 immediate Polyvalent Anti-Snake Venom (ASV) administration, continuous hemodynamics, and venom crisis stabilization in Khammam.": {
+    te: "ఖమ్మంలో 24/7 తక్షణ యాంటీ-స్నేక్ వెనమ్ (ASV) చికిత్స, నిరంతర రక్తపోటు పర్యవేక్షణ మరియు అత్యవసర విష స్థిరీకరణ.",
+    hi: "खम्मम में 24/7 एंटी-स्नेक वेनम (ASV) प्रशासन, निरंतर निगरानी और आपातकालीन स्थिरीकरण।"
+  },
+  "Disease-Modifying Anti-Rheumatic Drug (DMARD) management, anti-CCP serological testing, and joint deformity prevention.": {
+    te: "DMARD మందుల నిర్వహణ, యాంటీ-CCP రక్త పరీక్షలు మరియు కీళ్ల వంపులను నివారించే ఆధునిక చికిత్సలు.",
+    hi: "DMARD दवा प्रबंधन, एंटी-सीसीपी परीक्षण और जोड़ों की विकृति की रोकथाम।"
+  },
+  "Comprehensive hormonal evaluation (Testosterone, Prolactin, Thyroid), managing medication side effects, and restoring vitality.": {
+    te: "హార్మోన్ల సమగ్ర పరీక్షలు (టెస్టోస్టెరాన్, ప్రోలాక్టిన్, థైరాయిడ్), మందుల దుష్ప్రభావాల సవరణ మరియు శారీరక ఉత్తేజ పునరుద్ధరణ.",
+    hi: "हार्मोनल मूल्यांकन (टेस्टोस्टेरोन, थायराइड), दवा के दुष्प्रभावों का प्रबंधन और जीवन शक्ति की बहाली।"
+  },
+  "Serological IgM confirmation, tailored analgesic anti-inflammatory therapy, and physical therapy preventing chronic joint stiffness.": {
+    te: "IgM యాంటీబాడీ నిర్ధారణ, నొప్పి మరియు వాపు నివారణ చికిత్స మరియు కీళ్ల బిగుతును నివారించే ఫిజియోథెరపీ.",
+    hi: "आईजीएम पुष्टि, दर्द निवारक एंटी-इंफ्लेमेटरी थेरेपी और जोड़ों की अकड़न रोकने हेतु फिजियोथेरेपी।"
+  },
+  "Weight-bearing knee radiography, chondroprotective nutrition, quadriceps isometric strengthening, and joint preservation.": {
+    te: "మోకాలి బరువు మోసే ఎక్స్-రే, మృదులాస్థి పోషకాహార మద్దతు, కండరాల బలోపేత వ్యాయామాలు మరియు కీళ్ల రక్షణ.",
+    hi: "घुटने की रेडियोग्राफी, कार्टिलेज सुरक्षा पोषण, क्वाड्रिसेप्स व्यायाम और जोड़ संरक्षण।"
+  },
+  "Gastrointestinal motility evaluation, dietary trigger elimination, eradication of gut dysbiosis, and tailored digestive enzyme therapy.": {
+    te: "జీర్ణకోశ కదలికల పరీక్ష, హానికర ఆహారాల నివారణ, పేగుల్లో మంచి బాక్టీరియా పెంపు మరియు జీర్ణ ఎంజైమ్ల చికిత్స.",
+    hi: "जठरांत्र गतिशीलता मूल्यांकन, आहार ट्रिगर उन्मूलन और एंजाइम थेरेपी।"
+  },
+  "Automated urine microscopy, pathogen-specific antibiotic regimens, urine alkalinization, and recurrent UTI prevention.": {
+    te: "ఆటోమేటెడ్ మూత్ర మైక్రోస్కోపీ, బ్యాక్టీరియా నిర్దిష్ట యాంటీబయాటిక్స్, యూరిన్ ఆల్కలనైజేషన్ మరియు పునరావృత ఇన్ఫెక్షన్ల నివారణ.",
+    hi: "स्वचालित मूत्र माइक्रोस्कोपी, रोगज़नक़-विशिष्ट एंटीबायोटिक्स और आवर्तक यूटीआई रोकथाम।"
+  },
+  "Read Article": {
+    te: "వ్యాసం చదవండి",
+    hi: "लेख पढ़ें"
+  },
+  "View Protocol": {
+    te: "చికిత్స వివరాలు",
+    hi: "प्रोटोकॉल देखें"
+  },
+  "In Stock — Dispatch": {
+    te: "స్టాక్‌లో ఉంది — డెలివరీకి సిద్ధం",
+    hi: "स्टॉक में उपलब्ध — प्रेषण"
+  },
+  "Details": {
+    te: "వివరాలు",
+    hi: "विवरण"
+  },
+  "Add": {
+    te: "జోడించండి",
+    hi: "जोड़ें"
+  },
+  "Draft": {
+    te: "డ్రాఫ్ట్",
+    hi: "ड्राफ्ट"
+  },
+  "Search clinical treatments...": {
+    te: "చికిత్సలను శోధించండి...",
+    hi: "उपचार व सेवाएं खोजें..."
+  },
+  "Search clinical conditions, medicines...": {
+    te: "వ్యాధులు, మందులను శోధించండి...",
+    hi: "रोग, दवाएं खोजें..."
+  },
+  "Gallery": {
+    te: "గ్యాలరీ",
+    hi: "गैलरी"
+  },
+  "Media Gallery": {
+    te: "గ్యాలరీ",
+    hi: "गैलरी"
+  },
+  "32% OFF": {
+    te: "32% తగ్గింపు",
+    hi: "32% छूट"
+  },
+  "28% OFF": {
+    te: "28% తగ్గింపు",
+    hi: "28% छूट"
+  },
+  "25% OFF": {
+    te: "25% తగ్గింపు",
+    hi: "25% छूट"
+  },
+  "30% OFF": {
+    te: "30% తగ్గింపు",
+    hi: "30% छूट"
+  },
+  "20% OFF": {
+    te: "20% తగ్గింపు",
+    hi: "20% छूट"
+  },
+  "15% OFF": {
+    te: "15% తగ్గింపు",
+    hi: "15% छूट"
+  },
+  "18% OFF": {
+    te: "18% తగ్గింపు",
+    hi: "18% छूट"
+  },
+  "22% OFF": {
+    te: "22% తగ్గింపు",
+    hi: "22% छूट"
+  },
+  "10% OFF": {
+    te: "10% తగ్గింపు",
+    hi: "10% छूट"
+  },
+  "Nehru nagar Road Campus • Khammam": {
+    te: "నెహ్రూ నగర్ రోడ్ క్యాంపస్ • ఖమ్మం",
+    hi: "नेहरू नगर रोड कैंपस • खम्मम"
+  },
+  "Nehru nagar Road 24-Hour Transfusion & Thalassemia Daycare Support": {
+    te: "నెహ్రూ నగర్ రోడ్ 24-గంటల రక్త మార్పిడి & తలసేమియా డేకేర్ మద్దతు",
+    hi: "नेहरू नगर रोड 24 घंटे रक्त आधान एवं थैलेसीमिया डेकेयर सहायता"
+  },
+  "Nehru nagar Road, Opp. Old L.I.C. Office, Khammam, Telangana 507001": {
+    te: "నెహ్రూ నగర్ రోడ్, పాత ఎల్.ఐ.సి. ఆఫీస్ ఎదురుగా, ఖమ్మం, తెలంగాణ 507001",
+    hi: "नेहरू नगर रोड, पुराने एल.आई.सी. कार्यालय के सामने, खम्मम, तेलंगाना 507001"
+  },
+  "Nehru nagar Road, Opposite Old L.I.C. Office, Khammam, Telangana 507001": {
+    te: "నెహ్రూ నగర్ రోడ్, పాత ఎల్.ఐ.సి. ఆఫీస్ ఎదురుగా, ఖమ్మం, తెలంగాణ 507001",
+    hi: "नेहरू नगर रोड, पुराने एल.आई.सी. कार्यालय के सामने, खम्मम, तेलंगाना 507001"
+  },
+  "Located conveniently on Nehru nagar Road, Khammam. We are open for daily OPD consultations, routine diagnostic collection, 24/7 emergency response, and 24-hour in-house blood bank support.": {
+    te: "ఖమ్మంలోని నెహ్రూ నగర్ రోడ్డులో సౌకర్యవంతంగా కలదు. మేము రోజువారీ OPD సంప్రదింపులు, సాధారణ రోగనిర్ధారణ సేకరణ, 24/7 అత్యవసర స్పందన మరియు 24 గంటల ఇన్-హౌస్ బ్లడ్ బ్యాంక్ మద్దతు కోసం ఎల్లప్పుడూ అందుబాటులో ఉంటాము.",
+    hi: "नेहरू नगर रोड, खम्मम पर स्थित। हम दैनिक ओपीडी परामर्श, नैदानिक संग्रह, 24/7 आपातकालीन प्रतिक्रिया और 24 घंटे ब्लड बैंक सहायता के लिए खुले हैं।"
+  },
+  "Every patient consultation is personally reviewed by our lead consultants. Backed by 24/7 in-house emergency support, digital diagnostic labs, and the Rithanya 24 Hours Blood Bank on Nehru nagar Road, Khammam.": {
+    te: "ప్రతి రోగి సంప్రదింపులను మా ప్రధాన కన్సల్టెంట్లు వ్యక్తిగతంగా సమీక్షిస్తారు. 24/7 అత్యవసర మద్దతు, డిజిటల్ ల్యాబ్‌లు మరియు ఖమ్మం నెహ్రూ నగర్ రోడ్డులోని రితన్య 24 అవర్స్ బ్లడ్ బ్యాంక్ అండతో నడుస్తుంది.",
+    hi: "प्रत्येक परामर्श की हमारे मुख्य सलाहकारों द्वारा व्यक्तिगत समीक्षा की जाती है। 24/7 आपातकालीन सहायता और नेहरू नगर रोड, खम्मम में रिथन्या 24 घंटे ब्लड बैंक का सहयोग।"
+  },
+
   // Blogs & Tags
   'Recently Published': {
     te: 'ఇటీవల ప్రచురించబడింది',
@@ -1138,12 +1753,14 @@ export function localizeText(text, lang = 'en') {
     }
   }
 
-  // 4. Substring / sentence-level keyword translation for descriptions and summaries
+  // 4. HTML tag and sentence-level replacement
   let result = text;
   if (lang === 'te' || lang === 'hi') {
-    for (const [key, map] of Object.entries(TRANSLATION_MAP)) {
-      if (key.length > 5 && result.includes(key) && map[lang]) {
-        result = result.replaceAll(key, map[lang]);
+    // Sort keys by descending length so longer, more specific sentences replace before short phrases
+    const sortedKeys = Object.keys(TRANSLATION_MAP).filter(k => k.length > 3).sort((a, b) => b.length - a.length);
+    for (const key of sortedKeys) {
+      if (result.includes(key) && TRANSLATION_MAP[key][lang]) {
+        result = result.replaceAll(key, TRANSLATION_MAP[key][lang]);
       }
     }
   }
@@ -1177,6 +1794,8 @@ export function localizeItem(item, lang = 'en') {
   if (localized.caption) localized.caption = localizeText(localized.caption, lang);
   if (localized.duration) localized.duration = localizeText(localized.duration, lang);
   if (localized.author) localized.author = localizeText(localized.author, lang);
+  if (localized.doctorName) localized.doctorName = localizeText(localized.doctorName, lang);
+  if (localized.discountText) localized.discountText = localizeText(localized.discountText, lang);
   if (localized.readTime) localized.readTime = localizeText(localized.readTime, lang);
 
   if (Array.isArray(localized.tags)) {

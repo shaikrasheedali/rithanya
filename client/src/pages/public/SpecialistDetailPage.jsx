@@ -325,7 +325,7 @@ export default function SpecialistDetailPage() {
                     {loc('Direct Consultant Supervision at Rithanya Hospital')}
                   </h3>
                   <p style={{ fontSize: 14, color: 'var(--emerald-800)', lineHeight: 1.6, margin: 0 }}>
-                    {loc('Every patient consultation is personally reviewed by our lead consultants. Backed by 24/7 in-house emergency support, digital diagnostic labs, and the Rithanya 24 Hours Blood Bank on Nehru Road, Khammam.')}
+                    {loc('Every patient consultation is personally reviewed by our lead consultants. Backed by 24/7 in-house emergency support, digital diagnostic labs, and the Rithanya 24 Hours Blood Bank on Nehru nagar Road, Khammam.')}
                   </p>
                 </div>
               </div>
@@ -440,7 +440,7 @@ export default function SpecialistDetailPage() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12, fontSize: 13, color: 'var(--ink-soft)' }}>
                 <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
                   <MapPin size={16} style={{ color: 'var(--red-700)', flexShrink: 0, marginTop: 2 }} />
-                  <span>{t('footer.address', 'Nehru Road, Opp. Old L.I.C. Office, Khammam, Telangana 507001')}</span>
+                  <span>{t('footer.address', 'Nehru nagar Road, Opp. Old L.I.C. Office, Khammam, Telangana 507001')}</span>
                 </div>
 
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>

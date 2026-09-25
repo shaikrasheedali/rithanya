@@ -299,7 +299,7 @@ export default function SpecialistsAdminPage() {
               label="Doctor High-Res Portrait Photo"
               value={formData.image}
               onChange={(url) => setFormData((prev) => ({ ...prev, image: url }))}
-              helperText="Recommended: Clean white or transparent background portrait"
+              helperText="Recommended Aspect Ratio: 3:4 Portrait (e.g. 600×800px or 750×1000px) or 1:1 Square (min 600×600px). Head & shoulders centered with clean background. Image will fill the doctor card completely."
             />
 
             <div className="form-group">

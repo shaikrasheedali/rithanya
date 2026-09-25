@@ -43,7 +43,7 @@ export default function ContactPage() {
           <span className="section-tag">{loc('Hospital Location & Helpdesk')}</span>
           <h1 className="section-title">{loc('Get in Touch with Our Clinical Team')}</h1>
           <p className="section-subtitle">
-            {loc('Located conveniently on Nehru Road, Khammam. We are open for daily OPD consultations, routine diagnostic collection, 24/7 emergency response, and 24-hour in-house blood bank support.')}
+            {loc('Located conveniently on Nehru nagar Road, Khammam. We are open for daily OPD consultations, routine diagnostic collection, 24/7 emergency response, and 24-hour in-house blood bank support.')}
           </p>
         </div>
 
@@ -61,7 +61,7 @@ export default function ContactPage() {
                   <div>
                     <h4 style={{ fontSize: 14, fontWeight: 700 }}>{loc('Hospital Address')}</h4>
                     <p style={{ fontSize: 13, color: 'var(--ink-soft)', marginTop: 2 }}>
-                      {t('footer.address', 'Nehru Road, Opp. Old L.I.C. Office, Khammam, Telangana 507001')}
+                      {t('footer.address', 'Nehru nagar Road, Opp. Old L.I.C. Office, Khammam, Telangana 507001')}
                     </p>
                   </div>
                 </div>

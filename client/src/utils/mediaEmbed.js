@@ -1,6 +1,6 @@
 /**
  * Media Embed Helper
- * Handles raw iframe embed codes, video URLs, and responsive aspect ratios for YouTube, Instagram, Facebook, and HTML5 video
+ * Handles raw iframe embed codes, Instagram blockquotes, video URLs, and responsive aspect ratios for YouTube, Instagram, Facebook, and HTML5 video
  */
 
 export function parseEmbedSource(input, defaultMediaType = 'YOUTUBE') {
@@ -12,22 +12,31 @@ export function parseEmbedSource(input, defaultMediaType = 'YOUTUBE') {
   let src = '';
   let detectedType = defaultMediaType;
 
-  // 1. Extract src from iframe string if present
-  if (trimmed.includes('<iframe')) {
+  // 1. Extract from Instagram blockquote if present
+  if (trimmed.includes('data-instgrm-permalink')) {
+    const igMatch = trimmed.match(/data-instgrm-permalink=["']([^"']+)["']/i);
+    if (igMatch && igMatch[1]) {
+      src = igMatch[1];
+      detectedType = 'INSTAGRAM';
+    }
+  }
+
+  // 2. Extract src from iframe string if present
+  if (!src && trimmed.includes('<iframe')) {
     const match = trimmed.match(/src=["']([^"']+)["']/i);
     if (match && match[1]) {
       src = match[1];
     } else {
       src = trimmed;
     }
-  } else {
+  } else if (!src) {
     src = trimmed;
   }
 
-  // 2. Decode HTML entities in URL if any (&amp; -> &)
+  // 3. Decode HTML entities in URL if any (&amp; -> &)
   src = src.replace(/&amp;/g, '&');
 
-  // 3. Normalize URLs to embed endpoints
+  // 4. Normalize URLs to embed endpoints
   if (src.includes('youtube.com') || src.includes('youtu.be')) {
     detectedType = 'YOUTUBE';
     let videoId = null;
@@ -45,10 +54,10 @@ export function parseEmbedSource(input, defaultMediaType = 'YOUTUBE') {
         rawHtml: trimmed
       };
     } else if (src.includes('embed/')) {
-      // already embed URL
-      const isShort = src.includes('shorts') || trimmed.includes('height="7') || trimmed.includes('height="8');
+      // already embed URL - retain original query parameters
+      const isShort = src.includes('shorts') || trimmed.includes('height="7') || trimmed.includes('height="8') || trimmed.includes('height: 7') || trimmed.includes('height: 8');
       return {
-        src: src.includes('?') ? src : `${src}?autoplay=1&rel=0`,
+        src: src,
         aspectRatio: isShort ? '9/16' : '16/9',
         isVertical: isShort,
         mediaType: 'YOUTUBE',
@@ -63,7 +72,7 @@ export function parseEmbedSource(input, defaultMediaType = 'YOUTUBE') {
     // Clean up Instagram URL to embed format
     const clean = src.split('?')[0].replace(/\/$/, '');
     const isReel = clean.includes('/reel/') || trimmed.includes('/reel/');
-    const embedUrl = clean.endsWith('/embed') ? clean : `${clean}/embed`;
+    const embedUrl = clean.endsWith('/embed') ? `${clean}/` : `${clean}/embed/`;
     return {
       src: embedUrl,
       aspectRatio: isReel ? '9/16' : '1/1',
@@ -73,7 +82,7 @@ export function parseEmbedSource(input, defaultMediaType = 'YOUTUBE') {
     };
   } else if (src.includes('facebook.com')) {
     detectedType = 'FACEBOOK';
-    if (!src.includes('plugins/video.php')) {
+    if (!src.includes('plugins/video.php') && !src.includes('plugins/post.php')) {
       src = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(src)}&show_text=false`;
     }
   }
@@ -92,5 +101,80 @@ export function parseEmbedSource(input, defaultMediaType = 'YOUTUBE') {
     isVertical,
     mediaType: detectedType,
     rawHtml: trimmed
+  };
+}
+
+/**
+ * Parses gallery item to determine if it is:
+ * 1. 'CAROUSEL' (multiple images and/or videos)
+ * 2. 'EMBED' (iframe/social embed)
+ * 3. 'VIDEO' (single video)
+ * 4. 'IMAGE' (single image)
+ */
+export function parseGalleryItemMedia(item) {
+  if (!item) return { type: 'IMAGE', assets: [], count: 0 };
+
+  // Check if embedUrl holds a JSON-encoded carousel / multi-asset configuration
+  if (item.embedUrl && typeof item.embedUrl === 'string' && item.embedUrl.trim().startsWith('{')) {
+    try {
+      const parsed = JSON.parse(item.embedUrl);
+      if (parsed && Array.isArray(parsed.assets) && parsed.assets.length > 0) {
+        if (parsed.assets.length === 1) {
+          const single = parsed.assets[0];
+          return {
+            type: single.type === 'VIDEO' ? 'VIDEO' : 'IMAGE',
+            url: single.url,
+            assets: [single],
+            count: 1
+          };
+        }
+        return {
+          type: 'CAROUSEL',
+          assets: parsed.assets,
+          count: parsed.assets.length
+        };
+      }
+    } catch (e) {
+      // not JSON, fallback to standard embed
+    }
+  }
+
+  // Check if mediaType is marked as CAROUSEL
+  if (item.mediaType === 'CAROUSEL') {
+    return {
+      type: 'CAROUSEL',
+      assets: [{ url: item.imageUrl, type: 'IMAGE' }],
+      count: 1
+    };
+  }
+
+  // Check if social embed or iframe
+  if (item.embedUrl && item.embedUrl.trim().length > 0) {
+    const embed = parseEmbedSource(item.embedUrl, item.mediaType);
+    return {
+      type: 'EMBED',
+      embed,
+      url: item.imageUrl,
+      assets: [{ url: item.imageUrl, type: 'IMAGE' }],
+      count: 1
+    };
+  }
+
+  // Check if single direct video
+  if (item.mediaType === 'VIDEO') {
+    return {
+      type: 'VIDEO',
+      url: item.imageUrl,
+      assets: [{ url: item.imageUrl, type: 'VIDEO' }],
+      count: 1
+    };
+  }
+
+  // Default single image
+  return {
+    type: 'IMAGE',
+    url: item.imageUrl,
+    assets: [{ url: item.imageUrl, type: 'IMAGE' }],
+    count: 1
   };
 }

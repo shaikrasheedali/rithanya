@@ -25,7 +25,7 @@ import { useToast } from '../../components/common/Toast';
 import { useDynamicTranslation } from '../../utils/dynamicTranslator';
 
 export default function ProductsPage() {
-  const { t, locItems } = useDynamicTranslation();
+  const { t, loc, locItems } = useDynamicTranslation();
   const { addToast } = useToast();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -305,7 +305,7 @@ export default function ProductsPage() {
                           zIndex: 2
                         }}
                       >
-                        {p.discountText}
+                        {loc(p.discountText)}
                       </div>
                     )}
                   </div>
@@ -333,7 +333,7 @@ export default function ProductsPage() {
                             </span>
                           )}
                         </div>
-                        <span style={{ fontSize: 11, color: 'var(--green)', fontWeight: 600 }}>In Stock — Dispatch</span>
+                        <span style={{ fontSize: 11, color: 'var(--green)', fontWeight: 600 }}>{loc('In Stock — Dispatch')}</span>
                       </div>
 
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -343,7 +343,7 @@ export default function ProductsPage() {
                           style={{ padding: '6px 12px', fontSize: 12 }}
                           title="View clinical specifications"
                         >
-                          Details
+                          {loc('Details')}
                         </Link>
 
                         {inCartItem ? (
@@ -372,7 +372,7 @@ export default function ProductsPage() {
                             style={{ padding: '6px 14px', fontSize: 12, borderRadius: 10, display: 'inline-flex', alignItems: 'center', gap: 5 }}
                           >
                             <ShoppingCart size={13} />
-                            <span>Add</span>
+                            <span>{loc('Add')}</span>
                           </button>
                         )}
                       </div>

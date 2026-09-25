@@ -11,8 +11,11 @@ router.use(authenticate);
 router.post('/upload', upload.single('file'), mediaController.uploadMedia);
 router.post('/', upload.single('file'), mediaController.uploadMedia);
 
-// Asset management and deletion require explicit media permission or admin role
-router.get('/', requirePermission('media'), mediaController.getMediaAssets);
+// Media asset listing available to all authenticated staff/admins for modal re-use
+router.get('/', mediaController.getMediaAssets);
+router.get('/assets', mediaController.getMediaAssets);
+
+// Asset deletion requires explicit media permission or admin role
 router.delete('/:id', requirePermission('media'), mediaController.deleteMedia);
 
 module.exports = router;

@@ -5,7 +5,7 @@ import { apiRequest } from '../../utils/api';
 import { useDynamicTranslation } from '../../utils/dynamicTranslator';
 
 export default function BlogsPage() {
-  const { t, locItems } = useDynamicTranslation();
+  const { t, loc, locItems } = useDynamicTranslation();
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -59,7 +59,7 @@ export default function BlogsPage() {
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--line)', paddingTop: 14 }}>
                     <span style={{ fontSize: 12, color: 'var(--ink-soft)' }}>{blog.author}</span>
                     <Link to={`/insights/${blog.slug}`} className="btn btn-outline btn-sm">
-                      <span>{t('home.readArticle', 'Read Article')}</span>
+                      <span>{t('home.readArticle', loc('Read Article'))}</span>
                       <ArrowRight size={14} />
                     </Link>
                   </div>

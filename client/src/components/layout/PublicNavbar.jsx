@@ -68,7 +68,7 @@ export default function PublicNavbar() {
     { name: t('nav.treatments', 'Treatments'), path: '/treatments', icon: Activity },
     { name: t('nav.doctors', 'Doctors'), path: '/doctors', icon: Users },
     { name: t('nav.products', 'Products'), path: '/products', icon: Package },
-    { name: t('nav.gallery', 'Media Gallery'), path: '/gallery', icon: Image },
+    { name: t('nav.gallery', 'Gallery'), path: '/gallery', icon: Image },
     { name: t('nav.insights', 'Insights'), path: '/insights', icon: BookOpen },
     { name: t('nav.contact', 'Contact'), path: '/contact', icon: Mail }
   ];
