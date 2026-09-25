@@ -15,13 +15,53 @@ export default function LanguagePicker({ className = '', compact = false }) {
 
   const currentLang = LANGUAGES.find((l) => l.code === (i18n.language || 'en')) || LANGUAGES[0];
 
+  const triggerBrowserTranslation = (code) => {
+    try {
+      const domain = window.location.hostname;
+      if (code === 'en') {
+        document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=${domain}; path=/;`;
+        document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=.${domain}; path=/;`;
+      } else {
+        const val = `/en/${code}`;
+        document.cookie = `googtrans=${val}; path=/;`;
+        document.cookie = `googtrans=${val}; domain=${domain}; path=/;`;
+        document.cookie = `googtrans=${val}; domain=.${domain}; path=/;`;
+      }
+
+      const teCombo = document.querySelector('.goog-te-combo');
+      if (teCombo) {
+        teCombo.value = code;
+        teCombo.dispatchEvent(new Event('change'));
+      } else {
+        setTimeout(() => {
+          const combo = document.querySelector('.goog-te-combo');
+          if (combo) {
+            combo.value = code;
+            combo.dispatchEvent(new Event('change'));
+          }
+        }, 500);
+      }
+    } catch (e) {
+      console.error('Translation error:', e);
+    }
+  };
+
   const handleLanguageChange = (code) => {
     i18n.changeLanguage(code);
     try {
       localStorage.setItem('rh_language', code);
     } catch (_) {}
+    triggerBrowserTranslation(code);
     setIsOpen(false);
   };
+
+  useEffect(() => {
+    const saved = localStorage.getItem('rh_language');
+    if (saved && saved !== 'en') {
+      setTimeout(() => triggerBrowserTranslation(saved), 300);
+    }
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (e) => {

@@ -28,19 +28,24 @@
   border: 1px solid rgba(169, 17, 41, 0.16);
   border-radius: 9999px;
   box-shadow: 0 12px 36px -6px rgba(24, 18, 20, 0.09), 0 4px 14px rgba(169, 17, 41, 0.05);
-  padding: 12px 18px 12px 22px;
+  padding: 0 18px 0 22px;
+  height: 64px;
+  min-height: 64px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   position: relative;
   gap: 12px;
+  box-sizing: border-box;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .floating-island-container.scrolled .floating-island {
   background: rgba(255, 255, 255, 0.97);
   box-shadow: 0 16px 42px -6px rgba(24, 18, 20, 0.14), 0 6px 18px rgba(169, 17, 41, 0.08);
-  padding: 10px 16px 10px 20px;
+  padding: 0 16px 0 20px;
+  height: 60px;
+  min-height: 60px;
 }
 
 /* Island Brand */
@@ -52,6 +57,7 @@
   flex: 1 1 0;
   min-width: 0;
   justify-content: flex-start;
+  height: 100%;
 }
 
 .island-brand-icon {
@@ -90,41 +96,55 @@
   white-space: nowrap !important;
 }
 
-/* Desktop Island Navigation Links - Mathematically & Visually Centered */
+/* Desktop Island Navigation Links - Exactly 95% Height of Navbar */
 .island-nav-links {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 2px;
+  gap: clamp(2px, 0.22vw, 5px);
   list-style: none;
   margin: 0 auto;
   padding: 0;
   flex: 0 0 auto;
   min-width: 0;
   flex-wrap: nowrap;
+  height: 100%;
+}
+
+.island-nav-links li {
+  display: flex;
+  align-items: center;
+  height: 100%;
 }
 
 .island-nav-link {
-  font-size: clamp(11.5px, 0.85vw, 13px);
-  font-weight: 600;
+  height: 95% !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: clamp(13px, 0.92vw, 15px) !important;
+  font-weight: 700 !important;
   color: var(--ink-soft);
   text-decoration: none;
-  padding: 6px clamp(4px, 0.5vw, 9px);
+  padding: 0 clamp(8px, 0.72vw, 14px) !important;
   border-radius: 9999px;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap !important;
-  display: inline-block;
+  box-sizing: border-box !important;
+  line-height: 1 !important;
+  flex-shrink: 0;
 }
 
 .island-nav-link:hover {
   color: var(--red-700);
-  background: rgba(169, 17, 41, 0.06);
+  background: rgba(169, 17, 41, 0.08);
 }
 
 .island-nav-link.active {
   color: var(--red-700);
   background: var(--red-50);
-  font-weight: 700;
+  font-weight: 800 !important;
+  box-shadow: inset 0 0 0 1.5px rgba(169, 17, 41, 0.16);
 }
 
 /* Island Action CTAs */
@@ -136,6 +156,29 @@
   flex: 1 1 0;
   min-width: 0;
   margin-left: 0 !important;
+  height: 100%;
+}
+
+/* Google Translate Clean In-Built Engine Rules (Never displaces the floating navbar) */
+.goog-te-banner-frame.skiptranslate,
+.goog-te-banner-frame,
+#goog-gt-tt,
+.goog-te-balloon-frame {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  width: 0 !important;
+}
+body {
+  top: 0px !important;
+  position: static !important;
+}
+.skiptranslate iframe {
+  display: none !important;
+}
+.goog-text-highlight {
+  background: transparent !important;
+  box-shadow: none !important;
 }
 
 .island-btn {
@@ -223,6 +266,39 @@
   color: #fff;
   transform: scale(1.08);
   box-shadow: 0 4px 14px rgba(169, 17, 41, 0.35);
+}
+
+/* Staff Login Button with Shield Icon */
+.island-btn-staff {
+  background: var(--canvas);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 14px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  white-space: nowrap !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.island-btn-staff .staff-icon {
+  color: var(--red-700);
+  flex-shrink: 0;
+}
+
+.island-btn-staff:hover {
+  background: var(--red-50);
+  border-color: var(--red-200);
+  color: var(--red-700);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(169, 17, 41, 0.12);
 }
 
 /* Mobile Hamburger Toggle Button */
@@ -856,7 +932,8 @@
   .island-menu-toggle {
     display: flex !important;
   }
-  .island-circle-login-btn {
+  .island-circle-login-btn,
+  .island-btn-staff {
     display: none !important;
   }
   .brand-subtitle {

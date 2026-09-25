@@ -132,11 +132,12 @@ export default function PublicNavbar() {
 
             <Link
               to="/admin/login"
-              className="island-circle-login-btn island-desktop-btn"
-              title={t('nav.staffPortal', 'Staff Portal Login')}
-              aria-label={t('nav.staffPortal', 'Staff Portal Login')}
+              className="island-btn island-btn-staff island-desktop-btn"
+              title="Staff Login"
+              aria-label="Staff Login"
             >
-              <ArrowRight size={15} />
+              <ShieldCheck size={15} className="staff-icon" />
+              <span className="staff-text">Staff Login</span>
             </Link>
 
             {/* Mobile Hamburger Toggle Button */}

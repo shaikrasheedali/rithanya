@@ -25,7 +25,7 @@ export default function SettingsPage() {
     metaTitle: 'Rithanya Hospital & Daycare Transfusion Centre | Diabetology & HPLC Diagnostics Khammam',
     metaDescription: 'Premier healthcare facility in Khammam specializing in Thalassemia daycare transfusions with leukodepletion, longitudinal diabetology, and HPLC diagnostics under Dr. Narayana Murthy M.D.',
     keywords: 'hospital in khammam, thalassemia daycare transfusion, diabetology, blood bank, dr narayana murthy, HPLC diagnostics, emergency healthcare khammam',
-    favicon: '/logo.svg',
+    favicon: '/logo.jpeg',
     ogImage: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=1200&q=85',
     author: 'Dr. Narayana Murthy M.D. / Rithanya Hospital',
     canonicalUrl: 'https://rithanyahospital.com',
