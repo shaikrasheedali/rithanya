@@ -32,6 +32,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
   gap: 12px;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -48,7 +49,9 @@
   align-items: center;
   gap: 12px;
   text-decoration: none;
-  flex-shrink: 0;
+  flex: 1 1 0;
+  min-width: 0;
+  justify-content: flex-start;
 }
 
 .island-brand-icon {
@@ -87,15 +90,16 @@
   white-space: nowrap !important;
 }
 
-/* Desktop Island Navigation Links */
+/* Desktop Island Navigation Links - Mathematically & Visually Centered */
 .island-nav-links {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 2px;
   list-style: none;
-  margin: 0;
+  margin: 0 auto;
   padding: 0;
-  flex-shrink: 1;
+  flex: 0 0 auto;
   min-width: 0;
   flex-wrap: nowrap;
 }
@@ -127,10 +131,11 @@
 .island-actions {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 8px;
-  flex-shrink: 0 !important;
-  min-width: fit-content;
-  margin-left: auto;
+  flex: 1 1 0;
+  min-width: 0;
+  margin-left: 0 !important;
 }
 
 .island-btn {
@@ -838,6 +843,13 @@
 
 /* 2. Tablets, iPads & Compact Laptops (769px - 1300px) */
 @media (max-width: 1300px) {
+  .island-brand {
+    flex: 1 1 auto !important;
+  }
+  .island-actions {
+    flex: 0 0 auto !important;
+    margin-left: auto !important;
+  }
   .island-nav-links {
     display: none !important;
   }

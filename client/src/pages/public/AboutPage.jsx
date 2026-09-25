@@ -174,7 +174,7 @@ export default function AboutPage() {
                     {loc('Dr. D. Narayana Murthy')}
                   </h4>
                   <p style={{ margin: 0, fontSize: 13, color: 'var(--red-700)', fontWeight: 700 }}>
-                    డా॥ డి. నారాయణమూర్తి • Regd. No. 81187
+                    {loc('డా॥ డి. నారాయణమూర్తి • Regd. No. 81187')}
                   </p>
                 </div>
               </div>
@@ -198,7 +198,7 @@ export default function AboutPage() {
                 </h3>
 
                 <p style={{ fontSize: 15, color: 'var(--red-700)', fontWeight: 700, marginBottom: 18 }}>
-                  డా॥ డి. నారాయణమూర్తి (APMC/TSMC Regn. 81187)
+                  {loc('డా॥ డి. నారాయణమూర్తి (APMC/TSMC Regn. 81187)')}
                 </p>
 
                 {/* Credentials Banner */}
@@ -320,7 +320,7 @@ export default function AboutPage() {
                     {loc('Dr. A. Lakshmi Deepa')}
                   </h4>
                   <p style={{ margin: 0, fontSize: 13, color: 'var(--red-700)', fontWeight: 700 }}>
-                    డా॥ ఎ. లక్ష్మీదీప • Regd. No. 19422
+                    {loc('డా॥ ఎ. లక్ష్మీదీప • Regd. No. 19422')}
                   </p>
                 </div>
               </div>
@@ -344,7 +344,7 @@ export default function AboutPage() {
                 </h3>
 
                 <p style={{ fontSize: 15, color: 'var(--red-700)', fontWeight: 700, marginBottom: 18 }}>
-                  డా॥ ఎ. లక్ష్మీదీప (Regn. 19422)
+                  {loc('డా॥ ఎ. లక్ష్మీదీప (Regn. 19422)')}
                 </p>
 
                 {/* Credentials Banner */}
