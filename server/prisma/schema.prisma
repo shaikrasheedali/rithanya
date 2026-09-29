@@ -554,20 +554,31 @@ model OperationalExpenseLine {
 }
 
 model Expense {
-  id          String   @id @default(uuid())
-  expenseCode String   @unique // e.g. EXP-101
-  name        String
-  category    String   // Medical supplies, Clinical operations, Utilities, Compliance, Payroll
-  vendor      String
-  amount      Float
-  date        DateTime @default(now())
-  status      String   @default("paid") // paid, pending
-  notes       String?  @db.Text
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id                 String    @id @default(uuid())
+  expenseCode        String    @unique // e.g. EXP-101
+  name               String
+  category           String    // Medical supplies, Clinical operations, Utilities, Compliance, Facility Rent, Payroll
+  vendor             String
+  amount             Float
+  date               DateTime  @default(now())
+  status             String    @default("paid") // paid, pending
+  invoiceRef         String?   @db.VarChar(191)
+  receiptUrl         String?   @db.VarChar(1000)
+  paymentMethod      String    @default("Bank NEFT")
+  approvalStage      String    @default("PENDING_REVIEW") // PENDING_REVIEW, SUPERVISOR_VERIFIED, DISBURSED
+  supervisorApproved Boolean   @default(false)
+  supervisorName     String?
+  supervisorSignedAt DateTime?
+  directorApproved   Boolean   @default(false)
+  directorName       String?
+  directorSignedAt   DateTime?
+  notes              String?   @db.Text
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
 
   @@index([category])
   @@index([date])
+  @@index([approvalStage])
 }
 
 model HospitalSetting {

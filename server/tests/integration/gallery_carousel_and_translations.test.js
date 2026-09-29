@@ -24,12 +24,12 @@ test('Rithanya Hospital - Gallery Multi-Asset Carousel, Embeds & Catalog Test Su
   });
 
   // 2. Test Video Upload endpoint (MP4)
+  const uniqueVideoBuffer = Buffer.from('fake mp4 video binary stream data ' + Date.now() + Math.random());
   await t.test('POST /api/upload - Accepts MP4 video file and returns valid storage URL', async () => {
-    const fakeVideoBuffer = Buffer.from('fake mp4 video binary stream data');
     const res = await request(app)
       .post('/api/upload')
       .set('Authorization', `Bearer ${adminToken}`)
-      .attach('file', fakeVideoBuffer, 'clinical_tour.mp4');
+      .attach('file', uniqueVideoBuffer, 'clinical_tour.mp4');
 
     assert.strictEqual(res.status, 201);
     assert.strictEqual(res.body.success, true);
@@ -39,11 +39,10 @@ test('Rithanya Hospital - Gallery Multi-Asset Carousel, Embeds & Catalog Test Su
 
   // 2b. Test Duplicate Asset Upload Detection
   await t.test('POST /api/upload - Identical file upload is detected as duplicate and reuses existing asset', async () => {
-    const fakeVideoBuffer = Buffer.from('fake mp4 video binary stream data');
     const res = await request(app)
       .post('/api/upload')
       .set('Authorization', `Bearer ${adminToken}`)
-      .attach('file', fakeVideoBuffer, 'clinical_tour_duplicate.mp4');
+      .attach('file', uniqueVideoBuffer, 'clinical_tour_duplicate.mp4');
 
     assert.strictEqual(res.status, 200);
     assert.strictEqual(res.body.success, true);

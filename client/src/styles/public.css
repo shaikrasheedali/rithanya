@@ -96,16 +96,16 @@
   white-space: nowrap !important;
 }
 
-/* Desktop Island Navigation Links - Uniform 4:3 Aspect Ratio (Width: 60px, Height: 45px) */
+/* Desktop Island Navigation Links - Fluid, Responsive Pill Architecture */
 .island-nav-links {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: clamp(3px, 0.35vw, 6px);
+  gap: clamp(4px, 0.4vw, 8px);
   list-style: none;
   margin: 0 auto;
   padding: 0;
-  flex: 0 0 auto;
+  flex: 0 1 auto;
   min-width: 0;
   flex-wrap: nowrap;
   height: 100%;
@@ -116,61 +116,117 @@
   align-items: center;
   justify-content: center;
   height: 100%;
+  position: relative;
 }
 
 .island-nav-link {
-  aspect-ratio: 4 / 3 !important;
-  width: 60px !important;
-  height: 45px !important;
-  min-width: 60px !important;
-  max-width: 60px !important;
-  min-height: 45px !important;
-  max-height: 45px !important;
+  width: auto !important;
+  max-width: none !important;
+  min-width: unset !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  max-height: 38px !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   text-align: center !important;
-  font-size: 11.5px !important;
-  font-weight: 700 !important;
-  letter-spacing: -0.2px;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.1px;
   color: var(--ink-soft);
   text-decoration: none;
-  padding: 0 !important;
-  border-radius: 12px !important;
-  border: 1px solid transparent;
-  background: rgba(0, 0, 0, 0.02);
+  padding: 0 14px !important;
+  border-radius: 9999px !important;
+  border: 1.5px solid transparent;
+  background: transparent;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap !important;
   box-sizing: border-box !important;
   line-height: 1 !important;
   flex-shrink: 0;
+  cursor: pointer;
+  gap: 4px;
 }
 
 .floating-island-container.scrolled .island-nav-link {
-  aspect-ratio: 4 / 3 !important;
-  width: 56px !important;
-  height: 42px !important;
-  min-width: 56px !important;
-  max-width: 56px !important;
-  min-height: 42px !important;
-  max-height: 42px !important;
-  font-size: 11px !important;
-  border-radius: 10px !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  max-height: 36px !important;
+  padding: 0 12px !important;
+  font-size: 12.5px !important;
 }
 
 .island-nav-link:hover {
   color: var(--red-700);
-  background: rgba(169, 17, 41, 0.08);
-  border-color: rgba(169, 17, 41, 0.15);
+  background: rgba(169, 17, 41, 0.06);
+  border-color: rgba(169, 17, 41, 0.12);
   transform: translateY(-1px);
 }
 
 .island-nav-link.active {
+  color: var(--red-700) !important;
+  background: #fff0f2 !important;
+  font-weight: 700 !important;
+  border: 1.5px solid rgba(169, 17, 41, 0.28) !important;
+  box-shadow: 0 2px 8px rgba(169, 17, 41, 0.08) !important;
+}
+
+/* Navbar Sub-Menu Dropdown */
+.island-nav-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1.5px solid rgba(169, 17, 41, 0.15);
+  border-radius: 16px;
+  box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.12), 0 4px 14px rgba(169, 17, 41, 0.06);
+  padding: 8px;
+  min-width: 240px;
+  z-index: 1002;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  animation: islandDropdownFade 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes islandDropdownFade {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -6px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+.island-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.15s ease;
+}
+
+.island-dropdown-item:hover,
+.island-dropdown-item.active {
+  background: #fff0f2;
   color: var(--red-700);
-  background: var(--red-50);
-  font-weight: 800 !important;
-  border: 1.5px solid rgba(169, 17, 41, 0.24);
-  box-shadow: 0 2px 6px rgba(169, 17, 41, 0.09);
+}
+
+.island-dropdown-item-desc {
+  font-size: 11px;
+  color: var(--ink-soft);
+  font-weight: 400;
+  margin-top: 1px;
 }
 
 /* Island Action CTAs */
@@ -921,21 +977,19 @@ body {
     font-size: 15px !important;
   }
   .island-nav-links {
-    gap: 1px !important;
+    gap: 3px !important;
     flex-wrap: nowrap !important;
   }
   .island-nav-link {
-    aspect-ratio: 4 / 3 !important;
-    width: 56px !important;
-    height: 42px !important;
-    min-width: 56px !important;
-    max-width: 56px !important;
-    min-height: 42px !important;
-    max-height: 42px !important;
-    font-size: 11px !important;
-    padding: 0 !important;
-    border-radius: 10px !important;
-    letter-spacing: -0.2px;
+    width: auto !important;
+    max-width: none !important;
+    min-width: unset !important;
+    height: 35px !important;
+    min-height: 35px !important;
+    max-height: 35px !important;
+    font-size: 12px !important;
+    padding: 0 10px !important;
+    border-radius: 9999px !important;
   }
   .island-btn-phone .phone-text {
     display: none !important;

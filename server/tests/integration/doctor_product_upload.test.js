@@ -25,7 +25,7 @@ test('Rithanya Hospital - Doctor, Product & Upload Comprehensive CRUD Suite', as
 
   // 2. Test Image Upload Endpoints (/api/upload & /upload alias)
   await t.test('POST /api/upload - Upload file as authenticated staff returns valid JSON with url', async () => {
-    const fakeBuffer = Buffer.from('fake image content for testing');
+    const fakeBuffer = Buffer.from('fake image content for testing ' + Date.now() + Math.random());
     const res = await request(app)
       .post('/api/upload')
       .set('Authorization', `Bearer ${adminToken}`)
@@ -40,7 +40,7 @@ test('Rithanya Hospital - Doctor, Product & Upload Comprehensive CRUD Suite', as
   });
 
   await t.test('POST /upload - Upload alias works identically and returns valid JSON', async () => {
-    const fakeBuffer = Buffer.from('fake image content for testing alias');
+    const fakeBuffer = Buffer.from('fake image content for testing alias ' + Date.now() + Math.random());
     const res = await request(app)
       .post('/upload')
       .set('Authorization', `Bearer ${adminToken}`)

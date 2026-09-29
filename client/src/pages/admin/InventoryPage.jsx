@@ -41,6 +41,7 @@ const GROUP_CARD_THEMES = {
 
 export default function InventoryPage() {
   const { addToast } = useToast();
+  const [primarySection, setPrimarySection] = useState('inventory'); // 'inventory', 'lab', 'audit'
   const [activeTab, setActiveTab] = useState('grid'); // 'grid', 'reservations', 'bags', 'serology', 'emptyBags', 'testKits', 'logs'
   const [stocks, setStocks] = useState([]);
   const [categorizationGrid, setCategorizationGrid] = useState([]);
@@ -443,7 +444,14 @@ export default function InventoryPage() {
             </div>
           </div>
 
-          <div className="kpi-card" onClick={() => setActiveTab('reservations')} style={{ cursor: 'pointer' }}>
+          <div
+            className="kpi-card"
+            onClick={() => {
+              setPrimarySection('inventory');
+              setActiveTab('reservations');
+            }}
+            style={{ cursor: 'pointer' }}
+          >
             <div className="kpi-card-info">
               <p>Active Reservations</p>
               <h3 style={{ color: '#b45309' }}>{totals.totalReserved}</h3>
@@ -456,7 +464,14 @@ export default function InventoryPage() {
             </div>
           </div>
 
-          <div className="kpi-card" onClick={() => setActiveTab('serology')} style={{ cursor: 'pointer' }}>
+          <div
+            className="kpi-card"
+            onClick={() => {
+              setPrimarySection('lab');
+              setActiveTab('serology');
+            }}
+            style={{ cursor: 'pointer' }}
+          >
             <div className="kpi-card-info">
               <p>Quarantine (Unscreened)</p>
               <h3 style={{ color: totals.quarantineUnits > 0 ? '#9333ea' : 'inherit' }}>
@@ -471,7 +486,14 @@ export default function InventoryPage() {
             </div>
           </div>
 
-          <div className="kpi-card" onClick={() => setActiveTab('emptyBags')} style={{ cursor: 'pointer' }}>
+          <div
+            className="kpi-card"
+            onClick={() => {
+              setPrimarySection('lab');
+              setActiveTab('emptyBags');
+            }}
+            style={{ cursor: 'pointer' }}
+          >
             <div className="kpi-card-info">
               <p>Empty Collection Bags</p>
               <h3>{totals.emptyBagsTotal}</h3>
@@ -639,88 +661,181 @@ export default function InventoryPage() {
           </div>
         </div>
 
-        {/* NAVIGATION TABS */}
-        <div
-          style={{
-            display: 'flex',
-            gap: 6,
-            borderBottom: '2px solid var(--line)',
-            marginBottom: 20,
-            overflowX: 'auto',
-            paddingBottom: 2
-          }}
-        >
-          <button
-            type="button"
-            className={`btn btn-sm ${activeTab === 'grid' ? 'btn-primary' : 'btn-secondary'}`}
-            onClick={() => setActiveTab('grid')}
-            style={{ borderRadius: '8px 8px 0 0', display: 'flex', alignItems: 'center', gap: 6 }}
+        {/* TWO-LEVEL TAB ARCHITECTURE (REQ 2: ZERO HORIZONTAL SCROLL) */}
+        <div style={{ marginBottom: 20 }}>
+          {/* LEVEL 1: PRIMARY DOMAIN SELECTOR */}
+          <div
+            style={{
+              display: 'flex',
+              gap: 10,
+              background: '#f1f5f9',
+              padding: 6,
+              borderRadius: 12,
+              marginBottom: 12,
+              border: '1px solid var(--line)',
+              flexWrap: 'wrap'
+            }}
           >
-            <Layers size={14} />
-            <span>Multi-Stage Categorization Grid</span>
-          </button>
+            <button
+              type="button"
+              className={`btn btn-sm ${primarySection === 'inventory' ? 'btn-primary' : 'btn-secondary'}`}
+              onClick={() => {
+                setPrimarySection('inventory');
+                if (!['grid', 'reservations', 'bags'].includes(activeTab)) {
+                  setActiveTab('grid');
+                }
+              }}
+              style={{
+                flex: '1 1 200px',
+                justifyContent: 'center',
+                padding: '9px 16px',
+                borderRadius: 9,
+                fontWeight: 700,
+                fontSize: 13
+              }}
+            >
+              <Layers size={15} />
+              <span>1. Primary Inventory ({totals.totalUnits} Units)</span>
+            </button>
 
-          <button
-            type="button"
-            className={`btn btn-sm ${activeTab === 'reservations' ? 'btn-primary' : 'btn-secondary'}`}
-            onClick={() => setActiveTab('reservations')}
-            style={{ borderRadius: '8px 8px 0 0', display: 'flex', alignItems: 'center', gap: 6 }}
-          >
-            <BookmarkCheck size={14} />
-            <span>Active Reservations ({reservations.filter((r) => r.status === 'ACTIVE').length})</span>
-          </button>
+            <button
+              type="button"
+              className={`btn btn-sm ${primarySection === 'lab' ? 'btn-primary' : 'btn-secondary'}`}
+              onClick={() => {
+                setPrimarySection('lab');
+                if (!['serology', 'emptyBags', 'testKits'].includes(activeTab)) {
+                  setActiveTab('serology');
+                }
+              }}
+              style={{
+                flex: '1 1 200px',
+                justifyContent: 'center',
+                padding: '9px 16px',
+                borderRadius: 9,
+                fontWeight: 700,
+                fontSize: 13
+              }}
+            >
+              <FlaskConical size={15} />
+              <span>2. Lab Operations ({totals.quarantineUnits} in Quarantine)</span>
+            </button>
 
-          <button
-            type="button"
-            className={`btn btn-sm ${activeTab === 'bags' ? 'btn-primary' : 'btn-secondary'}`}
-            onClick={() => setActiveTab('bags')}
-            style={{ borderRadius: '8px 8px 0 0', display: 'flex', alignItems: 'center', gap: 6 }}
-          >
-            <Droplet size={14} />
-            <span>Bag-Level Unit Registry ({bags.length})</span>
-          </button>
+            <button
+              type="button"
+              className={`btn btn-sm ${primarySection === 'audit' ? 'btn-primary' : 'btn-secondary'}`}
+              onClick={() => {
+                setPrimarySection('audit');
+                setActiveTab('logs');
+              }}
+              style={{
+                flex: '1 1 180px',
+                justifyContent: 'center',
+                padding: '9px 16px',
+                borderRadius: 9,
+                fontWeight: 700,
+                fontSize: 13
+              }}
+            >
+              <Clock size={15} />
+              <span>3. Audit & Logs ({logs.length})</span>
+            </button>
+          </div>
 
-          <button
-            type="button"
-            className={`btn btn-sm ${activeTab === 'serology' ? 'btn-primary' : 'btn-secondary'}`}
-            onClick={() => setActiveTab('serology')}
-            style={{ borderRadius: '8px 8px 0 0', display: 'flex', alignItems: 'center', gap: 6 }}
+          {/* LEVEL 2: CONTEXTUAL SUB-TABS (ZERO HORIZONTAL SCROLL) */}
+          <div
+            style={{
+              display: 'flex',
+              gap: 8,
+              borderBottom: '2px solid var(--line)',
+              paddingBottom: 2,
+              flexWrap: 'wrap'
+            }}
           >
-            <FlaskConical size={14} />
-            <span>
-              Mandatory Serology Screening ({bags.filter((b) => b.stage === 'QUARANTINE').length})
-            </span>
-          </button>
+            {/* Primary Inventory Sub-Tabs */}
+            {primarySection === 'inventory' && (
+              <>
+                <button
+                  type="button"
+                  className={`btn btn-sm ${activeTab === 'grid' ? 'btn-primary' : 'btn-secondary'}`}
+                  onClick={() => setActiveTab('grid')}
+                  style={{ borderRadius: '8px 8px 0 0', display: 'flex', alignItems: 'center', gap: 6 }}
+                >
+                  <Layers size={14} />
+                  <span>Multi-Stage Categorization Grid</span>
+                </button>
 
-          <button
-            type="button"
-            className={`btn btn-sm ${activeTab === 'emptyBags' ? 'btn-primary' : 'btn-secondary'}`}
-            onClick={() => setActiveTab('emptyBags')}
-            style={{ borderRadius: '8px 8px 0 0', display: 'flex', alignItems: 'center', gap: 6 }}
-          >
-            <Package size={14} />
-            <span>Empty Bag Stocks ({emptyBags.length})</span>
-          </button>
+                <button
+                  type="button"
+                  className={`btn btn-sm ${activeTab === 'reservations' ? 'btn-primary' : 'btn-secondary'}`}
+                  onClick={() => setActiveTab('reservations')}
+                  style={{ borderRadius: '8px 8px 0 0', display: 'flex', alignItems: 'center', gap: 6 }}
+                >
+                  <BookmarkCheck size={14} />
+                  <span>Active Blood Holds ({reservations.filter((r) => r.status === 'ACTIVE').length})</span>
+                </button>
 
-          <button
-            type="button"
-            className={`btn btn-sm ${activeTab === 'testKits' ? 'btn-primary' : 'btn-secondary'}`}
-            onClick={() => setActiveTab('testKits')}
-            style={{ borderRadius: '8px 8px 0 0', display: 'flex', alignItems: 'center', gap: 6 }}
-          >
-            <FileCheck size={14} />
-            <span>Serology Test Kits ({testKits.length})</span>
-          </button>
+                <button
+                  type="button"
+                  className={`btn btn-sm ${activeTab === 'bags' ? 'btn-primary' : 'btn-secondary'}`}
+                  onClick={() => setActiveTab('bags')}
+                  style={{ borderRadius: '8px 8px 0 0', display: 'flex', alignItems: 'center', gap: 6 }}
+                >
+                  <Droplet size={14} />
+                  <span>Bag-Level Unit Registry ({bags.length})</span>
+                </button>
+              </>
+            )}
 
-          <button
-            type="button"
-            className={`btn btn-sm ${activeTab === 'logs' ? 'btn-primary' : 'btn-secondary'}`}
-            onClick={() => setActiveTab('logs')}
-            style={{ borderRadius: '8px 8px 0 0', display: 'flex', alignItems: 'center', gap: 6 }}
-          >
-            <Clock size={14} />
-            <span>Audit History</span>
-          </button>
+            {/* Lab Operations Sub-Tabs */}
+            {primarySection === 'lab' && (
+              <>
+                <button
+                  type="button"
+                  className={`btn btn-sm ${activeTab === 'serology' ? 'btn-primary' : 'btn-secondary'}`}
+                  onClick={() => setActiveTab('serology')}
+                  style={{ borderRadius: '8px 8px 0 0', display: 'flex', alignItems: 'center', gap: 6 }}
+                >
+                  <FlaskConical size={14} />
+                  <span>
+                    Mandatory Serology Screening ({bags.filter((b) => b.stage === 'QUARANTINE').length} Pending)
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  className={`btn btn-sm ${activeTab === 'emptyBags' ? 'btn-primary' : 'btn-secondary'}`}
+                  onClick={() => setActiveTab('emptyBags')}
+                  style={{ borderRadius: '8px 8px 0 0', display: 'flex', alignItems: 'center', gap: 6 }}
+                >
+                  <Package size={14} />
+                  <span>Empty Collection Bag Stocks ({emptyBags.length} Types)</span>
+                </button>
+
+                <button
+                  type="button"
+                  className={`btn btn-sm ${activeTab === 'testKits' ? 'btn-primary' : 'btn-secondary'}`}
+                  onClick={() => setActiveTab('testKits')}
+                  style={{ borderRadius: '8px 8px 0 0', display: 'flex', alignItems: 'center', gap: 6 }}
+                >
+                  <FileCheck size={14} />
+                  <span>Serology Test Kits & Reagents ({testKits.length})</span>
+                </button>
+              </>
+            )}
+
+            {/* Audit & Logs Sub-Tabs */}
+            {primarySection === 'audit' && (
+              <button
+                type="button"
+                className={`btn btn-sm ${activeTab === 'logs' ? 'btn-primary' : 'btn-secondary'}`}
+                onClick={() => setActiveTab('logs')}
+                style={{ borderRadius: '8px 8px 0 0', display: 'flex', alignItems: 'center', gap: 6 }}
+              >
+                <Clock size={14} />
+                <span>Dispense & Restock Audit History</span>
+              </button>
+            )}
+          </div>
         </div>
 
         {/* TAB 1: MULTI-STAGE CATEGORIZATION GRID (REQ 7) */}

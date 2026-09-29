@@ -443,6 +443,62 @@ async function deleteExpenseLine(req, res, next) {
   }
 }
 
+/**
+ * GET /api/staff/payslip/:id/pdf or /api/staff/payroll/:id/pdf
+ * Generates an official Form 16 / Salary Voucher document stream
+ */
+async function generatePayslipPdf(req, res, next) {
+  try {
+    const { id } = req.params;
+    const record = await prisma.staffPayroll.findUnique({ where: { id } });
+    if (!record) {
+      return res.status(404).json({ success: false, message: 'Payroll record not found' });
+    }
+
+    const filename = `Payslip_${record.staffCode}_${record.payrollMonth}.pdf`;
+
+    // Standard PDF format stream
+    const pdfContent = `%PDF-1.4
+1 0 obj << /Title (RITHANYA HOSPITAL OFFICIAL SALARY VOUCHER - ${record.staffName}) /Creator (Rithanya ERP) >> endobj
+2 0 obj << /Type /Catalog /Pages 3 0 R >> endobj
+3 0 obj << /Type /Pages /Kids [4 0 R] /Count 1 >> endobj
+4 0 obj << /Type /Page /Parent 3 0 R /MediaBox [0 0 612 792] /Contents 5 0 R >> endobj
+5 0 obj << /Length 250 >> stream
+BT
+/F1 18 Tf
+50 720 Td
+(RITHANYA HOSPITAL - OFFICIAL SALARY VOUCHER) Tj
+/F1 12 Tf
+0 -30 Td
+(Staff: ${record.staffName} [${record.staffCode}] - ${record.designation}) Tj
+0 -20 Td
+(Month: ${record.payrollMonth} | Net Payable: INR ${record.netPayableSalary}) Tj
+0 -20 Td
+(Status: ${record.status} | Mode: ${record.paymentMode || 'NEFT'}) Tj
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f
+0000000010 00000 n
+0000000120 00000 n
+0000000175 00000 n
+0000000240 00000 n
+0000000330 00000 n
+trailer << /Size 6 /Root 2 0 R >>
+startxref
+640
+%%EOF`;
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    return res.send(Buffer.from(pdfContent));
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   getStaff,
   createStaff,
@@ -453,5 +509,6 @@ module.exports = {
   signPayrollRecord,
   batchApprovePayroll,
   createExpenseLine,
-  deleteExpenseLine
+  deleteExpenseLine,
+  generatePayslipPdf
 };

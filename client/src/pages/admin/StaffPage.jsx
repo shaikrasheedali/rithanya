@@ -83,18 +83,6 @@ export default function StaffPage() {
     notes: ''
   });
 
-  // Expense line modal
-  const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
-  const [expenseFormData, setExpenseFormData] = useState({
-    expenseName: 'Hospital Facility Building Rent',
-    category: 'Facility Rent',
-    vendorOrPayee: 'Shree Krishna Properties (Landlord)',
-    amount: 85000,
-    paymentMethod: 'Bank NEFT',
-    invoiceRef: '',
-    notes: 'Monthly commercial hospital premises rental fee'
-  });
-
   // Pay Slip modal
   const [isPaySlipOpen, setIsPaySlipOpen] = useState(false);
   const [selectedSlipRecord, setSelectedSlipRecord] = useState(null);
@@ -316,40 +304,6 @@ export default function StaffPage() {
     }
   };
 
-  // Save Facility Overhead Expense Line
-  const handleSaveExpense = async (e) => {
-    e.preventDefault();
-    setSubmitting(true);
-    try {
-      await apiRequest('/staff/payroll/expenses', {
-        method: 'POST',
-        body: JSON.stringify({
-          ...expenseFormData,
-          payrollMonth: currentMonth
-        })
-      });
-      addToast(`Added ${expenseFormData.expenseName} (₹${expenseFormData.amount}) to monthly overhead statement`, 'success');
-      setIsExpenseModalOpen(false);
-      fetchPayroll(currentMonth);
-    } catch (err) {
-      addToast(err.message || 'Failed to add expense', 'error');
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  // Delete Overhead Expense Line
-  const handleDeleteExpense = async (id, name) => {
-    if (!window.confirm(`Remove overhead line item "${name}"?`)) return;
-    try {
-      await apiRequest(`/staff/payroll/expenses/${id}`, { method: 'DELETE' });
-      addToast('Expense line item removed', 'success');
-      fetchPayroll(currentMonth);
-    } catch (err) {
-      addToast(err.message || 'Failed to remove expense', 'error');
-    }
-  };
-
   // Print Pay Slip to PDF
   const handlePrintPaySlip = () => {
     window.print();
@@ -369,8 +323,8 @@ export default function StaffPage() {
   return (
     <div className="admin-page">
       <AdminTopbar
-        title="Human Resources (HR) & Comprehensive Payroll Engine"
-        subtitle="Pro-Rata Attendance Engine, Multi-Signatory Clearances & Facility Rent Statements"
+        title="Human Resources (HR) & Staff Attendance / Payroll"
+        subtitle="Staff Directory, Attendance Records, Pro-Rata Salary Calculations & Official Pay Slips"
         actions={
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             {activeTab === 'payroll' ? (
@@ -378,10 +332,10 @@ export default function StaffPage() {
                 <button
                   type="button"
                   className="btn btn-secondary btn-sm"
-                  onClick={() => setIsExpenseModalOpen(true)}
+                  onClick={() => window.print()}
                 >
-                  <Building2 size={14} style={{ color: '#0369a1' }} />
-                  <span>+ Facility Overhead Line</span>
+                  <Printer size={14} />
+                  <span>Print Register</span>
                 </button>
                 <button
                   type="button"
@@ -394,7 +348,7 @@ export default function StaffPage() {
                   <span>
                     {payrollData.totals.isFullyDisbursed
                       ? '✓ Fully Disbursed'
-                      : 'Batch Approve Month (Director)'}
+                      : 'Batch Disburse Payroll (Director)'}
                   </span>
                 </button>
               </>
@@ -426,7 +380,7 @@ export default function StaffPage() {
             style={{ borderRadius: '8px 8px 0 0', display: 'flex', alignItems: 'center', gap: 6 }}
           >
             <DollarSign size={14} />
-            <span>Monthly Payroll & Overhead Ledger (Req 8)</span>
+            <span>Monthly Staff Payroll Register</span>
           </button>
 
           <button
@@ -440,7 +394,7 @@ export default function StaffPage() {
           </button>
         </div>
 
-        {/* TAB 1: PAYROLL & OVERHEAD ENGINE (REQ 8) */}
+        {/* TAB 1: PAYROLL & ATTENDANCE ENGINE */}
         {activeTab === 'payroll' && (
           <div>
             {/* PAYROLL MONTH CONTROLLER BAR */}
@@ -504,37 +458,37 @@ export default function StaffPage() {
 
               <div className="kpi-card">
                 <div className="kpi-card-info">
-                  <p>Facility Overheads & Rent</p>
+                  <p>Active Personnel Directory</p>
                   <h3 style={{ color: '#0369a1' }}>
-                    {formatCurrency(payrollData.totals.totalFacilityOverhead)}
+                    {payrollData.totals.totalStaffCount} Staff
                   </h3>
                   <span style={{ fontSize: 12, color: '#0369a1', fontWeight: 600 }}>
-                    Includes Building Rent & AMC
+                    Doctors, Nurses & Technicians
                   </span>
                 </div>
                 <div className="kpi-icon-wrap" style={{ background: '#f0f9ff' }}>
-                  <Building2 size={22} style={{ color: '#0284c7' }} />
-                </div>
-              </div>
-
-              <div className="kpi-card" style={{ border: '2px solid #bbf7d0', background: '#f0fdf4' }}>
-                <div className="kpi-card-info">
-                  <p style={{ color: '#166534', fontWeight: 700 }}>Total Hospital Disbursement</p>
-                  <h3 style={{ color: '#15803d', fontSize: 26, fontWeight: 800 }}>
-                    {formatCurrency(payrollData.totals.masterDisbursement)}
-                  </h3>
-                  <span style={{ fontSize: 12, color: '#166534', fontWeight: 600 }}>
-                    Salaries + Facility Overhead
-                  </span>
-                </div>
-                <div className="kpi-icon-wrap green">
-                  <DollarSign size={24} style={{ color: '#15803d' }} />
+                  <UserCheck size={22} style={{ color: '#0284c7' }} />
                 </div>
               </div>
 
               <div className="kpi-card">
                 <div className="kpi-card-info">
-                  <p>Approval & Disbursed Status</p>
+                  <p>Pro-Rata Cycle Standard</p>
+                  <h3 style={{ color: 'var(--navy)' }}>
+                    {payrollData.calendarDays} Days
+                  </h3>
+                  <span style={{ fontSize: 12, color: 'var(--ink-soft)' }}>
+                    Full Calendar Working Month
+                  </span>
+                </div>
+                <div className="kpi-icon-wrap" style={{ background: '#f8fafc' }}>
+                  <Calendar size={22} style={{ color: 'var(--navy)' }} />
+                </div>
+              </div>
+
+              <div className="kpi-card">
+                <div className="kpi-card-info">
+                  <p>Director Disbursed Status</p>
                   <h3 style={{ color: payrollData.totals.isFullyDisbursed ? '#15803d' : '#b45309' }}>
                     {payrollData.totals.approvedCount} / {payrollData.totals.totalStaffCount}
                   </h3>
@@ -1428,111 +1382,7 @@ export default function StaffPage() {
           </form>
         </Modal>
 
-        {/* MODAL 3: ADD FACILITY OVERHEAD EXPENSE LINE */}
-        <Modal
-          isOpen={isExpenseModalOpen}
-          onClose={() => setIsExpenseModalOpen(false)}
-          title={`Add Facility Overhead Expense (${formattedMonthName})`}
-        >
-          <form onSubmit={handleSaveExpense}>
-            <div className="form-group">
-              <label className="form-label">Expense Description *</label>
-              <input
-                type="text"
-                className="form-control"
-                value={expenseFormData.expenseName}
-                onChange={(e) => setExpenseFormData({ ...expenseFormData, expenseName: e.target.value })}
-                placeholder="e.g. Hospital Facility Building Rent"
-                required
-              />
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-              <div className="form-group">
-                <label className="form-label">Category *</label>
-                <select
-                  className="form-control"
-                  value={expenseFormData.category}
-                  onChange={(e) => setExpenseFormData({ ...expenseFormData, category: e.target.value })}
-                >
-                  <option value="Facility Rent">Facility Rent</option>
-                  <option value="Utilities & Power">Utilities & Power</option>
-                  <option value="Biomedical Waste Disposal">Biomedical Waste Disposal</option>
-                  <option value="Equipment AMC Maintenance">Equipment AMC Maintenance</option>
-                  <option value="Clinical Consumables">Clinical Consumables</option>
-                  <option value="Other Operational Overhead">Other Operational Overhead</option>
-                </select>
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Amount (INR) *</label>
-                <input
-                  type="number"
-                  min="1"
-                  className="form-control"
-                  value={expenseFormData.amount}
-                  onChange={(e) => setExpenseFormData({ ...expenseFormData, amount: parseFloat(e.target.value) || 0 })}
-                  required
-                />
-              </div>
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-              <div className="form-group">
-                <label className="form-label">Vendor / Payee Name *</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={expenseFormData.vendorOrPayee}
-                  onChange={(e) => setExpenseFormData({ ...expenseFormData, vendorOrPayee: e.target.value })}
-                  placeholder="e.g. Shree Krishna Properties (Landlord)"
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Payment Method</label>
-                <select
-                  className="form-control"
-                  value={expenseFormData.paymentMethod}
-                  onChange={(e) => setExpenseFormData({ ...expenseFormData, paymentMethod: e.target.value })}
-                >
-                  <option value="Bank NEFT">Bank NEFT</option>
-                  <option value="Cheque">Cheque</option>
-                  <option value="RTGS">RTGS</option>
-                  <option value="UPI">UPI</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Invoice / Receipt Reference</label>
-              <input
-                type="text"
-                className="form-control"
-                value={expenseFormData.invoiceRef}
-                onChange={(e) => setExpenseFormData({ ...expenseFormData, invoiceRef: e.target.value })}
-                placeholder="e.g. RENT-INV-2026-SEP"
-              />
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 16 }}>
-              <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={() => setIsExpenseModalOpen(false)}
-                disabled={submitting}
-              >
-                Cancel
-              </button>
-              <button type="submit" className="btn btn-primary" disabled={submitting}>
-                <span>{submitting ? 'Adding...' : 'Add Overhead Line'}</span>
-              </button>
-            </div>
-          </form>
-        </Modal>
-
-        {/* MODAL 4: DIGITAL SIGNATURE WORKFLOW */}
+        {/* MODAL 3: DIGITAL SIGNATURE WORKFLOW */}
         <Modal
           isOpen={isSignModalOpen}
           onClose={() => setIsSignModalOpen(false)}

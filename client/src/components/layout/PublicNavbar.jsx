@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
@@ -15,6 +15,7 @@ import {
   Image,
   BookOpen,
   Mail,
+  ChevronDown,
   ChevronRight,
   ArrowRight
 } from 'lucide-react';
@@ -25,6 +26,8 @@ import { useHospitalSettings } from '../../context/HospitalSettingsContext';
 export default function PublicNavbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [clinicalDropdownOpen, setClinicalDropdownOpen] = useState(false);
+  const dropdownTimeoutRef = useRef(null);
   const { t } = useTranslation();
   const location = useLocation();
   const { telHref, formattedPhone } = useHospitalSettings();
@@ -37,15 +40,19 @@ export default function PublicNavbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile drawer on navigation
+  // Close mobile drawer and dropdown on navigation
   useEffect(() => {
     setMobileMenuOpen(false);
+    setClinicalDropdownOpen(false);
   }, [location.pathname]);
 
   // Close on Escape key
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape') setMobileMenuOpen(false);
+      if (e.key === 'Escape') {
+        setMobileMenuOpen(false);
+        setClinicalDropdownOpen(false);
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
@@ -63,7 +70,19 @@ export default function PublicNavbar() {
     };
   }, [mobileMenuOpen]);
 
-  const navLinks = [
+  const handleMouseEnterClinical = () => {
+    if (dropdownTimeoutRef.current) clearTimeout(dropdownTimeoutRef.current);
+    setClinicalDropdownOpen(true);
+  };
+
+  const handleMouseLeaveClinical = () => {
+    dropdownTimeoutRef.current = setTimeout(() => {
+      setClinicalDropdownOpen(false);
+    }, 150);
+  };
+
+  // Full mobile drawer items
+  const mobileNavLinks = [
     { name: t('nav.home', 'Home'), path: '/', icon: Home },
     { name: t('nav.about', 'About'), path: '/about', icon: Info },
     { name: t('nav.services', 'Services'), path: '/services', icon: Stethoscope },
@@ -86,6 +105,10 @@ export default function PublicNavbar() {
     return false;
   };
 
+  const isClinicalActive =
+    location.pathname.startsWith('/services') ||
+    location.pathname.startsWith('/treatments');
+
   return (
     <>
       <header className={`floating-island-container ${isScrolled ? 'scrolled' : ''}`}>
@@ -103,19 +126,98 @@ export default function PublicNavbar() {
 
           {/* Desktop Navigation Links */}
           <ul className="island-nav-links">
-            {navLinks.map((item) => {
-              const isActive = checkIsActive(item.path);
-              return (
-                <li key={item.path}>
+            <li>
+              <Link to="/" className={`island-nav-link ${location.pathname === '/' ? 'active' : ''}`}>
+                {t('nav.home', 'Home')}
+              </Link>
+            </li>
+
+            <li>
+              <Link to="/about" className={`island-nav-link ${location.pathname === '/about' ? 'active' : ''}`}>
+                {t('nav.about', 'About')}
+              </Link>
+            </li>
+
+            {/* Clinical Care Dropdown */}
+            <li
+              onMouseEnter={handleMouseEnterClinical}
+              onMouseLeave={handleMouseLeaveClinical}
+            >
+              <button
+                type="button"
+                className={`island-nav-link ${isClinicalActive ? 'active' : ''}`}
+                onClick={() => setClinicalDropdownOpen((prev) => !prev)}
+                aria-expanded={clinicalDropdownOpen}
+                aria-haspopup="true"
+              >
+                <span>{t('nav.clinicalCare', 'Clinical Care')}</span>
+                <ChevronDown
+                  size={13}
+                  style={{
+                    transform: clinicalDropdownOpen ? 'rotate(180deg)' : 'none',
+                    transition: 'transform 0.2s ease',
+                    opacity: 0.7
+                  }}
+                />
+              </button>
+
+              {clinicalDropdownOpen && (
+                <div className="island-nav-dropdown">
                   <Link
-                    to={item.path}
-                    className={`island-nav-link ${isActive ? 'active' : ''}`}
+                    to="/services"
+                    className={`island-dropdown-item ${location.pathname.startsWith('/services') ? 'active' : ''}`}
+                    onClick={() => setClinicalDropdownOpen(false)}
                   >
-                    {item.name}
+                    <Stethoscope size={16} style={{ color: 'var(--red-700)', flexShrink: 0 }} />
+                    <div>
+                      <div>{t('nav.services', 'Clinical Services')}</div>
+                      <div className="island-dropdown-item-desc">Comprehensive diagnostics & laboratory</div>
+                    </div>
                   </Link>
-                </li>
-              );
-            })}
+                  <Link
+                    to="/treatments"
+                    className={`island-dropdown-item ${location.pathname.startsWith('/treatments') ? 'active' : ''}`}
+                    onClick={() => setClinicalDropdownOpen(false)}
+                  >
+                    <Activity size={16} style={{ color: 'var(--red-700)', flexShrink: 0 }} />
+                    <div>
+                      <div>{t('nav.treatments', 'Daycare Treatments')}</div>
+                      <div className="island-dropdown-item-desc">Hematology, blood transfusion & diabetes</div>
+                    </div>
+                  </Link>
+                </div>
+              )}
+            </li>
+
+            <li>
+              <Link to="/doctors" className={`island-nav-link ${checkIsActive('/doctors') ? 'active' : ''}`}>
+                {t('nav.doctors', 'Doctors')}
+              </Link>
+            </li>
+
+            <li>
+              <Link to="/products" className={`island-nav-link ${checkIsActive('/products') ? 'active' : ''}`}>
+                {t('nav.products', 'Products')}
+              </Link>
+            </li>
+
+            <li>
+              <Link to="/insights" className={`island-nav-link ${checkIsActive('/insights') ? 'active' : ''}`}>
+                {t('nav.insights', 'Insights')}
+              </Link>
+            </li>
+
+            <li>
+              <Link to="/gallery" className={`island-nav-link ${checkIsActive('/gallery') ? 'active' : ''}`}>
+                {t('nav.gallery', 'Gallery')}
+              </Link>
+            </li>
+
+            <li>
+              <Link to="/contact" className={`island-nav-link ${location.pathname === '/contact' ? 'active' : ''}`}>
+                {t('nav.contact', 'Contact')}
+              </Link>
+            </li>
           </ul>
 
           {/* Action CTAs */}
@@ -188,7 +290,7 @@ export default function PublicNavbar() {
             </div>
 
             <ul className="drawer-links">
-              {navLinks.map((item) => {
+              {mobileNavLinks.map((item) => {
                 const Icon = item.icon;
                 const isActive = checkIsActive(item.path);
                 return (
@@ -212,12 +314,12 @@ export default function PublicNavbar() {
             <div className="drawer-actions">
               <div className="drawer-actions-row">
                 <a
-                  href="tel:+918328581019"
+                  href={telHref}
                   className="btn btn-secondary btn-sm"
                   style={{ flex: 1, justifyContent: 'center' }}
                 >
                   <Phone size={14} className="text-red" />
-                  <span>{t('nav.callEmergency', 'Call Emergency')}</span>
+                  <span>{t('nav.callEmergency', 'Call Hotline')}</span>
                 </a>
 
                 <Link

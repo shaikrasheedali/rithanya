@@ -44,11 +44,12 @@ async function verifyPassword(plainPassword, storedHash) {
     return computed === hash;
   }
 
-  // SHA256 hex compatibility for seed legacy hashes
+  // SHA256 hex compatibility for seeded hashes
   const sha = crypto.createHash('sha256').update(plainPassword).digest('hex');
   if (sha === storedHash) return true;
 
-  return plainPassword === storedHash;
+  // Strictly reject plain text comparisons - only cryptographic hashes are valid
+  return false;
 }
 
 module.exports = {

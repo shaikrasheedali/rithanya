@@ -9,6 +9,8 @@ router.use(requirePermission('staff'));
 
 // Req 8: Payroll Engine & Overhead Expense Line Items (placed before /:id routes)
 router.get('/payroll', staffController.getMonthlyPayroll);
+router.get('/payslip/:id/pdf', staffController.generatePayslipPdf);
+router.get('/payroll/:id/pdf', staffController.generatePayslipPdf);
 router.put('/payroll/:id', staffController.updatePayrollRecord);
 router.post('/payroll/:id/sign', staffController.signPayrollRecord);
 router.post('/payroll/batch-approve', staffController.batchApprovePayroll);

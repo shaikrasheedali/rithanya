@@ -4,7 +4,8 @@ import PublicNavbar from './components/layout/PublicNavbar';
 import PublicFooter from './components/layout/PublicFooter';
 import AdminSidebar from './components/layout/AdminSidebar';
 import { ToastProvider } from './components/common/Toast';
-import { isAuthenticated } from './utils/auth';
+import { isAuthenticated, clearSession } from './utils/auth';
+import { apiRequest } from './utils/api';
 
 // Public Pages
 import HomePage from './pages/public/HomePage';
@@ -67,9 +68,48 @@ function PublicLayout() {
 
 function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
+  const [sessionVerified, setSessionVerified] = React.useState(false);
+  const [authError, setAuthError] = React.useState(false);
 
-  if (!isAuthenticated()) {
+  React.useEffect(() => {
+    if (!isAuthenticated()) {
+      setAuthError(true);
+      return;
+    }
+    let isMounted = true;
+    apiRequest('/auth/me')
+      .then((res) => {
+        if (isMounted) {
+          if (res && res.user) {
+            localStorage.setItem('rh_user', JSON.stringify(res.user));
+          }
+          setSessionVerified(true);
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          clearSession();
+          setAuthError(true);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  if (authError || !isAuthenticated()) {
     return <Navigate to="/admin/login" replace />;
+  }
+
+  if (!sessionVerified) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--canvas)' }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ width: 36, height: 36, border: '3px solid rgba(197, 14, 31, 0.2)', borderTopColor: '#c50e1f', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto 14px' }} />
+          <div style={{ fontSize: 13, color: 'var(--ink-light)', fontWeight: 600 }}>Verifying Secure Database Credentials...</div>
+        </div>
+      </div>
+    );
   }
 
   return (
