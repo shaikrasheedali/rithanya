@@ -238,6 +238,14 @@ async function startServer() {
       } catch (sanErr) {
         console.warn('[Asset Sanitizer] Boot warning:', sanErr.message);
       }
+      try {
+        const { syncDiskAssetsToDatabase } = require('./controllers/mediaController');
+        syncDiskAssetsToDatabase().then((res) => {
+          if (res && res.syncedCount > 0) {
+            console.log(`[Disk Asset Sync] Synced ${res.syncedCount} media assets on startup.`);
+          }
+        }).catch((e) => console.warn('[Disk Asset Sync] Boot warning:', e.message));
+      } catch (_) {}
     }
 
     const server = app.listen(PORT, () => {

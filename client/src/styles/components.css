@@ -88,7 +88,9 @@
 .modal-body {
   padding: 24px;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   flex: 1 1 auto;
+  min-height: 0;
   scrollbar-width: thin !important;
   scrollbar-color: rgba(169, 17, 41, 0.38) #f5f3f4 !important;
 }

@@ -13,18 +13,21 @@ export default function ImageUploadField({ label, value, onChange, required = fa
   const [libraryOpen, setLibraryOpen] = useState(false);
 
   const handleFileChange = async (e) => {
-    const file = e.target.files?.[0];
+    const inputElement = e.target;
+    const file = inputElement?.files?.[0];
     if (!file) return;
 
     // Validate image type
     if (!file.type.startsWith('image/')) {
       addToast('Please select a valid image file (PNG, JPG, WebP, SVG)', 'error');
+      if (inputElement) inputElement.value = '';
       return;
     }
 
-    // Validate size (under 10MB)
-    if (file.size > 10 * 1024 * 1024) {
-      addToast('File size must be under 10MB', 'error');
+    // Validate size (under 15MB)
+    if (file.size > 15 * 1024 * 1024) {
+      addToast('File size must be under 15MB', 'error');
+      if (inputElement) inputElement.value = '';
       return;
     }
 
@@ -44,7 +47,7 @@ export default function ImageUploadField({ label, value, onChange, required = fa
         if (res.isDuplicate) {
           addToast('Identical asset already exists in storage and was reused!', 'info');
         } else {
-          addToast('Image uploaded successfully to server uploads directory!', 'success');
+          addToast('Image uploaded and converted to high-performance WebP!', 'success');
         }
       } else {
         throw new Error('Upload succeeded but no image URL was returned by server');
@@ -52,6 +55,7 @@ export default function ImageUploadField({ label, value, onChange, required = fa
     } catch (err) {
       addToast(err.message || 'Image upload failed', 'error');
     } finally {
+      if (inputElement) inputElement.value = '';
       setUploading(false);
     }
   };

@@ -46,9 +46,23 @@ export async function apiRequest(endpoint, options = {}) {
     delete headers['Content-Type'];
   }
 
+  const timeoutMs = options.timeout || (method === 'POST' && options.body instanceof FormData ? 60000 : 35000);
+  let signal = options.signal;
+  let timeoutId = null;
+  if (!signal) {
+    if (typeof AbortSignal !== 'undefined' && AbortSignal.timeout) {
+      signal = AbortSignal.timeout(timeoutMs);
+    } else if (typeof AbortController !== 'undefined') {
+      const controller = new AbortController();
+      signal = controller.signal;
+      timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+    }
+  }
+
   const config = {
     ...options,
     headers,
+    signal,
     ...(isAdminContext ? { cache: 'no-store' } : {})
   };
 
@@ -104,8 +118,15 @@ export async function apiRequest(endpoint, options = {}) {
 
     return data;
   } catch (error) {
+    if (error.name === 'TimeoutError' || error.name === 'AbortError') {
+      const timeoutError = new Error('The server took too long to respond (request timed out). Please check your connection and try again.');
+      console.error(`API Timeout [${endpoint}]:`, timeoutError.message);
+      throw timeoutError;
+    }
     console.error(`API Error [${endpoint}]:`, error.message);
     throw error;
+  } finally {
+    if (timeoutId) clearTimeout(timeoutId);
   }
 }
 

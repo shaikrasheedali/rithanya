@@ -13,13 +13,22 @@ describe('Media Persistence, Dynamic Route Serving & Sanitizer Suite', () => {
   const testFilename = `test-persistent-asset-${Date.now()}.png`;
 
   before(async () => {
-    // 1. Authenticate as superadmin
-    const loginRes = await request(app)
+    // 1. Authenticate as admin
+    let loginRes = await request(app)
       .post('/api/auth/login')
       .send({
-        identifier: 'superadmin@rithanya.org',
-        password: 'ChangeMeSuperAdmin2026!'
+        email: 'admin@rithanyahospital.com',
+        password: 'Admin@2026'
       });
+
+    if (!loginRes.body?.token) {
+      loginRes = await request(app)
+        .post('/api/auth/login')
+        .send({
+          email: 'superadmin@rithanya.org',
+          password: 'ChangeMeSuperAdmin2026!'
+        });
+    }
 
     if (loginRes.body && loginRes.body.token) {
       superadminToken = loginRes.body.token;
@@ -82,7 +91,39 @@ describe('Media Persistence, Dynamic Route Serving & Sanitizer Suite', () => {
       const first = assets[0];
       assert.ok(first.url && (first.url.startsWith('/') || first.url.startsWith('http')));
       assert.ok(first.fileUrl && first.fileUrl.startsWith('/api/media/file/'));
+      assert.strictEqual(first.fileData, undefined, 'fileData must be omitted from media assets listing to prevent latency');
     }
+  });
+
+  test('POST /api/media/upload - Real raster image is compressed and converted to WebP', async () => {
+    if (!superadminToken) return;
+    const realPngBuffer = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==', 'base64');
+    const res = await request(app)
+      .post('/api/media/upload')
+      .set('Authorization', `Bearer ${superadminToken}`)
+      .attach('file', realPngBuffer, 'sample_doctor_portrait.png');
+
+    assert.strictEqual(res.status, 201);
+    assert.strictEqual(res.body.success, true);
+    assert.ok(res.body.url.endsWith('.webp'), 'Image asset URL must end in .webp');
+    assert.strictEqual(res.body.data.mimeType, 'image/webp', 'MimeType must be image/webp');
+    assert.strictEqual(res.body.data.fileData, undefined, 'Response payload must omit heavy base64 fileData');
+
+    // Clean up
+    if (res.body.data.id) {
+      await prisma.mediaAsset.delete({ where: { id: res.body.data.id } }).catch(() => {});
+    }
+  });
+
+  test('POST /api/media/sync - Manual disk sync completes and returns syncedCount', async () => {
+    if (!superadminToken) return;
+    const res = await request(app)
+      .post('/api/media/sync')
+      .set('Authorization', `Bearer ${superadminToken}`);
+
+    assert.strictEqual(res.status, 200);
+    assert.strictEqual(res.body.success, true);
+    assert.strictEqual(typeof res.body.syncedCount, 'number');
   });
 
   test('Database Startup Sanitizer - Executes cleanly and audits image fields', async () => {

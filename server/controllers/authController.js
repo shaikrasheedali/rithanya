@@ -5,13 +5,14 @@ const { recordAuditLog } = require('../middlewares/auditMiddleware');
 
 async function login(req, res, next) {
   try {
-    const { email, password } = req.body;
-    if (!email || !password) {
+    const rawEmail = req.body.email || req.body.identifier;
+    const { password } = req.body;
+    if (!rawEmail || !password) {
       return res.status(400).json({ success: false, message: 'Email and password are required' });
     }
 
     const user = await prisma.user.findUnique({
-      where: { email: email.trim().toLowerCase() },
+      where: { email: rawEmail.trim().toLowerCase() },
       include: { staffProfile: true }
     });
 

@@ -447,24 +447,28 @@ export default function ProductsPage() {
             onClick={(e) => e.stopPropagation()}
             style={{
               width: '100%',
-              maxWidth: 460,
-              height: '100%',
+              maxWidth: 480,
+              height: '100vh',
+              maxHeight: '100vh',
               background: '#fff',
               display: 'flex',
               flexDirection: 'column',
               boxShadow: '-10px 0 40px rgba(0, 0, 0, 0.25)',
-              animation: 'slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards'
+              animation: 'slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+              overflow: 'hidden'
             }}
           >
             {/* Drawer Header */}
             <div
+              className="cart-drawer-header"
               style={{
                 padding: '20px 24px',
                 borderBottom: '1px solid var(--line)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                background: '#faf9fa'
+                background: '#faf9fa',
+                flexShrink: 0
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -493,7 +497,7 @@ export default function ProductsPage() {
             {/* Step 1: Cart Items */}
             {checkoutStep === 'cart' && (
               <>
-                <div style={{ flexGrow: 1, overflowY: 'auto', padding: '20px 24px' }}>
+                <div className="cart-drawer-body" style={{ flex: '1 1 0%', minHeight: 0, overflowY: 'auto', padding: '20px 24px' }}>
                   {cart.length === 0 ? (
                     <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--ink-soft)' }}>
                       <Package size={48} style={{ color: 'var(--line)', marginBottom: 16 }} />
@@ -573,8 +577,8 @@ export default function ProductsPage() {
 
                 {/* Cart Summary & Proceed to Checkout */}
                 {cart.length > 0 && (
-                  <div style={{ padding: '20px 24px', borderTop: '1px solid var(--line)', background: '#faf9fa' }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 18, fontSize: 13.5 }}>
+                  <div className="cart-drawer-footer" style={{ padding: '18px 24px', borderTop: '1px solid var(--line)', background: '#faf9fa', flexShrink: 0, position: 'sticky', bottom: 0, zIndex: 10 }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 16, fontSize: 13.5 }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--ink-soft)' }}>
                         <span>Subtotal ({cartCount} items):</span>
                         <span style={{ fontWeight: 600, color: 'var(--ink)' }}>{formatCurrency(cartSubtotal)}</span>
@@ -605,8 +609,8 @@ export default function ProductsPage() {
 
             {/* Step 2: Checkout Form */}
             {checkoutStep === 'checkout' && (
-              <form onSubmit={handlePlaceOrder} style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-                <div style={{ flexGrow: 1, overflowY: 'auto', padding: '20px 24px' }}>
+              <form onSubmit={handlePlaceOrder} className="cart-checkout-form" style={{ display: 'flex', flexDirection: 'column', flex: '1 1 0%', minHeight: 0, height: '100%', overflow: 'hidden' }}>
+                <div className="cart-drawer-body" style={{ flex: '1 1 0%', minHeight: 0, overflowY: 'auto', padding: '20px 24px' }}>
                   <div style={{ background: 'var(--canvas)', border: '1px solid var(--line)', borderRadius: 12, padding: '12px 16px', marginBottom: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div>
                       <span style={{ fontSize: 12, color: 'var(--ink-soft)' }}>Order Summary:</span>
@@ -720,13 +724,13 @@ export default function ProductsPage() {
                   </div>
                 </div>
 
-                {/* Submit Order Action */}
-                <div style={{ padding: '20px 24px', borderTop: '1px solid var(--line)', background: '#faf9fa', display: 'flex', gap: 12 }}>
+                {/* Submit Order Action - Always visible on desktop, tablet, and mobile */}
+                <div className="cart-drawer-footer" style={{ padding: '16px 24px', borderTop: '1px solid var(--line)', background: '#faf9fa', display: 'flex', gap: 12, flexShrink: 0, position: 'sticky', bottom: 0, zIndex: 20, boxShadow: '0 -4px 12px rgba(0, 0, 0, 0.05)' }}>
                   <button
                     type="button"
                     className="btn btn-secondary"
                     onClick={() => setCheckoutStep('cart')}
-                    style={{ borderRadius: 12, padding: '12px 18px' }}
+                    style={{ borderRadius: 12, padding: '12px 18px', flexShrink: 0 }}
                   >
                     Back to Cart
                   </button>
@@ -744,7 +748,7 @@ export default function ProductsPage() {
 
             {/* Step 3: Success Confirmation */}
             {checkoutStep === 'success' && (
-              <div style={{ padding: '40px 28px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexGrow: 1 }}>
+              <div className="cart-drawer-body" style={{ padding: '40px 28px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: '1 1 0%', minHeight: 0, overflowY: 'auto' }}>
                 <div style={{ width: 70, height: 70, borderRadius: '50%', background: 'var(--green-bg)', color: 'var(--green)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
                   <Check size={36} />
                 </div>

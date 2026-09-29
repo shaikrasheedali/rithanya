@@ -18,6 +18,9 @@ router.post('/', upload.single('file'), mediaController.uploadMedia);
 router.get('/', mediaController.getMediaAssets);
 router.get('/assets', mediaController.getMediaAssets);
 
+// Sync disk files to database
+router.post('/sync', mediaController.syncMediaEndpoint);
+
 // Asset deletion requires explicit media permission or admin role
 router.delete('/:id', requirePermission('media'), mediaController.deleteMedia);
 
