@@ -11,9 +11,25 @@ router.get('/public', inventoryController.getPublicBloodStock);
 router.use(authenticate);
 router.use(requirePermission('inventory'));
 
+// Inventory overview & audit logs
 router.get('/', inventoryController.getBloodInventory);
+router.get('/logs', inventoryController.getInventoryLogs);
 router.post('/load', inventoryController.quickLoadStock);
 router.post('/dispense', inventoryController.quickDispenseStock);
-router.get('/logs', inventoryController.getInventoryLogs);
+
+// Req 6: Blood Unit Reservations
+router.post('/reserve', inventoryController.reserveBloodStock);
+router.post('/unreserve/:id', inventoryController.releaseReservation);
+router.post('/reservations/:id/release', inventoryController.releaseReservation);
+router.post('/fulfill-reservation/:id', inventoryController.fulfillReservation);
+router.post('/reservations/:id/fulfill', inventoryController.fulfillReservation);
+
+// Req 7: Blood Bag Units & Mandatory Serology Screening Pipeline
+router.post('/bags', inventoryController.registerBloodBag);
+router.put('/bags/:id/screen', inventoryController.screenBloodBag);
+
+// Req 7: Empty Collection Bags & Serology Test Kit Supplies
+router.put('/empty-bags/:id', inventoryController.updateEmptyBagStock);
+router.put('/test-kits/:id/restock', inventoryController.restockTestKit);
 
 module.exports = router;

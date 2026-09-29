@@ -392,8 +392,165 @@ model MediaAsset {
   size         Int
   url          String   @db.VarChar(1000)
   dimensions   String?
+  fileData     String?  @db.LongText // Base64 content for resilient persistence across ephemeral restarts
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+}
+
+model BloodReservation {
+  id              String   @id @default(uuid())
+  reservationCode String   @unique
+  bloodGroup      String
+  units           Int      @default(1)
+  patientId       String?
+  patientName     String
+  status          String   @default("ACTIVE") // ACTIVE, FULFILLED, RELEASED
+  reservedBy      String   @default("Chief Physician")
+  notes           String?  @db.Text
+  holdHours       Int      @default(24)
+  expiresAt       DateTime
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([bloodGroup])
+  @@index([status])
+  @@index([patientId])
+}
+
+model BloodBagUnit {
+  id              String   @id @default(uuid())
+  bagId           String   @unique
+  bloodGroup      String
+  componentType   String   @default("Packed Red Cells (PRBC)")
+  bagType         String   @default("Triple 3D")
+  volumeMl        Int      @default(350)
+  donorCode       String   @default("DNR-LOCAL")
+  donorName       String?
+  collectionDate  DateTime @default(now())
+  expiryDate      DateTime
+  stage           String   @default("QUARANTINE") // QUARANTINE, SCREENED_AVAILABLE, RESERVED, DISPENSED, DISCARDED
+  serologyStatus  String   @default("PENDING") // PENDING, CLEARED, REACTIVE_FAILED
+  hivResult       String   @default("PENDING") // NON_REACTIVE, REACTIVE, PENDING
+  hcvResult       String   @default("PENDING")
+  hbsagResult     String   @default("PENDING")
+  vdrlResult      String   @default("PENDING")
+  screenedBy      String?
+  screenedAt      DateTime?
+  location        String   @default("Refrigerated Unit A (2°C - 6°C)")
+  notes           String?  @db.Text
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([bloodGroup])
+  @@index([stage])
+  @@index([serologyStatus])
+  @@index([expiryDate])
+}
+
+model EmptyBagStock {
+  id            String   @id @default(uuid())
+  bagType       String   @unique
+  description   String?  @db.Text
+  volume        String   @default("450ml")
+  anticoagulant String   @default("CPDA-1")
+  currentStock  Int      @default(50)
+  minThreshold  Int      @default(15)
+  unitCost      Float    @default(0)
+  lastRestocked DateTime @default(now())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model SerologyTestKit {
+  id             String            @id @default(uuid())
+  assayName      String            @unique
+  manufacturer   String            @default("Transasia / J. Mitra")
+  lotNumber      String            @default("LOT-2026-A1")
+  totalTestsKit  Int               @default(100)
+  testsRemaining Int               @default(100)
+  minThreshold   Int               @default(20)
+  expiryDate     DateTime
+  status         String            @default("ACTIVE")
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  usageLogs      ReagentUsageLog[]
+}
+
+model ReagentUsageLog {
+  id          String          @id @default(uuid())
+  kitId       String
+  kit         SerologyTestKit @relation(fields: [kitId], references: [id], onDelete: Cascade)
+  assayName   String
+  testsUsed   Int             @default(1)
+  batchNumber String
+  technician  String          @default("Lab Officer")
+  date        DateTime        @default(now())
+  notes       String?         @db.Text
+  createdAt   DateTime        @default(now())
+
+  @@index([kitId])
+  @@index([date])
+}
+
+model StaffPayroll {
+  id                 String    @id @default(uuid())
+  payrollMonth       String
+  staffId            String
+  staffCode          String
+  staffName          String
+  designation        String
+  department         String
+  fixedMonthlySalary Float     @default(0)
+  totalCalendarDays  Int       @default(30)
+  actualWorkingDays  Int       @default(26)
+  lopDays            Float     @default(0)
+  paidDays           Float     @default(30)
+  perDayRate         Float     @default(0)
+  lopDeduction       Float     @default(0)
+  allowances         Float     @default(0)
+  otherDeductions    Float     @default(0)
+  netPayableSalary   Float     @default(0)
+  staffAcknowledged  Boolean   @default(false)
+  staffSignature     String?   @db.LongText
+  staffSignedAt      DateTime?
+  supervisorApproved Boolean   @default(false)
+  supervisorName     String?
+  supervisorSignedAt DateTime?
+  directorApproved   Boolean   @default(false)
+  directorName       String?   @default("Dr. Narayana Murthy, MD")
+  directorSignature  String?   @db.LongText
+  directorSignedAt   DateTime?
+  status             String    @default("DRAFT")
+  paymentMode        String    @default("Bank Transfer")
+  paymentReference   String?
+  disbursedAt        DateTime?
+  notes              String?   @db.Text
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@unique([payrollMonth, staffId])
+  @@index([payrollMonth])
+  @@index([staffId])
+  @@index([status])
+}
+
+model OperationalExpenseLine {
+  id            String   @id @default(uuid())
+  payrollMonth  String
+  expenseName   String
+  category      String   @default("Facility Rent")
+  vendorOrPayee String
+  amount        Float    @default(0)
+  paymentStatus String   @default("PENDING")
+  paymentMethod String   @default("Cheque / NEFT")
+  invoiceRef    String?
+  approvedBy    String   @default("Dr. Narayana Murthy")
+  notes         String?  @db.Text
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([payrollMonth])
+  @@index([category])
 }
 
 model Expense {

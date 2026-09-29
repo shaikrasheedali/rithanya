@@ -5,10 +5,12 @@ import { apiRequest } from '../../utils/api';
 import { useToast } from '../../components/common/Toast';
 import { formatDateTime } from '../../utils/formatters';
 import ImageUploadField from '../../components/common/ImageUploadField';
+import { getSafeImageUrl, onImageError } from '../../utils/imageUtils';
 
 export default function SettingsPage() {
   const { addToast } = useToast();
   const [activeTab, setActiveTab] = useState('profile'); // profile, seo, dpdp, audit
+  const [previewMode, setPreviewMode] = useState('google'); // 'google' | 'social' | 'mobile'
 
   const [profile, setProfile] = useState({
     name: 'Rithanya Hospital & Diagnostics',
@@ -70,6 +72,7 @@ export default function SettingsPage() {
         body: JSON.stringify({ value: profile })
       });
       addToast('Hospital master configuration saved successfully', 'success');
+      window.dispatchEvent(new Event('hospital-settings-updated'));
     } catch (err) {
       addToast(err.message || 'Failed to save profile', 'error');
     } finally {
@@ -93,6 +96,8 @@ export default function SettingsPage() {
       if (metaDesc && seo.metaDescription) metaDesc.content = seo.metaDescription;
       const linkIcon = document.querySelector("link[rel*='icon']");
       if (linkIcon && seo.favicon) linkIcon.href = seo.favicon;
+
+      window.dispatchEvent(new Event('hospital-settings-updated'));
     } catch (err) {
       addToast(err.message || 'Failed to save SEO settings', 'error');
     } finally {
@@ -343,22 +348,165 @@ export default function SettingsPage() {
                 helperText="Displayed when your website link is shared on WhatsApp, Facebook, iMessage, Twitter/X, and LinkedIn."
               />
 
-              {/* Live Search Engine Snippet Preview */}
-              <div style={{ marginTop: 24, padding: 20, background: '#f8fafc', borderRadius: 12, border: '1px solid #e2e8f0' }}>
-                <span style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', color: '#64748b', letterSpacing: 0.5 }}>
-                  Google Search Snippet Preview
-                </span>
-                <div style={{ marginTop: 8 }}>
-                  <div style={{ fontSize: 13, color: '#202124' }}>
-                    {seo.canonicalUrl || 'https://rithanyahospital.com'}
+              {/* Live Search Engine & Social Media Previews */}
+              <div style={{ marginTop: 28, padding: 24, background: '#ffffff', borderRadius: 16, border: '1.5px solid #e2e8f0', boxShadow: '0 4px 16px rgba(0,0,0,0.04)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, borderBottom: '1px solid #f1f5f9', paddingBottom: 12 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <Sparkles size={16} style={{ color: 'var(--red-700)' }} />
+                    <span style={{ fontSize: 13, fontWeight: 700, textTransform: 'uppercase', color: 'var(--ink)', letterSpacing: 0.5 }}>
+                      Live Search & Social Preview (Real-Time Reactive)
+                    </span>
                   </div>
-                  <div style={{ fontSize: 18, color: '#1a0dab', fontWeight: 600, marginTop: 2, cursor: 'pointer', textDecoration: 'underline' }}>
-                    {seo.metaTitle || 'Rithanya Hospital'}
-                  </div>
-                  <div style={{ fontSize: 13, color: '#4d5156', marginTop: 4, lineHeight: 1.5 }}>
-                    {seo.metaDescription || 'No description provided.'}
+
+                  <div style={{ display: 'flex', gap: 6 }}>
+                    <button
+                      type="button"
+                      className={`btn btn-sm ${previewMode === 'google' ? 'btn-primary' : 'btn-secondary'}`}
+                      style={{ padding: '4px 12px', fontSize: 12 }}
+                      onClick={() => setPreviewMode('google')}
+                    >
+                      Google Search SERP
+                    </button>
+                    <button
+                      type="button"
+                      className={`btn btn-sm ${previewMode === 'social' ? 'btn-primary' : 'btn-secondary'}`}
+                      style={{ padding: '4px 12px', fontSize: 12 }}
+                      onClick={() => setPreviewMode('social')}
+                    >
+                      Social & WhatsApp Card
+                    </button>
                   </div>
                 </div>
+
+                {/* VIEW 1: GOOGLE SERP SIMULATION */}
+                {previewMode === 'google' && (
+                  <div style={{ padding: '16px 20px', background: '#f8fafc', borderRadius: 12, border: '1px solid #e2e8f0', maxWidth: 650 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+                      <div
+                        style={{
+                          width: 28,
+                          height: 28,
+                          borderRadius: '50%',
+                          background: '#ffffff',
+                          border: '1px solid #e2e8f0',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          overflow: 'hidden',
+                          flexShrink: 0
+                        }}
+                      >
+                        <img
+                          src={getSafeImageUrl(seo.favicon || '/favicon.ico')}
+                          alt="Google Snippet Favicon"
+                          style={{ width: 18, height: 18, objectFit: 'contain' }}
+                          onError={onImageError}
+                        />
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.2 }}>
+                        <span style={{ fontSize: 14, fontWeight: 600, color: '#202124' }}>
+                          Rithanya Hospital
+                        </span>
+                        <span style={{ fontSize: 12, color: '#4d5156' }}>
+                          {seo.canonicalUrl || 'https://rithanyahospital.com'}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start', marginTop: 6 }}>
+                      <div style={{ flex: 1 }}>
+                        <h4
+                          style={{
+                            fontSize: 19,
+                            color: '#1a0dab',
+                            fontWeight: 500,
+                            lineHeight: 1.3,
+                            margin: '0 0 6px 0',
+                            fontFamily: 'arial, sans-serif',
+                            cursor: 'pointer',
+                            textDecoration: 'underline'
+                          }}
+                        >
+                          {seo.metaTitle || 'Rithanya Hospital & Daycare Transfusion Centre | Khammam'}
+                        </h4>
+                        <p
+                          style={{
+                            fontSize: 13.5,
+                            color: '#4d5156',
+                            lineHeight: 1.55,
+                            margin: 0,
+                            fontFamily: 'arial, sans-serif'
+                          }}
+                        >
+                          {seo.metaDescription || 'Premier healthcare facility in Khammam specializing in Thalassemia daycare transfusions, longitudinal diabetology, and 24/7 blood bank support.'}
+                        </p>
+                      </div>
+
+                      {/* Google Rich SERP Thumbnail */}
+                      {seo.ogImage && (
+                        <div
+                          style={{
+                            width: 88,
+                            height: 88,
+                            borderRadius: 10,
+                            overflow: 'hidden',
+                            border: '1px solid #e2e8f0',
+                            flexShrink: 0,
+                            background: '#fff'
+                          }}
+                        >
+                          <img
+                            src={getSafeImageUrl(seo.ogImage)}
+                            alt="Google SERP Thumbnail"
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                            onError={onImageError}
+                          />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Sitelinks Pills */}
+                    <div style={{ display: 'flex', gap: 8, marginTop: 12, flexWrap: 'wrap' }}>
+                      <span style={{ fontSize: 11.5, background: '#e8f0fe', color: '#1967d2', padding: '3px 8px', borderRadius: 12, fontWeight: 600 }}>
+                        24/7 Blood Bank
+                      </span>
+                      <span style={{ fontSize: 11.5, background: '#e8f0fe', color: '#1967d2', padding: '3px 8px', borderRadius: 12, fontWeight: 600 }}>
+                        Thalassemia Daycare
+                      </span>
+                      <span style={{ fontSize: 11.5, background: '#e8f0fe', color: '#1967d2', padding: '3px 8px', borderRadius: 12, fontWeight: 600 }}>
+                        Diabetology Care
+                      </span>
+                      <span style={{ fontSize: 11.5, background: '#e8f0fe', color: '#1967d2', padding: '3px 8px', borderRadius: 12, fontWeight: 600 }}>
+                        Nehru Road, Khammam
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {/* VIEW 2: SOCIAL MEDIA & WHATSAPP CARD SIMULATION */}
+                {previewMode === 'social' && (
+                  <div style={{ maxWidth: 520, borderRadius: 12, overflow: 'hidden', border: '1px solid #e2e8f0', background: '#f8fafc', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
+                    <div style={{ width: '100%', aspectRatio: '1.91 / 1', background: '#e2e8f0', position: 'relative', overflow: 'hidden' }}>
+                      <img
+                        src={getSafeImageUrl(seo.ogImage || '/image.png')}
+                        alt="Open Graph Thumbnail Preview"
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        onError={onImageError}
+                      />
+                    </div>
+                    <div style={{ padding: 14, background: '#ffffff' }}>
+                      <span style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', color: '#64748b', letterSpacing: 0.5, display: 'block', marginBottom: 4 }}>
+                        {seo.canonicalUrl ? new URL(seo.canonicalUrl).hostname.toUpperCase() : 'RITHANYAHOSPITAL.COM'}
+                      </span>
+                      <h4 style={{ fontSize: 15, fontWeight: 700, color: '#1e293b', margin: '0 0 6px 0', lineHeight: 1.3 }}>
+                        {seo.metaTitle || 'Rithanya Hospital (రితన్య హాస్పిటల్) | Khammam'}
+                      </h4>
+                      <p style={{ fontSize: 12.5, color: '#64748b', margin: 0, lineHeight: 1.5, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                        {seo.metaDescription || '24/7 Emergency Services, Blood Bank, and Aarogyasri Daycare Transfusions.'}
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <button type="submit" className="btn btn-primary" style={{ marginTop: 24 }} disabled={savingSeo}>

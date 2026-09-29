@@ -1,6 +1,18 @@
 const prisma = require('../config/db');
 const { recordAuditLog } = require('../middlewares/auditMiddleware');
 
+// Helper to determine total days in a month string "YYYY-MM"
+function getMonthDays(monthStr) {
+  if (!monthStr || !monthStr.includes('-')) return 30;
+  const [yearStr, monthNumStr] = monthStr.split('-');
+  const y = parseInt(yearStr, 10);
+  const m = parseInt(monthNumStr, 10);
+  return new Date(y, m, 0).getDate();
+}
+
+/**
+ * Standard Staff Directory
+ */
 async function getStaff(req, res, next) {
   try {
     const { department, status } = req.query;
@@ -113,9 +125,333 @@ async function deleteStaff(req, res, next) {
   }
 }
 
+/**
+ * REQ 8: MONTHLY PRO-RATA PAYROLL ENGINE
+ * GET /api/staff/payroll?month=YYYY-MM
+ */
+async function getMonthlyPayroll(req, res, next) {
+  try {
+    const month = req.query.month || new Date().toISOString().slice(0, 7);
+    const calendarDays = getMonthDays(month);
+
+    // 1. Fetch all active staff
+    const allStaff = await prisma.staff.findMany({
+      where: { status: 'active' },
+      orderBy: { staffCode: 'asc' }
+    });
+
+    // 2. Fetch existing payroll records for this month
+    const existingRecords = await prisma.staffPayroll.findMany({
+      where: { payrollMonth: month }
+    });
+    const recordMap = new Map(existingRecords.map(r => [r.staffId, r]));
+
+    // 3. For any staff without a payroll record for this month, initialize pro-rata record
+    for (const staff of allStaff) {
+      if (!recordMap.has(staff.id)) {
+        const fixedSalary = staff.salary || 0;
+        const lopDays = 0;
+        const paidDays = calendarDays;
+        const actualWorkingDays = Math.max(1, calendarDays - 4); // ~26 days
+        const perDayRate = fixedSalary > 0 ? parseFloat((fixedSalary / calendarDays).toFixed(2)) : 0;
+        const lopDeduction = 0;
+        const allowances = 0;
+        const otherDeductions = 0;
+        const netPayableSalary = fixedSalary;
+
+        const newRecord = await prisma.staffPayroll.create({
+          data: {
+            payrollMonth: month,
+            staffId: staff.id,
+            staffCode: staff.staffCode,
+            staffName: staff.name,
+            designation: staff.designation,
+            department: staff.department,
+            fixedMonthlySalary: fixedSalary,
+            totalCalendarDays: calendarDays,
+            actualWorkingDays,
+            lopDays,
+            paidDays,
+            perDayRate,
+            lopDeduction,
+            allowances,
+            otherDeductions,
+            netPayableSalary,
+            status: 'DRAFT',
+            paymentMode: 'Bank Transfer'
+          }
+        });
+        recordMap.set(staff.id, newRecord);
+      }
+    }
+
+    // 4. Re-fetch all payroll records for the month
+    const payrollRecords = await prisma.staffPayroll.findMany({
+      where: { payrollMonth: month },
+      orderBy: { staffCode: 'asc' }
+    });
+
+    // 5. Fetch Operational / Overhead Expense line items for the month (Facility Rent, etc.)
+    const expenseLines = await prisma.operationalExpenseLine.findMany({
+      where: { payrollMonth: month },
+      orderBy: { createdAt: 'asc' }
+    });
+
+    // 6. Calculate Aggregated Totals
+    const totalStaffSalary = payrollRecords.reduce((sum, r) => sum + r.netPayableSalary, 0);
+    const totalFacilityOverhead = expenseLines.reduce((sum, e) => sum + e.amount, 0);
+    const masterDisbursement = totalStaffSalary + totalFacilityOverhead;
+
+    const approvedCount = payrollRecords.filter(r => r.directorApproved || r.status === 'DISBURSED').length;
+    const acknowledgedCount = payrollRecords.filter(r => r.staffAcknowledged).length;
+
+    return res.json({
+      success: true,
+      data: {
+        month,
+        calendarDays,
+        payrollRecords,
+        expenseLines,
+        totals: {
+          totalStaffCount: payrollRecords.length,
+          totalStaffSalary: Math.round(totalStaffSalary),
+          totalFacilityOverhead: Math.round(totalFacilityOverhead),
+          masterDisbursement: Math.round(masterDisbursement),
+          approvedCount,
+          acknowledgedCount,
+          isFullyDisbursed: approvedCount === payrollRecords.length && payrollRecords.length > 0
+        }
+      }
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
+ * REQ 8: UPDATE PAYROLL LINE ITEM (LOP, WORKING DAYS, ALLOWANCES, DEDUCTIONS)
+ * PUT /api/staff/payroll/:id
+ */
+async function updatePayrollRecord(req, res, next) {
+  try {
+    const { id } = req.params;
+    const {
+      lopDays,
+      actualWorkingDays,
+      allowances,
+      otherDeductions,
+      fixedMonthlySalary,
+      paymentMode,
+      paymentReference,
+      notes
+    } = req.body;
+
+    const existing = await prisma.staffPayroll.findUnique({ where: { id } });
+    if (!existing) {
+      return res.status(404).json({ success: false, message: 'Payroll record not found' });
+    }
+
+    const totalDays = existing.totalCalendarDays || 30;
+    const salary = fixedMonthlySalary !== undefined ? parseFloat(fixedMonthlySalary) : existing.fixedMonthlySalary;
+    const lop = lopDays !== undefined ? parseFloat(lopDays) : existing.lopDays;
+    const workingDays = actualWorkingDays !== undefined ? parseInt(actualWorkingDays, 10) : existing.actualWorkingDays;
+    const allow = allowances !== undefined ? parseFloat(allowances) : existing.allowances;
+    const deduct = otherDeductions !== undefined ? parseFloat(otherDeductions) : existing.otherDeductions;
+
+    // Pro-rata recalculations
+    const paidDays = Math.max(0, totalDays - lop);
+    const perDayRate = totalDays > 0 ? parseFloat((salary / totalDays).toFixed(2)) : 0;
+    const lopDeduction = parseFloat((perDayRate * lop).toFixed(2));
+    const netPayableSalary = Math.max(0, Math.round((salary - lopDeduction) + allow - deduct));
+
+    const updated = await prisma.staffPayroll.update({
+      where: { id },
+      data: {
+        fixedMonthlySalary: salary,
+        lopDays: lop,
+        paidDays,
+        actualWorkingDays: workingDays,
+        perDayRate,
+        lopDeduction,
+        allowances: allow,
+        otherDeductions: deduct,
+        netPayableSalary,
+        ...(paymentMode && { paymentMode }),
+        ...(paymentReference && { paymentReference }),
+        ...(notes !== undefined && { notes })
+      }
+    });
+
+    return res.json({ success: true, data: updated, message: 'Payroll details updated successfully' });
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
+ * REQ 8: MULTI-SIGNATORY APPROVAL & DIGITAL SIGNATURES
+ * POST /api/staff/payroll/:id/sign
+ * Roles: STAFF, SUPERVISOR, DIRECTOR
+ */
+async function signPayrollRecord(req, res, next) {
+  try {
+    const { id } = req.params;
+    const { roleType, signatureData, approverName } = req.body;
+
+    const existing = await prisma.staffPayroll.findUnique({ where: { id } });
+    if (!existing) {
+      return res.status(404).json({ success: false, message: 'Payroll record not found' });
+    }
+
+    const updateData = {};
+
+    if (roleType === 'STAFF') {
+      updateData.staffAcknowledged = true;
+      updateData.staffSignature = signatureData || 'DIGITAL_ACK_BY_EMPLOYEE';
+      updateData.staffSignedAt = new Date();
+      if (existing.status === 'DRAFT') {
+        updateData.status = 'STAFF_ACKNOWLEDGED';
+      }
+    } else if (roleType === 'SUPERVISOR') {
+      updateData.supervisorApproved = true;
+      updateData.supervisorName = approverName || 'Dr. C. Shanthi, Pathologist';
+      updateData.supervisorSignedAt = new Date();
+      if (existing.status === 'DRAFT' || existing.status === 'STAFF_ACKNOWLEDGED') {
+        updateData.status = 'SUPERVISOR_VERIFIED';
+      }
+    } else if (roleType === 'DIRECTOR') {
+      updateData.directorApproved = true;
+      updateData.directorName = approverName || 'Dr. Narayana Murthy, MD';
+      updateData.directorSignature = signatureData || 'DIGITALLY_SEALED_DR_NARAYANA_MURTHY';
+      updateData.directorSignedAt = new Date();
+      updateData.status = 'DISBURSED';
+      updateData.disbursedAt = new Date();
+    } else {
+      return res.status(400).json({ success: false, message: 'Invalid roleType. Must be STAFF, SUPERVISOR, or DIRECTOR' });
+    }
+
+    const updated = await prisma.staffPayroll.update({
+      where: { id },
+      data: updateData
+    });
+
+    recordAuditLog({
+      actorId: req.user ? req.user.id : null,
+      actorName: req.user ? req.user.name : (approverName || 'Director'),
+      actorRole: req.user ? req.user.role : 'ADMIN',
+      action: `SIGN_PAYROLL_${roleType}`,
+      module: 'FINANCE',
+      recordId: updated.id,
+      ipAddress: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
+      details: { staffName: updated.staffName, month: updated.payrollMonth, roleType }
+    });
+
+    return res.json({ success: true, data: updated, message: `${roleType} sign-off recorded successfully!` });
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
+ * REQ 8: BATCH APPROVE ENTIRE MONTH'S PAYROLL AS DIRECTOR
+ * POST /api/staff/payroll/batch-approve
+ */
+async function batchApprovePayroll(req, res, next) {
+  try {
+    const { month, approverName, signatureData } = req.body;
+    if (!month) {
+      return res.status(400).json({ success: false, message: 'Month is required' });
+    }
+
+    const directorName = approverName || 'Dr. Narayana Murthy, MD';
+    const now = new Date();
+
+    const result = await prisma.staffPayroll.updateMany({
+      where: { payrollMonth: month },
+      data: {
+        directorApproved: true,
+        directorName,
+        directorSignature: signatureData || 'DIGITALLY_SEALED_DR_NARAYANA_MURTHY',
+        directorSignedAt: now,
+        supervisorApproved: true,
+        supervisorName: 'Clinical Director & HR',
+        supervisorSignedAt: now,
+        status: 'DISBURSED',
+        disbursedAt: now
+      }
+    });
+
+    recordAuditLog({
+      actorId: req.user ? req.user.id : null,
+      actorName: directorName,
+      actorRole: 'ADMIN',
+      action: 'BATCH_APPROVE_PAYROLL',
+      module: 'FINANCE',
+      ipAddress: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
+      details: { month, approvedCount: result.count }
+    });
+
+    return res.json({ success: true, message: `Approved and disbursed all ${result.count} payroll records for ${month}!` });
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
+ * REQ 8: OPERATIONAL / OVERHEAD EXPENSES LINE ITEMS (FACILITY RENT, UTILITIES, ETC.)
+ * POST /api/staff/payroll/expenses
+ */
+async function createExpenseLine(req, res, next) {
+  try {
+    const { payrollMonth, expenseName, category, vendorOrPayee, amount, paymentMethod, invoiceRef, notes } = req.body;
+
+    if (!payrollMonth || !expenseName || !vendorOrPayee || !amount) {
+      return res.status(400).json({ success: false, message: 'Month, expense name, payee, and amount are required' });
+    }
+
+    const expense = await prisma.operationalExpenseLine.create({
+      data: {
+        payrollMonth,
+        expenseName: expenseName.trim(),
+        category: category || 'Facility Rent',
+        vendorOrPayee: vendorOrPayee.trim(),
+        amount: parseFloat(amount),
+        paymentMethod: paymentMethod || 'Bank NEFT',
+        invoiceRef: invoiceRef ? invoiceRef.trim() : null,
+        paymentStatus: 'APPROVED',
+        approvedBy: 'Dr. Narayana Murthy, MD',
+        notes: notes ? notes.trim() : null
+      }
+    });
+
+    return res.status(201).json({ success: true, data: expense, message: 'Expense line item added' });
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
+ * DELETE /api/staff/payroll/expenses/:id
+ */
+async function deleteExpenseLine(req, res, next) {
+  try {
+    const { id } = req.params;
+    await prisma.operationalExpenseLine.delete({ where: { id } });
+    return res.json({ success: true, message: 'Expense line item deleted' });
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   getStaff,
   createStaff,
   updateStaff,
-  deleteStaff
+  deleteStaff,
+  getMonthlyPayroll,
+  updatePayrollRecord,
+  signPayrollRecord,
+  batchApprovePayroll,
+  createExpenseLine,
+  deleteExpenseLine
 };

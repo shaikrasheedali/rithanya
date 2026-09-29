@@ -39,12 +39,51 @@ if (process.env.NODE_ENV !== 'test') {
   app.use(morgan('dev'));
 }
 
-// Serve uploaded assets
+// Serve uploaded assets with automatic MySQL database rehydration
 const uploadsDir = path.join(__dirname, '../client/public/assets/uploads');
+const distUploadsDir = path.join(__dirname, '../client/dist/assets/uploads');
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
+
+// 1. Static disk serving
 app.use('/assets/uploads', express.static(uploadsDir));
+app.use('/uploads', express.static(uploadsDir));
+if (fs.existsSync(distUploadsDir)) {
+  app.use('/assets/uploads', express.static(distUploadsDir));
+  app.use('/uploads', express.static(distUploadsDir));
+}
+
+// 2. Resilient Database Rehydration Route: Serves assets stored in MySQL if disk was reset
+const prismaClient = require('./config/db');
+app.get(['/assets/uploads/:filename', '/uploads/:filename'], async (req, res, next) => {
+  const filename = path.basename(req.params.filename);
+  try {
+    const asset = await prismaClient.mediaAsset.findFirst({
+      where: {
+        OR: [
+          { filename },
+          { url: { endsWith: filename } }
+        ]
+      }
+    });
+
+    if (asset && asset.fileData) {
+      const buffer = Buffer.from(asset.fileData, 'base64');
+      // Rehydrate local disk cache
+      try {
+        fs.writeFileSync(path.join(uploadsDir, filename), buffer);
+      } catch (_) {}
+
+      res.setHeader('Content-Type', asset.mimeType || 'image/jpeg');
+      res.setHeader('Cache-Control', 'public, max-age=86400, stale-while-revalidate=604800');
+      return res.send(buffer);
+    }
+  } catch (err) {
+    console.warn(`[Asset Rehydrate] Notice for ${filename}:`, err.message);
+  }
+  next();
+});
 
 // Intelligent Caching: Allow fast HTTP caching for public catalog GET requests; keep no-store for auth & admin
 const PUBLIC_CATALOG_ROUTES = ['/services', '/treatments', '/specialists', '/products', '/gallery', '/blogs', '/settings'];

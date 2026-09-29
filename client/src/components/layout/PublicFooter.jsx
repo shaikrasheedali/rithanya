@@ -3,9 +3,11 @@ import { Link } from 'react-router-dom';
 import { ShieldCheck, HeartHandshake, Phone, MapPin, Mail, Lock } from 'lucide-react';
 import RithanyaLogo from '../common/RithanyaLogo';
 import { useDynamicTranslation } from '../../utils/dynamicTranslator';
+import { useHospitalSettings } from '../../context/HospitalSettingsContext';
 
 export default function PublicFooter() {
   const { t, loc } = useDynamicTranslation();
+  const { profile, cleanPhone } = useHospitalSettings();
 
   return (
     <footer className="public-footer">
@@ -89,7 +91,7 @@ export default function PublicFooter() {
               </li>
               <li style={{ display: 'flex', gap: 10, fontSize: 13, color: '#aaa' }}>
                 <Phone size={18} style={{ color: '#df3850', flexShrink: 0 }} />
-                <span>8328581019 / 9948713504</span>
+                <span>{profile.phone || cleanPhone}{profile.secondaryPhone ? ` / ${profile.secondaryPhone}` : ''}</span>
               </li>
               <li style={{ display: 'flex', gap: 10, fontSize: 13, color: '#aaa' }}>
                 <Mail size={18} style={{ color: '#df3850', flexShrink: 0 }} />

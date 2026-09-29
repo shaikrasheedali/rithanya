@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Search, CheckCircle2 } from 'lucide-react';
 import { apiRequest } from '../../utils/api';
 import { useDynamicTranslation } from '../../utils/dynamicTranslator';
+import { getSafeImageUrl, onImageError } from '../../utils/imageUtils';
 
 export default function ServicesPage() {
   const { t, locItems } = useDynamicTranslation();
@@ -98,7 +99,12 @@ export default function ServicesPage() {
             {filtered.map((service) => (
               <div key={service.id} className="service-card">
                 <div className="card-image-wrap">
-                  <img src={service.coverImage} alt={service.title} />
+                  <img
+                    src={getSafeImageUrl(service.coverImage)}
+                    alt={service.title}
+                    onError={onImageError}
+                    loading="lazy"
+                  />
                 </div>
                 <div className="service-card-body">
                   <span className="service-category">{service.category}</span>

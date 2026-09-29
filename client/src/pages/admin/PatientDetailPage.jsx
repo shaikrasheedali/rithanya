@@ -12,8 +12,30 @@ import {
   Droplet,
   BedDouble,
   AlertTriangle,
-  Calendar
+  Calendar,
+  Edit3,
+  Save,
+  X,
+  PlusCircle,
+  Check
 } from 'lucide-react';
+
+const BLOOD_GROUPS = ['O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'];
+
+const CONDITION_CATEGORIES = [
+  'Beta Thalassemia Major',
+  'Sickle Cell Anemia',
+  'Type 2 Diabetes Mellitus',
+  'Diabetic Nephropathy',
+  'Diabetic Foot & Neuropathy',
+  'Refractory Hypertension',
+  'Immune Thrombocytopenia (ITP)',
+  'Aplastic Anemia',
+  'Hemophilia A / B',
+  'Chronic Kidney Disease (CKD)',
+  'General Outpatient Care',
+  'Other / Custom Condition'
+];
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -83,6 +105,95 @@ export default function PatientDetailPage() {
   useEffect(() => {
     fetchPatient();
   }, [id]);
+
+  // Patient Brief Editing State & Handlers
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [editForm, setEditForm] = useState({
+    name: '',
+    bloodGroup: 'O+',
+    status: 'outpatient',
+    age: '',
+    gender: 'Male',
+    phone: '',
+    condition: 'Beta Thalassemia Major',
+    customCondition: ''
+  });
+  const [allergiesList, setAllergiesList] = useState([]);
+  const [newAllergyInput, setNewAllergyInput] = useState('');
+  const [savingProfile, setSavingProfile] = useState(false);
+
+  useEffect(() => {
+    if (patient) {
+      const isCustom = !CONDITION_CATEGORIES.slice(0, -1).includes(patient.condition);
+      setEditForm({
+        name: patient.name || '',
+        bloodGroup: patient.bloodGroup || 'O+',
+        status: patient.status || 'outpatient',
+        age: patient.age || '',
+        gender: patient.gender || 'Male',
+        phone: patient.phone || '',
+        condition: isCustom ? 'Other / Custom Condition' : (patient.condition || 'Beta Thalassemia Major'),
+        customCondition: isCustom ? (patient.condition || '') : ''
+      });
+      const parsedAllergies = patient.allergies && patient.allergies !== 'None reported'
+        ? patient.allergies.split(/[,•\n]+/).map((s) => s.trim()).filter(Boolean)
+        : [];
+      setAllergiesList(parsedAllergies);
+    }
+  }, [patient]);
+
+  const handleAddAllergy = (e) => {
+    if (e) e.preventDefault();
+    const trimmed = newAllergyInput.trim();
+    if (!trimmed) return;
+    if (!allergiesList.includes(trimmed)) {
+      setAllergiesList([...allergiesList, trimmed]);
+    }
+    setNewAllergyInput('');
+  };
+
+  const handleRemoveAllergy = (idx) => {
+    setAllergiesList(allergiesList.filter((_, i) => i !== idx));
+  };
+
+  const handleSaveProfileEdit = async (e) => {
+    e.preventDefault();
+    if (!editForm.name.trim() || !editForm.phone.trim() || !editForm.age) {
+      addToast('Name, Age, and Phone are required.', 'error');
+      return;
+    }
+
+    setSavingProfile(true);
+    try {
+      const finalCondition = editForm.condition === 'Other / Custom Condition'
+        ? (editForm.customCondition.trim() || 'General Condition')
+        : editForm.condition;
+
+      const payload = {
+        name: editForm.name.trim(),
+        bloodGroup: editForm.bloodGroup,
+        status: editForm.status,
+        age: parseInt(editForm.age, 10),
+        gender: editForm.gender,
+        phone: editForm.phone.trim(),
+        condition: finalCondition,
+        allergies: allergiesList.length > 0 ? allergiesList.join(', ') : 'None reported'
+      };
+
+      const res = await apiRequest(`/patients/${patient.id}`, {
+        method: 'PUT',
+        body: JSON.stringify(payload)
+      });
+
+      setPatient(res.data);
+      setIsEditingProfile(false);
+      addToast('Patient clinical brief and EMR details updated successfully!', 'success');
+    } catch (err) {
+      addToast(err.message || 'Failed to update patient profile', 'error');
+    } finally {
+      setSavingProfile(false);
+    }
+  };
 
   // Execute DPDP Right to Erasure
   const handlePurgeData = async () => {
@@ -337,29 +448,286 @@ export default function PatientDetailPage() {
           <span>Back to Patients EMR</span>
         </Link>
 
-        {/* PATIENT PROFILE HEADER CARD */}
-        <div className="patient-profile-header">
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-              <h2 style={{ fontSize: 26 }}>{patient.name}</h2>
-              <span className={`badge ${getBloodGroupBadgeClass(patient.bloodGroup)}`}>
-                {patient.bloodGroup}
-              </span>
-              <span className={`status-pill ${patient.status}`}>{patient.status}</span>
-            </div>
+        {/* PATIENT PROFILE HEADER CARD (VIEW & EDIT MODES) */}
+        <div className="patient-profile-header" style={{ position: 'relative' }}>
+          {!isEditingProfile ? (
+            <div style={{ flex: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8, flexWrap: 'wrap', gap: 10 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+                  <h2 style={{ fontSize: 26, margin: 0 }}>{patient.name}</h2>
+                  <span className={`badge ${getBloodGroupBadgeClass(patient.bloodGroup)}`} style={{ fontSize: 13, padding: '4px 10px' }}>
+                    {patient.bloodGroup}
+                  </span>
+                  <span className={`status-pill ${patient.status}`}>
+                    {patient.status === 'admitted' ? 'Admitted (Daycare)' : patient.status}
+                  </span>
+                </div>
 
-            <p style={{ fontSize: 14, color: 'var(--ink-soft)' }}>
-              <strong>Patient Code:</strong> {patient.patientCode} &nbsp;|&nbsp;
-              <strong>Age:</strong> {patient.age} yrs &nbsp;|&nbsp;
-              <strong>Gender:</strong> {patient.gender} &nbsp;|&nbsp;
-              <strong>Phone:</strong> {patient.phone}
-            </p>
+                <button
+                  type="button"
+                  className="btn btn-secondary btn-sm"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '6px 14px' }}
+                  onClick={() => setIsEditingProfile(true)}
+                >
+                  <Edit3 size={14} style={{ color: 'var(--red-700)' }} />
+                  <span style={{ fontWeight: 700 }}>Edit Patient Details</span>
+                </button>
+              </div>
 
-            <div style={{ marginTop: 10, fontSize: 13.5 }}>
-              <span style={{ color: 'var(--red-700)', fontWeight: 700 }}>Condition:</span> {patient.condition} &nbsp;•&nbsp;
-              <span style={{ color: 'var(--ink-soft)' }}>Allergies: {patient.allergies}</span>
+              <p style={{ fontSize: 14, color: 'var(--ink-soft)', margin: '6px 0 10px' }}>
+                <strong>Patient Code:</strong> {patient.patientCode} &nbsp;|&nbsp;
+                <strong>Age:</strong> {patient.age} yrs &nbsp;|&nbsp;
+                <strong>Gender:</strong> {patient.gender} &nbsp;|&nbsp;
+                <strong>Phone:</strong> {patient.phone}
+              </p>
+
+              <div style={{ marginTop: 10, fontSize: 13.5, display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center' }}>
+                <div>
+                  <span style={{ color: 'var(--red-700)', fontWeight: 700 }}>Condition:</span>{' '}
+                  <span style={{ fontWeight: 600, background: 'var(--red-50)', padding: '2px 8px', borderRadius: 8, color: 'var(--red-900)' }}>
+                    {patient.condition}
+                  </span>
+                </div>
+                <div style={{ color: 'var(--line-heavy, #cbd5e1)' }}>•</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                  <span style={{ color: 'var(--ink-soft)', fontWeight: 600 }}>Allergies:</span>
+                  {allergiesList.length === 0 ? (
+                    <span style={{ color: 'var(--ink-soft)', fontStyle: 'italic' }}>None reported</span>
+                  ) : (
+                    allergiesList.map((alg, i) => (
+                      <span key={i} className="badge badge-amber" style={{ fontSize: 11.5, padding: '2px 8px' }}>
+                        {alg}
+                      </span>
+                    ))
+                  )}
+                </div>
+              </div>
             </div>
-          </div>
+          ) : (
+            /* EDIT FORM MODE */
+            <form onSubmit={handleSaveProfileEdit} style={{ flex: 1, paddingRight: 20 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, borderBottom: '1px solid var(--line)', paddingBottom: 10 }}>
+                <h3 style={{ fontSize: 18, margin: 0, color: 'var(--red-900)', display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <Edit3 size={18} />
+                  <span>Edit Patient EMR Profile ({patient.patientCode})</span>
+                </h3>
+                <button
+                  type="button"
+                  className="btn btn-secondary btn-sm"
+                  onClick={() => setIsEditingProfile(false)}
+                  style={{ padding: '4px 8px' }}
+                >
+                  <X size={15} />
+                </button>
+              </div>
+
+              <div className="grid-3" style={{ gap: 14, marginBottom: 14 }}>
+                <div className="form-group" style={{ margin: 0 }}>
+                  <label className="form-label" style={{ fontSize: 12 }}>Patient Full Name *</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={editForm.name}
+                    onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                    required
+                  />
+                </div>
+
+                <div className="form-group" style={{ margin: 0 }}>
+                  <label className="form-label" style={{ fontSize: 12 }}>Blood Group *</label>
+                  <select
+                    className="form-control"
+                    value={editForm.bloodGroup}
+                    onChange={(e) => setEditForm({ ...editForm, bloodGroup: e.target.value })}
+                    required
+                  >
+                    {BLOOD_GROUPS.map((bg) => (
+                      <option key={bg} value={bg}>{bg}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="form-group" style={{ margin: 0 }}>
+                  <label className="form-label" style={{ fontSize: 12 }}>Patiency Status *</label>
+                  <select
+                    className="form-control"
+                    value={editForm.status}
+                    onChange={(e) => setEditForm({ ...editForm, status: e.target.value })}
+                    required
+                  >
+                    <option value="outpatient">Outpatient (OPD)</option>
+                    <option value="admitted">Admitted (Daycare Transfusion Ward)</option>
+                    <option value="discharged">Discharged</option>
+                  </select>
+                  <small style={{ fontSize: 10.5, color: 'var(--ink-soft)' }}>
+                    Outpatients can be directly admitted to Daycare.
+                  </small>
+                </div>
+              </div>
+
+              <div className="grid-3" style={{ gap: 14, marginBottom: 14 }}>
+                <div className="form-group" style={{ margin: 0 }}>
+                  <label className="form-label" style={{ fontSize: 12 }}>Age (Years) *</label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="120"
+                    className="form-control"
+                    value={editForm.age}
+                    onChange={(e) => setEditForm({ ...editForm, age: e.target.value })}
+                    required
+                  />
+                </div>
+
+                <div className="form-group" style={{ margin: 0 }}>
+                  <label className="form-label" style={{ fontSize: 12 }}>Gender *</label>
+                  <select
+                    className="form-control"
+                    value={editForm.gender}
+                    onChange={(e) => setEditForm({ ...editForm, gender: e.target.value })}
+                    required
+                  >
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+
+                <div className="form-group" style={{ margin: 0 }}>
+                  <label className="form-label" style={{ fontSize: 12 }}>Phone Contact *</label>
+                  <input
+                    type="tel"
+                    className="form-control"
+                    value={editForm.phone}
+                    onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Condition Category Dropdown */}
+              <div className="form-group" style={{ marginBottom: 14 }}>
+                <label className="form-label" style={{ fontSize: 12 }}>Clinical Condition Category *</label>
+                <select
+                  className="form-control"
+                  value={editForm.condition}
+                  onChange={(e) => setEditForm({ ...editForm, condition: e.target.value })}
+                  required
+                >
+                  {CONDITION_CATEGORIES.map((cat) => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))}
+                </select>
+
+                {editForm.condition === 'Other / Custom Condition' && (
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter specific diagnosis / clinical condition..."
+                    style={{ marginTop: 8 }}
+                    value={editForm.customCondition}
+                    onChange={(e) => setEditForm({ ...editForm, customCondition: e.target.value })}
+                    required
+                  />
+                )}
+              </div>
+
+              {/* Interactive Allergies List Manager */}
+              <div className="form-group" style={{ marginBottom: 18 }}>
+                <label className="form-label" style={{ fontSize: 12 }}>
+                  Drug & Clinical Allergies (Add/Remove Points)
+                </label>
+                
+                {/* Allergy Pills */}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 8, minHeight: 32, padding: 8, background: '#f8fafc', borderRadius: 8, border: '1px solid var(--line)' }}>
+                  {allergiesList.length === 0 ? (
+                    <span style={{ fontSize: 12, color: 'var(--ink-soft)', fontStyle: 'italic' }}>
+                      No allergy points added. Use input below to attach points.
+                    </span>
+                  ) : (
+                    allergiesList.map((alg, idx) => (
+                      <span
+                        key={idx}
+                        className="badge badge-amber"
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: 6,
+                          fontSize: 12,
+                          padding: '4px 10px'
+                        }}
+                      >
+                        <span>{alg}</span>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveAllergy(idx)}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            cursor: 'pointer',
+                            padding: 0,
+                            display: 'flex',
+                            color: 'inherit'
+                          }}
+                          title="Remove allergy point"
+                        >
+                          <X size={12} />
+                        </button>
+                      </span>
+                    ))
+                  )}
+                </div>
+
+                {/* Add Allergy Input */}
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="e.g. Penicillin, Sulfa Drugs, NSAIDs, Latex..."
+                    value={newAllergyInput}
+                    onChange={(e) => setNewAllergyInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleAddAllergy();
+                      }
+                    }}
+                    style={{ fontSize: 13 }}
+                  />
+                  <button
+                    type="button"
+                    className="btn btn-secondary btn-sm"
+                    onClick={handleAddAllergy}
+                    style={{ whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: 4 }}
+                  >
+                    <PlusCircle size={14} />
+                    <span>Add Allergy Point</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Form Action Buttons */}
+              <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-start' }}>
+                <button
+                  type="submit"
+                  className="btn btn-primary btn-sm"
+                  disabled={savingProfile}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '7px 18px' }}
+                >
+                  <Save size={14} />
+                  <span>{savingProfile ? 'Saving Changes...' : 'Save Patient Profile'}</span>
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-secondary btn-sm"
+                  onClick={() => setIsEditingProfile(false)}
+                  disabled={savingProfile}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          )}
 
           {/* DPDP DIGITAL CONSENT PHOTO SIGNATURE */}
           <div

@@ -7,6 +7,15 @@ const { requirePermission } = require('../middlewares/rbacMiddleware');
 router.use(authenticate);
 router.use(requirePermission('staff'));
 
+// Req 8: Payroll Engine & Overhead Expense Line Items (placed before /:id routes)
+router.get('/payroll', staffController.getMonthlyPayroll);
+router.put('/payroll/:id', staffController.updatePayrollRecord);
+router.post('/payroll/:id/sign', staffController.signPayrollRecord);
+router.post('/payroll/batch-approve', staffController.batchApprovePayroll);
+router.post('/payroll/expenses', staffController.createExpenseLine);
+router.delete('/payroll/expenses/:id', staffController.deleteExpenseLine);
+
+// Staff Directory CRUD
 router.get('/', staffController.getStaff);
 router.post('/', staffController.createStaff);
 router.put('/:id', staffController.updateStaff);

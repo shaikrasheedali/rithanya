@@ -130,9 +130,14 @@ async function syncProductionMasterData(prisma) {
       });
 
       if (existing) {
+        const updateData = { ...item };
+        // PRESERVE existing user-uploaded coverImage so it is never wiped!
+        if (existing.coverImage && existing.coverImage.trim()) {
+          updateData.coverImage = existing.coverImage;
+        }
         await prisma.treatment.update({
           where: { id: existing.id },
-          data: item
+          data: updateData
         });
       } else {
         await prisma.treatment.create({
@@ -171,7 +176,7 @@ async function syncProductionMasterData(prisma) {
             slug: existing.slug || doc.slug,
             registrationNumber: existing.registrationNumber || doc.registrationNumber,
             qualifications: existing.qualifications || doc.qualifications,
-            image: existing.image || doc.image,
+            image: (existing.image && existing.image.trim()) ? existing.image : doc.image,
             status: 'active'
           }
         });

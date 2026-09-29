@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { Phone } from 'lucide-react';
+import { useHospitalSettings } from '../../context/HospitalSettingsContext';
 
 export default function FloatingContactButtons() {
   const [hoveredBtn, setHoveredBtn] = useState(null);
-
-  const phoneHref = 'tel:+918328581019';
-  const whatsappHref =
-    'https://wa.me/918328581019?text=Hello%20Rithanya%20Hospital,%20I%20would%20like%20to%20inquire%20about%20your%20services';
+  const { cleanPhone, telHref, whatsappHref } = useHospitalSettings();
 
   return (
     <div
@@ -26,7 +24,7 @@ export default function FloatingContactButtons() {
           target="_blank"
           rel="noopener noreferrer"
           className="floating-btn floating-btn-whatsapp"
-          aria-label="Chat with Rithanya Hospital on WhatsApp (8328581019)"
+          aria-label={`Chat with Rithanya Hospital on WhatsApp (${cleanPhone})`}
           onMouseEnter={() => setHoveredBtn('whatsapp')}
           onMouseLeave={() => setHoveredBtn(null)}
           onFocus={() => setHoveredBtn('whatsapp')}
@@ -52,12 +50,12 @@ export default function FloatingContactButtons() {
           className={`floating-tooltip ${hoveredBtn === 'phone' ? 'tooltip-visible' : ''}`}
           aria-hidden="true"
         >
-          Call 24/7: 8328581019
+          Call 24/7: {cleanPhone}
         </span>
         <a
-          href={phoneHref}
+          href={telHref}
           className="floating-btn floating-btn-phone"
-          aria-label="Call Rithanya Hospital 24/7 Helpline at 8328581019"
+          aria-label={`Call Rithanya Hospital 24/7 Helpline at ${cleanPhone}`}
           onMouseEnter={() => setHoveredBtn('phone')}
           onMouseLeave={() => setHoveredBtn(null)}
           onFocus={() => setHoveredBtn('phone')}

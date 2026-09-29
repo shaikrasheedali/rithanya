@@ -3,10 +3,12 @@ import { MapPin, Phone, Mail, Clock, Send, CheckCircle2 } from 'lucide-react';
 import { apiRequest } from '../../utils/api';
 import { useToast } from '../../components/common/Toast';
 import useDynamicTranslation from '../../utils/dynamicTranslator';
+import { useHospitalSettings } from '../../context/HospitalSettingsContext';
 
 export default function ContactPage() {
   const { addToast } = useToast();
   const { t, loc } = useDynamicTranslation();
+  const { profile, cleanPhone } = useHospitalSettings();
   const [form, setForm] = useState({ name: '', phone: '', email: '', message: '' });
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -73,7 +75,7 @@ export default function ContactPage() {
                   <div>
                     <h4 style={{ fontSize: 14, fontWeight: 700 }}>{loc('Phone / Emergency Support')}</h4>
                     <p style={{ fontSize: 13, color: 'var(--ink-soft)', marginTop: 2 }}>
-                      8328581019 &nbsp;|&nbsp; 9948713504
+                      {profile.phone || cleanPhone}{profile.secondaryPhone ? `  |  ${profile.secondaryPhone}` : ''}
                     </p>
                   </div>
                 </div>

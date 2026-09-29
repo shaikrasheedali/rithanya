@@ -40,15 +40,29 @@ async function getMediaAssets(req, res, next) {
                 : ext === '.pdf' ? 'application/pdf'
                 : 'image/jpeg';
 
+              let fileDataBase64 = null;
+              try {
+                fileDataBase64 = fs.readFileSync(filePath).toString('base64');
+              } catch (_) {}
+
               await prisma.mediaAsset.create({
                 data: {
                   filename,
                   originalName: filename,
                   mimeType,
                   size: stat.size,
-                  url: `/assets/uploads/${filename}`
+                  url: `/assets/uploads/${filename}`,
+                  fileData: fileDataBase64
                 }
               });
+            } else if (exists && !exists.fileData) {
+              try {
+                const b64 = fs.readFileSync(filePath).toString('base64');
+                await prisma.mediaAsset.update({
+                  where: { id: exists.id },
+                  data: { fileData: b64 }
+                });
+              } catch (_) {}
             }
 
             // Sync to dist uploads if directory exists
@@ -135,6 +149,14 @@ async function uploadMedia(req, res, next) {
     const uploadedFilePath = req.file.path;
     const uploadedHash = computeFileHash(uploadedFilePath);
 
+    // Read file binary content as base64 for permanent cloud database storage
+    let fileDataBase64 = null;
+    try {
+      if (fs.existsSync(uploadedFilePath)) {
+        fileDataBase64 = fs.readFileSync(uploadedFilePath).toString('base64');
+      }
+    } catch (_) {}
+
     // 1. Check for duplicate asset by file size and SHA-256 hash
     if (uploadedHash) {
       const candidates = await prisma.mediaAsset.findMany({
@@ -146,7 +168,15 @@ async function uploadMedia(req, res, next) {
         if (fs.existsSync(candidatePath)) {
           const candidateHash = computeFileHash(candidatePath);
           if (candidateHash && candidateHash === uploadedHash) {
-            // Duplicate detected! Remove the new duplicate file from disk
+            // Duplicate detected! If existing doesn't have fileData, save it now
+            if (!candidate.fileData && fileDataBase64) {
+              await prisma.mediaAsset.update({
+                where: { id: candidate.id },
+                data: { fileData: fileDataBase64 }
+              }).catch(() => {});
+            }
+
+            // Remove the redundant temp file from disk
             try {
               if (fs.existsSync(uploadedFilePath)) {
                 fs.unlinkSync(uploadedFilePath);
@@ -181,7 +211,8 @@ async function uploadMedia(req, res, next) {
         originalName: req.file.originalname,
         mimeType: req.file.mimetype,
         size: req.file.size,
-        url: publicUrl
+        url: publicUrl,
+        fileData: fileDataBase64
       }
     });
 

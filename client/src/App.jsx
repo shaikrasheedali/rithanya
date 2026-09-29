@@ -47,6 +47,7 @@ import StaffPage from './pages/admin/StaffPage';
 import FinancePage from './pages/admin/FinancePage';
 import ErasureRequestsAdminPage from './pages/admin/ErasureRequestsAdminPage';
 import SettingsPage from './pages/admin/SettingsPage';
+import { HospitalSettingsProvider } from './context/HospitalSettingsContext';
 import { useDynamicSEO } from './utils/useSEO';
 import FloatingContactButtons from './components/common/FloatingContactButtons';
 
@@ -91,9 +92,10 @@ function AdminLayout() {
 export default function App() {
   useDynamicSEO();
   return (
-    <ToastProvider>
-      <BrowserRouter>
-        <Routes>
+    <HospitalSettingsProvider>
+      <ToastProvider>
+        <BrowserRouter>
+          <Routes>
           {/* Public Website Routes */}
           <Route element={<PublicLayout />}>
             <Route path="/" element={<HomePage />} />
@@ -157,5 +159,6 @@ export default function App() {
         </Routes>
       </BrowserRouter>
     </ToastProvider>
+  </HospitalSettingsProvider>
   );
 }

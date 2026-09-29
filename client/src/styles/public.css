@@ -96,12 +96,12 @@
   white-space: nowrap !important;
 }
 
-/* Desktop Island Navigation Links - Exactly 95% Height of Navbar */
+/* Desktop Island Navigation Links - Uniform 4:3 Aspect Ratio (Width: 60px, Height: 45px) */
 .island-nav-links {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: clamp(2px, 0.22vw, 5px);
+  gap: clamp(3px, 0.35vw, 6px);
   list-style: none;
   margin: 0 auto;
   padding: 0;
@@ -114,20 +114,31 @@
 .island-nav-links li {
   display: flex;
   align-items: center;
+  justify-content: center;
   height: 100%;
 }
 
 .island-nav-link {
-  height: 95% !important;
+  aspect-ratio: 4 / 3 !important;
+  width: 60px !important;
+  height: 45px !important;
+  min-width: 60px !important;
+  max-width: 60px !important;
+  min-height: 45px !important;
+  max-height: 45px !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  font-size: clamp(13px, 0.92vw, 15px) !important;
+  text-align: center !important;
+  font-size: 11.5px !important;
   font-weight: 700 !important;
+  letter-spacing: -0.2px;
   color: var(--ink-soft);
   text-decoration: none;
-  padding: 0 clamp(8px, 0.72vw, 14px) !important;
-  border-radius: 9999px;
+  padding: 0 !important;
+  border-radius: 12px !important;
+  border: 1px solid transparent;
+  background: rgba(0, 0, 0, 0.02);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap !important;
   box-sizing: border-box !important;
@@ -135,16 +146,31 @@
   flex-shrink: 0;
 }
 
+.floating-island-container.scrolled .island-nav-link {
+  aspect-ratio: 4 / 3 !important;
+  width: 56px !important;
+  height: 42px !important;
+  min-width: 56px !important;
+  max-width: 56px !important;
+  min-height: 42px !important;
+  max-height: 42px !important;
+  font-size: 11px !important;
+  border-radius: 10px !important;
+}
+
 .island-nav-link:hover {
   color: var(--red-700);
   background: rgba(169, 17, 41, 0.08);
+  border-color: rgba(169, 17, 41, 0.15);
+  transform: translateY(-1px);
 }
 
 .island-nav-link.active {
   color: var(--red-700);
   background: var(--red-50);
   font-weight: 800 !important;
-  box-shadow: inset 0 0 0 1.5px rgba(169, 17, 41, 0.16);
+  border: 1.5px solid rgba(169, 17, 41, 0.24);
+  box-shadow: 0 2px 6px rgba(169, 17, 41, 0.09);
 }
 
 /* Island Action CTAs */
@@ -899,8 +925,16 @@ body {
     flex-wrap: nowrap !important;
   }
   .island-nav-link {
-    padding: 5px 6px !important;
-    font-size: 12px !important;
+    aspect-ratio: 4 / 3 !important;
+    width: 56px !important;
+    height: 42px !important;
+    min-width: 56px !important;
+    max-width: 56px !important;
+    min-height: 42px !important;
+    max-height: 42px !important;
+    font-size: 11px !important;
+    padding: 0 !important;
+    border-radius: 10px !important;
     letter-spacing: -0.2px;
   }
   .island-btn-phone .phone-text {

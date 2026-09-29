@@ -20,12 +20,14 @@ import {
 } from 'lucide-react';
 import RithanyaLogo from '../common/RithanyaLogo';
 import LanguagePicker from '../common/LanguagePicker';
+import { useHospitalSettings } from '../../context/HospitalSettingsContext';
 
 export default function PublicNavbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { t } = useTranslation();
   const location = useLocation();
+  const { telHref, formattedPhone } = useHospitalSettings();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -122,12 +124,12 @@ export default function PublicNavbar() {
             <LanguagePicker compact={true} />
 
             <a
-              href="tel:+918328581019"
+              href={telHref}
               className="island-btn island-btn-phone"
               title={t('nav.emergencyHotline', '24/7 Emergency Transfusion Hotline')}
             >
               <Phone size={14} className="phone-icon" />
-              <span className="phone-text">+91 83285 81019</span>
+              <span className="phone-text">{formattedPhone}</span>
             </a>
 
             <Link
