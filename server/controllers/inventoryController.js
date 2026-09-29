@@ -53,21 +53,35 @@ async function getBloodInventory(req, res, next) {
     // 1. Auto-clean expired reservations
     await autoReleaseExpiredReservations();
 
-    // 2. Fetch all raw inventory records
+    // 2. Fetch inventory records with soft degradation for secondary tables
+    let hasDegraded = false;
+    const warnings = [];
+
+    async function safeInventoryQuery(fn, fallback = [], tableName = 'table') {
+      try {
+        return await fn();
+      } catch (err) {
+        hasDegraded = true;
+        warnings.push(`Table ${tableName} temporarily unavailable: ${err.message}`);
+        console.warn(`[Inventory Soft Degradation] Warning querying ${tableName}:`, err.message);
+        return fallback;
+      }
+    }
+
     const [rawStocks, rawBags, rawReservations, emptyBags, testKits, recentLogs] = await Promise.all([
-      prisma.bloodInventory.findMany(),
-      prisma.bloodBagUnit.findMany({ orderBy: { collectionDate: 'desc' } }),
-      prisma.bloodReservation.findMany({ orderBy: { createdAt: 'desc' }, take: 50 }),
-      prisma.emptyBagStock.findMany({ orderBy: { currentStock: 'asc' } }),
-      prisma.serologyTestKit.findMany({
+      safeInventoryQuery(() => prisma.bloodInventory.findMany(), [], 'BloodInventory'),
+      safeInventoryQuery(() => prisma.bloodBagUnit.findMany({ orderBy: { collectionDate: 'desc' } }), [], 'BloodBagUnit'),
+      safeInventoryQuery(() => prisma.bloodReservation.findMany({ orderBy: { createdAt: 'desc' }, take: 50 }), [], 'BloodReservation'),
+      safeInventoryQuery(() => prisma.emptyBagStock.findMany({ orderBy: { currentStock: 'asc' } }), [], 'EmptyBagStock'),
+      safeInventoryQuery(() => prisma.serologyTestKit.findMany({
         include: { usageLogs: { take: 5, orderBy: { date: 'desc' } } },
         orderBy: { assayName: 'asc' }
-      }),
-      prisma.inventoryLog.findMany({
+      }), [], 'SerologyTestKit'),
+      safeInventoryQuery(() => prisma.inventoryLog.findMany({
         take: 30,
         orderBy: { date: 'desc' },
         include: { patient: { select: { patientCode: true, name: true } } }
-      })
+      }), [], 'InventoryLog')
     ]);
 
     // 3. Map & order stocks strictly by clinical order: O+, O-, A+, A-, B+, B-, AB+, AB-
@@ -146,6 +160,11 @@ async function getBloodInventory(req, res, next) {
 
     return res.json({
       success: true,
+      ...(hasDegraded && {
+        degraded: true,
+        diagnosticWarning: 'One or more secondary blood bank tables unavailable. Running in soft-degraded mode.',
+        diagnostics: warnings
+      }),
       data: {
         stocks: orderedStocks,
         categorizationGrid,

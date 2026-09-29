@@ -51,6 +51,7 @@ import SettingsPage from './pages/admin/SettingsPage';
 import { HospitalSettingsProvider } from './context/HospitalSettingsContext';
 import { useDynamicSEO } from './utils/useSEO';
 import FloatingContactButtons from './components/common/FloatingContactButtons';
+import ModuleErrorBoundary from './components/common/ModuleErrorBoundary';
 
 // Layout wrappers
 function PublicLayout() {
@@ -171,11 +172,11 @@ export default function App() {
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<Navigate to="/admin/dashboard" replace />} />
             <Route path="dashboard" element={<AdminDashboardPage />} />
-            <Route path="patients" element={<PatientsPage />} />
-            <Route path="patients/:id" element={<PatientDetailPage />} />
-            <Route path="clinical" element={<ClinicalLogsPage />} />
-            <Route path="admissions" element={<AdmissionsPage />} />
-            <Route path="inventory" element={<InventoryPage />} />
+            <Route path="patients" element={<ModuleErrorBoundary moduleName="Patients & Registry"><PatientsPage /></ModuleErrorBoundary>} />
+            <Route path="patients/:id" element={<ModuleErrorBoundary moduleName="Patient Details"><PatientDetailPage /></ModuleErrorBoundary>} />
+            <Route path="clinical" element={<ModuleErrorBoundary moduleName="Clinical Vitals & EMR"><ClinicalLogsPage /></ModuleErrorBoundary>} />
+            <Route path="admissions" element={<ModuleErrorBoundary moduleName="Daycare Admissions"><AdmissionsPage /></ModuleErrorBoundary>} />
+            <Route path="inventory" element={<ModuleErrorBoundary moduleName="Blood Inventory & Supplies"><InventoryPage /></ModuleErrorBoundary>} />
             <Route path="appointments" element={<AppointmentsPage />} />
             <Route path="services" element={<ServicesAdminPage />} />
             <Route path="treatments" element={<TreatmentsAdminPage />} />
@@ -189,7 +190,7 @@ export default function App() {
             <Route path="media" element={<MediaLibraryPage />} />
             <Route path="credentials" element={<CredentialsPage />} />
             <Route path="staff" element={<StaffPage />} />
-            <Route path="finance" element={<FinancePage />} />
+            <Route path="finance" element={<ModuleErrorBoundary moduleName="Consolidated Finance & Payroll"><FinancePage /></ModuleErrorBoundary>} />
             <Route path="erasure-requests" element={<ErasureRequestsAdminPage />} />
             <Route path="settings" element={<SettingsPage />} />
           </Route>

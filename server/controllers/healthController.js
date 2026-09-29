@@ -1,14 +1,17 @@
 const prisma = require('../config/db');
+const { checkDatabaseIntegrity } = require('../config/dbMigrator');
 
 async function getHealth(req, res) {
   try {
-    // Quick DB ping
-    await prisma.$queryRaw`SELECT 1`;
-    return res.json({
-      status: 'healthy',
+    const integrity = await checkDatabaseIntegrity();
+    const isHealthy = integrity.connected && integrity.missingTables.length === 0;
+
+    return res.status(isHealthy ? 200 : 503).json({
+      status: isHealthy ? 'healthy' : 'degraded',
       service: 'Rithanya Hospital API',
       version: '1.0.0',
-      database: 'connected',
+      database: integrity.connected ? 'connected' : 'disconnected',
+      dbIntegrity: integrity,
       timestamp: new Date().toISOString()
     });
   } catch (err) {

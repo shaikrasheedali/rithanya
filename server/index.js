@@ -54,10 +54,47 @@ if (fs.existsSync(distUploadsDir)) {
   app.use('/uploads', express.static(distUploadsDir));
 }
 
-// 2. Resilient Database Rehydration Route: Serves assets stored in MySQL if disk was reset
+// SVG Fallback Generator for self-healing asset delivery
+function generateFallbackSvg(filename = 'asset') {
+  const cleanName = path.basename(filename).replace(/[._-]/g, ' ').slice(0, 30);
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c50e1f"/>
+      <stop offset="100%" stop-color="#991b1b"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="400" fill="url(#bgGrad)"/>
+  <rect x="20" y="20" width="560" height="360" rx="12" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2" stroke-dasharray="6 6"/>
+  <circle cx="300" cy="165" r="48" fill="url(#accentGrad)" opacity="0.9"/>
+  <!-- Hospital Cross Icon -->
+  <path d="M292 135 H308 V157 H330 V173 H308 V195 H292 V173 H270 V157 H292 Z" fill="#ffffff"/>
+  <text x="300" y="245" fill="#f8fafc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="700" text-anchor="middle" letter-spacing="1">RITHANYA HOSPITAL</text>
+  <text x="300" y="275" fill="#94a3b8" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="500" text-anchor="middle">Clinical Media Asset</text>
+  <text x="300" y="305" fill="#64748b" font-family="monospace" font-size="11" text-anchor="middle">${cleanName}</text>
+</svg>`;
+}
+
+// 2. Resilient Database Rehydration Route: Serves assets stored in MySQL or self-heals with fallback
 const prismaClient = require('./config/db');
-app.get(['/assets/uploads/:filename', '/uploads/:filename'], async (req, res, next) => {
+app.get(['/assets/uploads/:filename', '/uploads/:filename'], async (req, res) => {
   const filename = path.basename(req.params.filename);
+
+  // Check physical disk first
+  const publicPath = path.join(uploadsDir, filename);
+  const distFile = path.join(distUploadsDir, filename);
+  if (fs.existsSync(publicPath)) {
+    return res.sendFile(publicPath);
+  }
+  if (fs.existsSync(distFile)) {
+    return res.sendFile(distFile);
+  }
+
   try {
     const asset = await prismaClient.mediaAsset.findFirst({
       where: {
@@ -68,21 +105,25 @@ app.get(['/assets/uploads/:filename', '/uploads/:filename'], async (req, res, ne
       }
     });
 
-    if (asset && asset.fileData) {
+    if (asset && asset.fileData && asset.fileData.trim().length > 20) {
       const buffer = Buffer.from(asset.fileData, 'base64');
       // Rehydrate local disk cache
       try {
-        fs.writeFileSync(path.join(uploadsDir, filename), buffer);
+        fs.writeFileSync(publicPath, buffer);
       } catch (_) {}
 
       res.setHeader('Content-Type', asset.mimeType || 'image/jpeg');
       res.setHeader('Cache-Control', 'public, max-age=86400, stale-while-revalidate=604800');
-      return res.send(buffer);
+      return res.status(200).send(buffer);
     }
   } catch (err) {
-    console.warn(`[Asset Rehydrate] Notice for ${filename}:`, err.message);
+    console.warn(`[Asset Rehydrate] Safe catch for ${filename}:`, err.message);
   }
-  next();
+
+  // Graceful Self-Healing Fallback: Return clean SVG image (200 OK) so frontend never breaks with 404/500
+  res.setHeader('Content-Type', 'image/svg+xml');
+  res.setHeader('Cache-Control', 'public, max-age=86400, stale-while-revalidate=604800');
+  return res.status(200).send(generateFallbackSvg(filename));
 });
 
 // Intelligent Caching: Allow fast HTTP caching for public catalog GET requests; keep no-store for auth & admin
@@ -118,6 +159,26 @@ app.all('/api/*', (req, res) => {
   });
 });
 
+// Strict Block Middleware: Intercept bot probing, php/asp scans, and sensitive paths before SPA catch-all
+const BLOCKED_PATTERNS = [
+  /\.(php|asp|aspx|jsp|cgi|pl|env|git|yml|yaml|sql|bak|config|ini|sh|bash)$/i,
+  /^\/(wp-admin|wp-includes|wp-content|xmlrpc|phpmyadmin|pma|adminer|cgi-bin|\.env|\.git|\.well-known\/traffic-advice)/i
+];
+
+app.use((req, res, next) => {
+  const urlPath = req.path;
+  const isBlocked = BLOCKED_PATTERNS.some((pattern) => pattern.test(urlPath) || pattern.test(req.originalUrl));
+  if (isBlocked) {
+    return res.status(404).json({
+      success: false,
+      error: 'Not Found',
+      code: 'SECURITY_BLOCKED',
+      path: urlPath
+    });
+  }
+  next();
+});
+
 // Unified Frontend Serving: Serve built React client from client/dist on the exact same port
 const distPath = path.join(__dirname, '../client/dist');
 const publicPath = path.join(__dirname, '../client/public');
@@ -130,9 +191,9 @@ if (fs.existsSync(distPath)) {
   console.log(`[Unified Port] Serving React frontend production bundle from: ${distPath}`);
   app.use(express.static(distPath));
 
-  // SPA fallback for HTML5 History routing (GET only, ignore /api and /assets)
+  // SPA fallback for HTML5 History routing (GET only, ignore /api, /assets, and /uploads)
   app.get('*', (req, res, next) => {
-    if (req.originalUrl.startsWith('/api') || req.originalUrl.startsWith('/assets')) {
+    if (req.originalUrl.startsWith('/api') || req.originalUrl.startsWith('/assets') || req.originalUrl.startsWith('/uploads')) {
       return next();
     }
     res.sendFile(path.join(distPath, 'index.html'));

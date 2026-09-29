@@ -32,20 +32,38 @@ async function getExpenses(req, res, next) {
     const { category, status, approvalStage } = req.query;
     const month = req.query.month || new Date().toISOString().slice(0, 7); // 'YYYY-MM'
 
-    // 1. Fetch Expenses from Database
-    const expenses = await prisma.expense.findMany({
-      where: {
-        ...(category && { category }),
-        ...(status && { status }),
-        ...(approvalStage && { approvalStage })
-      },
-      orderBy: { date: 'desc' }
-    });
+    // 1. Fetch Expenses from Database with safe soft degradation
+    let expenses = [];
+    let hasDegraded = false;
+    let diagnosticWarning = null;
+    try {
+      expenses = await prisma.expense.findMany({
+        where: {
+          ...(category && { category }),
+          ...(status && { status }),
+          ...(approvalStage && { approvalStage })
+        },
+        orderBy: { date: 'desc' }
+      });
+    } catch (expErr) {
+      hasDegraded = true;
+      diagnosticWarning = `Expense table query note: ${expErr.message}`;
+      console.warn('[Finance Soft Degradation]', diagnosticWarning);
+      expenses = [];
+    }
 
-    // 2. Fetch Staff Payroll records for this month to aggregate personnel outflow
-    const payrollRecords = await prisma.staffPayroll.findMany({
-      where: { payrollMonth: month }
-    });
+    // 2. Fetch Staff Payroll records for this month with safe fallback
+    let payrollRecords = [];
+    try {
+      payrollRecords = await prisma.staffPayroll.findMany({
+        where: { payrollMonth: month }
+      });
+    } catch (payErr) {
+      hasDegraded = true;
+      diagnosticWarning = (diagnosticWarning ? diagnosticWarning + '; ' : '') + `StaffPayroll table query note: ${payErr.message}`;
+      console.warn('[Finance Soft Degradation]', payErr.message);
+      payrollRecords = [];
+    }
 
     const totalStaffPayroll = payrollRecords.reduce((sum, r) => sum + r.netPayableSalary, 0);
     const payrollApprovedCount = payrollRecords.filter((r) => r.directorApproved || r.status === 'DISBURSED').length;
@@ -141,6 +159,10 @@ async function getExpenses(req, res, next) {
 
     return res.json({
       success: true,
+      ...(hasDegraded && {
+        degraded: true,
+        diagnosticWarning
+      }),
       data: {
         month,
         expenses: activeExpenses,

@@ -14,6 +14,13 @@ require('../utils/dbEnv');
  * Resolves database connection configuration parameters from GoDaddy environment variables
  */
 function getDbConfig() {
+  const isSslRequired = process.env.DB_SSL === 'true' || 
+                        process.env.MYSQL_SSL === 'true' || 
+                        process.env.DB_SSL_MODE === 'REQUIRED' || 
+                        process.env.SSL_MODE === 'REQUIRED' ||
+                        (process.env.DATABASE_URL && process.env.DATABASE_URL.includes('sslmode=require'));
+  const sslConfig = isSslRequired ? { rejectUnauthorized: false } : undefined;
+
   if (process.env.DB_HOST && process.env.DB_NAME) {
     return {
       host: process.env.DB_HOST,
@@ -21,7 +28,8 @@ function getDbConfig() {
       user: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      charset: 'utf8mb4'
+      charset: 'utf8mb4',
+      ...(sslConfig && { ssl: sslConfig })
     };
   }
 
@@ -29,7 +37,7 @@ function getDbConfig() {
   if (process.env.DATABASE_URL) {
     try {
       const url = new URL(process.env.DATABASE_URL);
-      const isSsl = url.searchParams.get('ssl-mode') || url.searchParams.get('sslmode');
+      const isSsl = url.searchParams.get('ssl-mode') || url.searchParams.get('sslmode') || isSslRequired;
       return {
         host: url.hostname,
         port: Number(url.port || '3306'),
@@ -48,7 +56,8 @@ function getDbConfig() {
     user: process.env.DB_USER || 'root',
     password: process.env.DB_PASSWORD || '',
     database: process.env.DB_NAME,
-    charset: 'utf8mb4'
+    charset: 'utf8mb4',
+    ...(sslConfig && { ssl: sslConfig })
   };
 }
 

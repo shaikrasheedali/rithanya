@@ -18,9 +18,18 @@ function initDbEnv() {
     const pass = encodeURIComponent(process.env.DB_PASSWORD || '');
     const name = process.env.DB_NAME || '';
 
+    // Check for SSL/TLS transit encryption requirement
+    const isSslRequired = process.env.DB_SSL === 'true' || 
+                          process.env.MYSQL_SSL === 'true' || 
+                          process.env.DB_SSL_MODE === 'REQUIRED' || 
+                          process.env.SSL_MODE === 'REQUIRED' ||
+                          (process.env.DATABASE_URL && process.env.DATABASE_URL.includes('sslmode=require'));
+
+    const sslParam = isSslRequired ? '&sslmode=require' : '';
+
     // Construct standard MySQL connection string for Prisma
-    process.env.DATABASE_URL = `mysql://${user}:${pass}@${host}:${port}/${name}?connection_limit=10&connect_timeout=30&pool_timeout=60`;
-    console.log(`[Database Config] ✓ Configured GoDaddy Hosted MySQL: mysql://${user}:***@${host}:${port}/${name}`);
+    process.env.DATABASE_URL = `mysql://${user}:${pass}@${host}:${port}/${name}?connection_limit=10&connect_timeout=30&pool_timeout=60${sslParam}`;
+    console.log(`[Database Config] ✓ Configured GoDaddy Hosted MySQL: mysql://${user}:***@${host}:${port}/${name}${isSslRequired ? ' (SSL/TLS Enabled)' : ''}`);
   }
 }
 

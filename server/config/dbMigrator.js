@@ -8,6 +8,36 @@ const { getDbConfig } = require('./mysqlConnection');
 const { seedDatabase } = require('../prisma/seed');
 const { syncProductionMasterData } = require('./masterCatalogSeeder');
 
+const REQUIRED_TABLES = [
+  'User',
+  'Staff',
+  'Patient',
+  'Admission',
+  'ClinicalReading',
+  'BloodInventory',
+  'InventoryLog',
+  'Appointment',
+  'Service',
+  'Blog',
+  'Specialist',
+  'Treatment',
+  'ProductPackage',
+  'ProductInquiry',
+  'GalleryItem',
+  'MediaAsset',
+  'BloodReservation',
+  'BloodBagUnit',
+  'EmptyBagStock',
+  'SerologyTestKit',
+  'ReagentUsageLog',
+  'StaffPayroll',
+  'OperationalExpenseLine',
+  'Expense',
+  'HospitalSetting',
+  'ErasureRequest',
+  'AuditLog'
+];
+
 /**
  * Restores all hospital master data (doctors, treatments, services, media, blood bank, settings)
  * from the Aiven migration dump into the target GoDaddy database.
@@ -200,16 +230,30 @@ async function autoMigrate() {
     return;
   }
 
-  // 3. Check existing tables
+  // 3. Introspect existing tables across all models
   let tablesCount = 0;
   let hasUserTable = false;
+  let existingTables = [];
+  let missingTables = [];
 
   try {
-    const rawTables = await prisma.$queryRawUnsafe('SHOW TABLES');
-    tablesCount = Array.isArray(rawTables) ? rawTables.length : 0;
+    const tableRows = await prisma.$queryRawUnsafe(`
+      SELECT TABLE_NAME 
+      FROM INFORMATION_SCHEMA.TABLES 
+      WHERE TABLE_SCHEMA = DATABASE()
+    `);
+    existingTables = Array.isArray(tableRows) ? tableRows.map((r) => r.TABLE_NAME || Object.values(r)[0]) : [];
+    tablesCount = existingTables.length;
   } catch (e) {
-    console.warn('[AutoMigrate] SHOW TABLES query check note:', e.message);
+    try {
+      const rawTables = await prisma.$queryRawUnsafe('SHOW TABLES');
+      existingTables = Array.isArray(rawTables) ? rawTables.map((r) => Object.values(r)[0]) : [];
+      tablesCount = existingTables.length;
+    } catch (_) {}
   }
+
+  const existingSet = new Set(existingTables.map((t) => String(t).toLowerCase()));
+  missingTables = REQUIRED_TABLES.filter((t) => !existingSet.has(t.toLowerCase()));
 
   if (tablesCount > 0) {
     try {
@@ -220,11 +264,11 @@ async function autoMigrate() {
     }
   }
 
-  console.log(`[AutoMigrate] Database state: ${tablesCount} tables present. User table exists: ${hasUserTable}`);
+  console.log(`[AutoMigrate] Database state: ${tablesCount} tables present. Missing: ${missingTables.length} tables. User table exists: ${hasUserTable}`);
 
-  // 4. If database is empty or User table does not exist, build all tables!
-  if (tablesCount < 20 || !hasUserTable) {
-    console.log('[AutoMigrate] Missing tables detected. Building complete schema tables...');
+  // 4. If ANY required table is missing or User table does not exist, build/push all tables!
+  if (missingTables.length > 0 || tablesCount < REQUIRED_TABLES.length || !hasUserTable) {
+    console.log(`[AutoMigrate] Missing tables detected: [${missingTables.join(', ')}]. Building complete schema tables...`);
     let migrationSuccess = false;
 
     // Strategy 1: Local Prisma CLI execution via Node runtime
@@ -250,7 +294,7 @@ async function autoMigrate() {
     }
 
     // Strategy 2: Direct SQL DDL execution via mysql2
-    if (!migrationSuccess) {
+    if (!migrationSuccess || missingTables.length > 0) {
       console.log('[AutoMigrate] Executing direct SQL table creation via official mysql2 driver...');
       const initSqlPath = path.join(__dirname, '../prisma/init.sql');
 
@@ -431,7 +475,108 @@ async function autoMigrate() {
     console.warn('[AutoMigrate] Note during ProductPackage column verification:', pColErr.message);
   }
 
-  // 9. Synchronize production master catalog: exact 40 treatments & faculty doctors
+  // 9. Verify and ensure Expense table columns exist (invoiceRef, receiptUrl, paymentMethod, approvalStage, supervisor/director fields)
+  try {
+    const expenseColumns = await prisma.$queryRawUnsafe(`
+      SELECT COLUMN_NAME 
+      FROM INFORMATION_SCHEMA.COLUMNS 
+      WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Expense'
+    `);
+    const expColNames = Array.isArray(expenseColumns) ? expenseColumns.map((c) => c.COLUMN_NAME) : [];
+
+    if (expColNames.length > 0) {
+      if (!expColNames.includes('invoiceRef')) {
+        console.log('[AutoMigrate] Adding missing `invoiceRef` column to Expense table...');
+        await prisma.$executeRawUnsafe(`ALTER TABLE \`Expense\` ADD COLUMN \`invoiceRef\` VARCHAR(191) NULL`);
+      }
+      if (!expColNames.includes('receiptUrl')) {
+        console.log('[AutoMigrate] Adding missing `receiptUrl` column to Expense table...');
+        await prisma.$executeRawUnsafe(`ALTER TABLE \`Expense\` ADD COLUMN \`receiptUrl\` VARCHAR(1000) NULL`);
+      }
+      if (!expColNames.includes('paymentMethod')) {
+        console.log('[AutoMigrate] Adding missing `paymentMethod` column to Expense table...');
+        await prisma.$executeRawUnsafe(`ALTER TABLE \`Expense\` ADD COLUMN \`paymentMethod\` VARCHAR(191) NOT NULL DEFAULT 'Bank NEFT'`);
+      }
+      if (!expColNames.includes('approvalStage')) {
+        console.log('[AutoMigrate] Adding missing `approvalStage` column to Expense table...');
+        await prisma.$executeRawUnsafe(`ALTER TABLE \`Expense\` ADD COLUMN \`approvalStage\` VARCHAR(191) NOT NULL DEFAULT 'PENDING_REVIEW'`);
+      }
+      if (!expColNames.includes('supervisorApproved')) {
+        console.log('[AutoMigrate] Adding missing `supervisorApproved` column to Expense table...');
+        await prisma.$executeRawUnsafe(`ALTER TABLE \`Expense\` ADD COLUMN \`supervisorApproved\` BOOLEAN NOT NULL DEFAULT false`);
+      }
+      if (!expColNames.includes('supervisorName')) {
+        console.log('[AutoMigrate] Adding missing `supervisorName` column to Expense table...');
+        await prisma.$executeRawUnsafe(`ALTER TABLE \`Expense\` ADD COLUMN \`supervisorName\` VARCHAR(191) NULL`);
+      }
+      if (!expColNames.includes('supervisorSignedAt')) {
+        console.log('[AutoMigrate] Adding missing `supervisorSignedAt` column to Expense table...');
+        await prisma.$executeRawUnsafe(`ALTER TABLE \`Expense\` ADD COLUMN \`supervisorSignedAt\` DATETIME(3) NULL`);
+      }
+      if (!expColNames.includes('directorApproved')) {
+        console.log('[AutoMigrate] Adding missing `directorApproved` column to Expense table...');
+        await prisma.$executeRawUnsafe(`ALTER TABLE \`Expense\` ADD COLUMN \`directorApproved\` BOOLEAN NOT NULL DEFAULT false`);
+      }
+      if (!expColNames.includes('directorName')) {
+        console.log('[AutoMigrate] Adding missing `directorName` column to Expense table...');
+        await prisma.$executeRawUnsafe(`ALTER TABLE \`Expense\` ADD COLUMN \`directorName\` VARCHAR(191) NULL`);
+      }
+      if (!expColNames.includes('directorSignedAt')) {
+        console.log('[AutoMigrate] Adding missing `directorSignedAt` column to Expense table...');
+        await prisma.$executeRawUnsafe(`ALTER TABLE \`Expense\` ADD COLUMN \`directorSignedAt\` DATETIME(3) NULL`);
+      }
+    }
+  } catch (expColErr) {
+    console.warn('[AutoMigrate] Note during Expense column verification:', expColErr.message);
+  }
+
+  // 10. Verify and ensure MediaAsset table columns exist (fileData, dimensions)
+  try {
+    const mediaColumns = await prisma.$queryRawUnsafe(`
+      SELECT COLUMN_NAME 
+      FROM INFORMATION_SCHEMA.COLUMNS 
+      WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'MediaAsset'
+    `);
+    const mediaColNames = Array.isArray(mediaColumns) ? mediaColumns.map((c) => c.COLUMN_NAME) : [];
+
+    if (mediaColNames.length > 0) {
+      if (!mediaColNames.includes('fileData')) {
+        console.log('[AutoMigrate] Adding missing `fileData` column to MediaAsset table...');
+        await prisma.$executeRawUnsafe(`ALTER TABLE \`MediaAsset\` ADD COLUMN \`fileData\` LONGTEXT NULL`);
+      }
+      if (!mediaColNames.includes('dimensions')) {
+        console.log('[AutoMigrate] Adding missing `dimensions` column to MediaAsset table...');
+        await prisma.$executeRawUnsafe(`ALTER TABLE \`MediaAsset\` ADD COLUMN \`dimensions\` VARCHAR(191) NULL`);
+      }
+    }
+  } catch (mColErr) {
+    console.warn('[AutoMigrate] Note during MediaAsset column verification:', mColErr.message);
+  }
+
+  // 11. Verify and ensure BloodInventory table has reservedUnits column
+  try {
+    const bloodCols = await prisma.$queryRawUnsafe(`
+      SELECT COLUMN_NAME 
+      FROM INFORMATION_SCHEMA.COLUMNS 
+      WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'BloodInventory'
+    `);
+    const bColNames = Array.isArray(bloodCols) ? bloodCols.map((c) => c.COLUMN_NAME) : [];
+    if (bColNames.length > 0 && !bColNames.includes('reservedUnits')) {
+      console.log('[AutoMigrate] Adding missing `reservedUnits` column to BloodInventory table...');
+      await prisma.$executeRawUnsafe(`ALTER TABLE \`BloodInventory\` ADD COLUMN \`reservedUnits\` INT NOT NULL DEFAULT 0`);
+    }
+  } catch (bColErr) {
+    console.warn('[AutoMigrate] Note during BloodInventory column verification:', bColErr.message);
+  }
+
+  // 12. Run Self-Healing: Clean orphaned DB media asset records
+  try {
+    await auditAndCleanOrphanedMedia(prisma);
+  } catch (cleanErr) {
+    console.warn('[AutoMigrate] Note during orphaned media self-healing:', cleanErr.message);
+  }
+
+  // 13. Synchronize production master catalog: exact 40 treatments & faculty doctors
   try {
     await syncProductionMasterData(prisma);
   } catch (syncErr) {
@@ -439,4 +584,121 @@ async function autoMigrate() {
   }
 }
 
-module.exports = { autoMigrate, getDbConnectionConfig: getDbConfig };
+/**
+ * Self-healing service: Audits and removes media asset records from DB
+ * that have no base64 file data and no matching physical file on disk.
+ */
+async function auditAndCleanOrphanedMedia(prismaClient) {
+  try {
+    const uploadsDir = path.join(__dirname, '../../client/public/assets/uploads');
+    const distUploadsDir = path.join(__dirname, '../../client/dist/assets/uploads');
+
+    const assets = await prismaClient.mediaAsset.findMany({
+      select: { id: true, filename: true, fileData: true }
+    });
+
+    const orphanedIds = [];
+    for (const a of assets) {
+      const hasBase64 = a.fileData && a.fileData.trim().length > 50;
+      const onPublicDisk = fs.existsSync(path.join(uploadsDir, a.filename));
+      const onDistDisk = fs.existsSync(path.join(distUploadsDir, a.filename));
+
+      // Orphaned: no base64 in DB AND missing from both public and dist uploads folders
+      if (!hasBase64 && !onPublicDisk && !onDistDisk) {
+        orphanedIds.push(a.id);
+      }
+    }
+
+    if (orphanedIds.length > 0) {
+      console.log(`[Self-Healing] Detected ${orphanedIds.length} orphaned media records without local file or DB data. Cleaning...`);
+      await prismaClient.mediaAsset.deleteMany({
+        where: { id: { in: orphanedIds } }
+      });
+      console.log(`[Self-Healing] ✓ Purged ${orphanedIds.length} orphaned media records from database.`);
+    }
+  } catch (err) {
+    console.warn('[Self-Healing] Note during orphaned media audit:', err.message);
+  }
+}
+
+/**
+ * Diagnostics helper: Performs full database schema and connectivity integrity check
+ */
+async function checkDatabaseIntegrity() {
+  const isSslRequired = process.env.DB_SSL === 'true' || 
+                        process.env.MYSQL_SSL === 'true' || 
+                        process.env.DB_SSL_MODE === 'REQUIRED' || 
+                        process.env.SSL_MODE === 'REQUIRED' ||
+                        (process.env.DATABASE_URL && process.env.DATABASE_URL.includes('sslmode=require'));
+
+  let isConnected = false;
+  let existingTables = [];
+  let missingTables = [];
+  let columnCheck = {};
+
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    isConnected = true;
+
+    try {
+      const tableRows = await prisma.$queryRawUnsafe(`
+        SELECT TABLE_NAME 
+        FROM INFORMATION_SCHEMA.TABLES 
+        WHERE TABLE_SCHEMA = DATABASE()
+      `);
+      existingTables = Array.isArray(tableRows) ? tableRows.map((r) => r.TABLE_NAME || Object.values(r)[0]) : [];
+    } catch (_) {
+      const raw = await prisma.$queryRawUnsafe('SHOW TABLES');
+      existingTables = Array.isArray(raw) ? raw.map((r) => Object.values(r)[0]) : [];
+    }
+
+    const existingSet = new Set(existingTables.map((t) => String(t).toLowerCase()));
+    missingTables = REQUIRED_TABLES.filter((t) => !existingSet.has(t.toLowerCase()));
+
+    // Verify key columns
+    try {
+      const expCols = await prisma.$queryRawUnsafe(`
+        SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS 
+        WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Expense'
+      `);
+      const expColNames = Array.isArray(expCols) ? expCols.map((c) => c.COLUMN_NAME) : [];
+      columnCheck.Expense = {
+        invoiceRef: expColNames.includes('invoiceRef'),
+        approvalStage: expColNames.includes('approvalStage'),
+        supervisorApproved: expColNames.includes('supervisorApproved')
+      };
+    } catch (_) {}
+
+    try {
+      const mediaCols = await prisma.$queryRawUnsafe(`
+        SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS 
+        WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'MediaAsset'
+      `);
+      const mediaColNames = Array.isArray(mediaCols) ? mediaCols.map((c) => c.COLUMN_NAME) : [];
+      columnCheck.MediaAsset = {
+        fileData: mediaColNames.includes('fileData'),
+        dimensions: mediaColNames.includes('dimensions')
+      };
+    } catch (_) {}
+  } catch (err) {
+    isConnected = false;
+  }
+
+  return {
+    connected: isConnected,
+    ssl: isSslRequired,
+    totalTables: existingTables.length,
+    expectedTables: REQUIRED_TABLES.length,
+    missingTables,
+    columnsChecked: columnCheck,
+    schemaSyncStatus: isConnected && missingTables.length === 0 ? 'SYNCHRONIZED' : 'DESYNCHRONIZED'
+  };
+}
+
+module.exports = {
+  autoMigrate,
+  getDbConnectionConfig: getDbConfig,
+  auditAndCleanOrphanedMedia,
+  checkDatabaseIntegrity,
+  REQUIRED_TABLES
+};

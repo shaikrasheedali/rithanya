@@ -97,4 +97,66 @@ test('Health Check & Server Smoke Test', async (t) => {
     assert.strictEqual(capturedJson.code, 'P1001');
     assert.ok(capturedJson.message.includes('Unable to reach database server'));
   });
+
+  await t.test('GET /api/health should include comprehensive dbIntegrity diagnostic report', async () => {
+    const res = await request(app).get('/api/health');
+    assert.strictEqual(res.status, 200);
+    assert.ok(res.body.dbIntegrity);
+    assert.strictEqual(typeof res.body.dbIntegrity.connected, 'boolean');
+    assert.strictEqual(typeof res.body.dbIntegrity.totalTables, 'number');
+    assert.ok(Array.isArray(res.body.dbIntegrity.missingTables));
+    assert.ok(res.body.dbIntegrity.schemaSyncStatus);
+  });
+
+  await t.test('Bot Scanner Blocking Middleware: should block php/asp probes before SPA catch-all', async () => {
+    const res1 = await request(app).get('/wp-admin/install.php');
+    assert.strictEqual(res1.status, 404);
+    assert.strictEqual(res1.body.code, 'SECURITY_BLOCKED');
+
+    const res2 = await request(app).get('/test.php');
+    assert.strictEqual(res2.status, 404);
+    assert.strictEqual(res2.body.code, 'SECURITY_BLOCKED');
+
+    const res3 = await request(app).get('/.env');
+    assert.strictEqual(res3.status, 404);
+    assert.strictEqual(res3.body.code, 'SECURITY_BLOCKED');
+  });
+
+  await t.test('Asset Self-Healing: should return clean fallback SVG (200 OK) for missing upload assets', async () => {
+    const res = await request(app).get('/assets/uploads/non-existent-test-asset.jpg');
+    assert.strictEqual(res.status, 200);
+    const contentType = res.header['content-type'] || res.get('Content-Type') || '';
+    assert.ok(contentType.includes('image/svg+xml'));
+    const bodyStr = res.text || (Buffer.isBuffer(res.body) ? res.body.toString('utf8') : String(res.body || ''));
+    assert.ok(bodyStr.includes('<svg'));
+    assert.ok(bodyStr.includes('RITHANYA HOSPITAL'));
+  });
+
+  await t.test('Error Handler: should format missing table error P2021 as standardized SCHEMA_DESYNC', () => {
+    let capturedStatus = null;
+    let capturedJson = null;
+
+    const mockRes = {
+      status(code) {
+        capturedStatus = code;
+        return this;
+      },
+      json(data) {
+        capturedJson = data;
+        return this;
+      }
+    };
+
+    const mockP2021Err = new Error('The table `BloodReservation` does not exist in the current database.');
+    mockP2021Err.code = 'P2021';
+    mockP2021Err.meta = { table: 'BloodReservation' };
+
+    errorHandler(mockP2021Err, {}, mockRes, () => {});
+
+    assert.strictEqual(capturedStatus, 503);
+    assert.strictEqual(capturedJson.success, false);
+    assert.strictEqual(capturedJson.error, 'Database table mismatch');
+    assert.strictEqual(capturedJson.code, 'SCHEMA_DESYNC');
+    assert.ok(capturedJson.details.includes('BloodReservation'));
+  });
 });

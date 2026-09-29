@@ -4,6 +4,24 @@ function errorHandler(err, req, res, next) {
   let statusCode = err.statusCode || 500;
   let message = err.message || 'Internal Server Error';
 
+  // Specific handling for Database table and schema desynchronization
+  if (
+    err.code === 'P2021' ||
+    err.code === 'P2022' ||
+    err.code === 'SCHEMA_DESYNC' ||
+    err.code === 'ER_NO_SUCH_TABLE' ||
+    err.code === 'ER_BAD_FIELD_ERROR' ||
+    (typeof err.message === 'string' && (err.message.includes("doesn't exist") || err.message.includes('Unknown column')))
+  ) {
+    const tableInfo = err.meta?.table ? `Table ${err.meta.table} unavailable. Please run schema sync.` : (err.message || 'Database schema mismatch. Please run schema sync.');
+    return res.status(503).json({
+      success: false,
+      error: 'Database table mismatch',
+      code: 'SCHEMA_DESYNC',
+      details: tableInfo
+    });
+  }
+
   // Specific handling for Database connection and configuration errors
   if (err.code === 'P1001') {
     statusCode = 503;
