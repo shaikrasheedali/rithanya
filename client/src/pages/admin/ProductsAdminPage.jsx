@@ -8,6 +8,7 @@ import { formatCurrency } from '../../utils/formatters';
 import Modal from '../../components/common/Modal';
 import ImageUploadField from '../../components/common/ImageUploadField';
 import RichTextEditor from '../../components/common/RichTextEditor';
+import SafeImage from '../../components/common/SafeImage';
 import { getSafeImageUrl, onImageError } from '../../utils/imageUtils';
 
 export default function ProductsAdminPage() {
@@ -151,11 +152,11 @@ export default function ProductsAdminPage() {
                 <tr key={pkg.id}>
                   <td style={{ width: 80 }}>
                     <div style={{ width: 60, height: 48, borderRadius: 8, overflow: 'hidden', background: '#f5f5f5', border: '1px solid var(--line)' }}>
-                      <img
-                        src={getSafeImageUrl(pkg.image)}
+                      <SafeImage
+                        src={pkg.image}
                         alt={pkg.name}
+                        fallbackSrc="/image.png"
                         style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                        onError={(e) => onImageError(e)}
                       />
                     </div>
                   </td>

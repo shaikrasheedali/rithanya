@@ -14,14 +14,15 @@ export function clearClientCache() {
 export async function apiRequest(endpoint, options = {}) {
   const method = (options.method || 'GET').toUpperCase();
   const token = localStorage.getItem('rh_token');
+  const isAdminContext = (typeof window !== 'undefined' && window.location.pathname.startsWith('/admin')) || Boolean(token) || Boolean(options.bypassCache);
 
   // Clear client cache on any modifying mutation (POST, PUT, DELETE)
   if (method !== 'GET') {
     clientCache.clear();
   }
 
-  // Check client cache for GET requests
-  const isPublicGet = method === 'GET' && !options.bypassCache;
+  // Check client cache for GET requests ONLY on public, unauthenticated routes
+  const isPublicGet = method === 'GET' && !isAdminContext;
   if (isPublicGet) {
     const cached = clientCache.get(endpoint);
     if (cached && Date.now() < cached.expiresAt) {
@@ -32,6 +33,11 @@ export async function apiRequest(endpoint, options = {}) {
   const headers = {
     'Content-Type': 'application/json',
     ...(token && { Authorization: `Bearer ${token}` }),
+    ...(isAdminContext && {
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'x-admin-request': '1'
+    }),
     ...options.headers
   };
 
@@ -42,11 +48,18 @@ export async function apiRequest(endpoint, options = {}) {
 
   const config = {
     ...options,
-    headers
+    headers,
+    ...(isAdminContext ? { cache: 'no-store' } : {})
   };
 
+  let finalEndpoint = endpoint;
+  if (isAdminContext && method === 'GET') {
+    const separator = finalEndpoint.includes('?') ? '&' : '?';
+    finalEndpoint = `${finalEndpoint}${separator}_t=${Date.now()}`;
+  }
+
   try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+    const response = await fetch(`${API_BASE_URL}${finalEndpoint}`, config);
 
     // Handle session expiry
     if (response.status === 401 && !endpoint.includes('/auth/login')) {

@@ -23,7 +23,7 @@ import { apiRequest } from '../../utils/api';
 import { formatCurrency } from '../../utils/formatters';
 import { useToast } from '../../components/common/Toast';
 import { useDynamicTranslation } from '../../utils/dynamicTranslator';
-import { getSafeImageUrl, onImageError } from '../../utils/imageUtils';
+import SafeImage from '../../components/common/SafeImage';
 
 export default function ProductsPage() {
   const { t, loc, locItems } = useDynamicTranslation();
@@ -265,11 +265,9 @@ export default function ProductsPage() {
                   {/* Product Card Image Wrap */}
                   <div className="card-image-wrap" style={{ position: 'relative' }}>
                     <Link to={productUrl} style={{ display: 'block', width: '100%', height: '100%' }}>
-                      <img
-                        src={getSafeImageUrl(p.image)}
+                      <SafeImage
+                        src={p.image}
                         alt={p.name}
-                        onError={onImageError}
-                        loading="lazy"
                       />
                     </Link>
                     {p.tag && (
@@ -525,7 +523,7 @@ export default function ProductsPage() {
                             alignItems: 'center'
                           }}
                         >
-                          <img
+                          <SafeImage
                             src={item.image}
                             alt={item.name}
                             style={{ width: 56, height: 56, borderRadius: 10, objectFit: 'cover', background: '#fff' }}

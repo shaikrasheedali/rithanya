@@ -25,6 +25,7 @@ import Modal from '../../components/common/Modal';
 import ImageUploadField from '../../components/common/ImageUploadField';
 import MediaLibraryModal from '../../components/common/MediaLibraryModal';
 import { parseEmbedSource, parseGalleryItemMedia } from '../../utils/mediaEmbed';
+import SafeImage from '../../components/common/SafeImage';
 import { getSafeImageUrl, onImageError } from '../../utils/imageUtils';
 
 export default function GalleryAdminPage() {
@@ -360,11 +361,10 @@ export default function GalleryAdminPage() {
                     <tr key={item.id}>
                       <td style={{ width: 90 }}>
                         <div style={{ width: 70, height: 46, borderRadius: 8, overflow: 'hidden', background: '#000' }}>
-                          <img
-                            src={getSafeImageUrl(item.imageUrl)}
+                          <SafeImage
+                            src={item.imageUrl}
                             alt={item.title}
                             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                            onError={(e) => onImageError(e)}
                           />
                         </div>
                       </td>
@@ -667,11 +667,10 @@ export default function GalleryAdminPage() {
                               <Video size={22} style={{ color: '#fff' }} />
                             </div>
                           ) : (
-                            <img
-                              src={getSafeImageUrl(asset.url)}
+                            <SafeImage
+                              src={asset.url}
                               alt={`Asset ${idx + 1}`}
                               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                              onError={(e) => onImageError(e)}
                             />
                           )}
 
@@ -756,11 +755,10 @@ export default function GalleryAdminPage() {
                             style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                           />
                         ) : (
-                          <img
-                            src={getSafeImageUrl(assetList[modalSlideIdx]?.url)}
+                          <SafeImage
+                            src={assetList[modalSlideIdx]?.url}
                             alt="Preview"
                             style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                            onError={(e) => onImageError(e)}
                           />
                         )}
 
@@ -981,11 +979,10 @@ export default function GalleryAdminPage() {
                       margin: '0 auto'
                     }}
                   >
-                    <img
-                      src={getSafeImageUrl(parsed.url)}
+                    <SafeImage
+                      src={parsed.url}
                       alt={previewTarget.title}
                       style={{ width: '100%', maxHeight: '75vh', objectFit: 'contain' }}
-                      onError={(e) => onImageError(e)}
                     />
                   </div>
                 )}
@@ -1045,11 +1042,10 @@ function AdminCarouselViewer({ assets }) {
         {asset.type === 'VIDEO' ? (
           <video controls autoPlay src={asset.url} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
         ) : (
-          <img
-            src={getSafeImageUrl(asset.url)}
+          <SafeImage
+            src={asset.url}
             alt={`Slide ${current + 1}`}
             style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-            onError={(e) => onImageError(e)}
           />
         )}
 

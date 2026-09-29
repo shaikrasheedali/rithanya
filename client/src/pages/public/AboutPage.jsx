@@ -18,6 +18,7 @@ import {
   Check
 } from 'lucide-react';
 import useDynamicTranslation from '../../utils/dynamicTranslator';
+import SafeImage from '../../components/common/SafeImage';
 
 export default function AboutPage() {
   const { t, loc } = useDynamicTranslation();
@@ -84,7 +85,7 @@ export default function AboutPage() {
 
               {/* Hospital Storefront Presentation */}
               <div style={{ position: 'relative', borderRadius: 20, overflow: 'hidden', border: '1px solid var(--line)', background: '#0e0b0c', boxShadow: '0 16px 40px rgba(0, 0, 0, 0.08)' }}>
-                <img
+                <SafeImage
                   src="/image.png"
                   alt="Rithanya Hospital Khammam Storefront Entrance"
                   style={{ width: '100%', height: '100%', maxHeight: 380, objectFit: 'cover', display: 'block' }}
@@ -142,9 +143,10 @@ export default function AboutPage() {
                   alignItems: 'stretch'
                 }}
               >
-                <img
+                <SafeImage
                   src="/Dr Narayana Murthy-Rithanya Hospital-Khammam.png"
                   alt="Dr. D. Narayana Murthy"
+                  fallbackSrc="/image.png"
                   style={{
                     width: '100%',
                     height: '100%',
@@ -288,9 +290,10 @@ export default function AboutPage() {
                   alignItems: 'stretch'
                 }}
               >
-                <img
+                <SafeImage
                   src="/Dr A Laxmi Dipa-Rithanya Hospital-Khammam.png"
                   alt="Dr. A. Lakshmi Deepa"
+                  fallbackSrc="/image.png"
                   style={{
                     width: '100%',
                     height: '100%',

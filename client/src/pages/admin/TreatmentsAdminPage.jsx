@@ -7,6 +7,7 @@ import { useToast } from '../../components/common/Toast';
 import Modal from '../../components/common/Modal';
 import ImageUploadField from '../../components/common/ImageUploadField';
 import RichTextEditor from '../../components/common/RichTextEditor';
+import SafeImage from '../../components/common/SafeImage';
 import { getSafeImageUrl, onImageError } from '../../utils/imageUtils';
 
 export default function TreatmentsAdminPage() {
@@ -163,11 +164,10 @@ export default function TreatmentsAdminPage() {
               {treatments.map((t) => (
                 <tr key={t.id}>
                   <td style={{ width: 70 }}>
-                    <img
-                      src={getSafeImageUrl(t.coverImage)}
+                    <SafeImage
+                      src={t.coverImage}
                       alt={t.title}
                       style={{ width: 54, height: 40, objectFit: 'cover', borderRadius: 8 }}
-                      onError={(e) => onImageError(e)}
                     />
                   </td>
                   <td>

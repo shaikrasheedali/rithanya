@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { getSafeImageUrl, onImageError } from '../../utils/imageUtils';
+import SafeImage from './SafeImage';
 
 export default function ImageCarousel({ images = [], alt = 'Hospital Facility' }) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -25,12 +25,10 @@ export default function ImageCarousel({ images = [], alt = 'Hospital Facility' }
 
   return (
     <div className="carousel-container">
-      <img
-        src={getSafeImageUrl(images[currentIndex])}
+      <SafeImage
+        src={images[currentIndex]}
         alt={`${alt} - Slide ${currentIndex + 1}`}
         className="carousel-slide"
-        onError={onImageError}
-        loading="lazy"
       />
 
       {images.length > 1 && (

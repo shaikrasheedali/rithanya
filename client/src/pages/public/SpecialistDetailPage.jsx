@@ -18,6 +18,7 @@ import {
 import { apiRequest } from '../../utils/api';
 import { useToast } from '../../components/common/Toast';
 import useDynamicTranslation from '../../utils/dynamicTranslator';
+import SafeImage from '../../components/common/SafeImage';
 
 export default function SpecialistDetailPage() {
   const { slug } = useParams();
@@ -168,9 +169,10 @@ export default function SpecialistDetailPage() {
               padding: '16px 16px 0'
             }}
           >
-            <img
-              src={currentDoctor.image || '/image.png'}
+            <SafeImage
+              src={currentDoctor.image}
               alt={currentDoctor.name}
+              fallbackSrc="/image.png"
               style={{
                 width: '100%',
                 maxHeight: 380,

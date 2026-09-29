@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Clock, User, ArrowRight, Tag } from 'lucide-react';
 import { apiRequest } from '../../utils/api';
 import { useDynamicTranslation } from '../../utils/dynamicTranslator';
-import { getSafeImageUrl, onImageError } from '../../utils/imageUtils';
+import SafeImage from '../../components/common/SafeImage';
 
 export default function BlogsPage() {
   const { t, loc, locItems } = useDynamicTranslation();
@@ -46,11 +46,9 @@ export default function BlogsPage() {
             {displayedBlogs.map((blog) => (
               <article key={blog.id} className="card card-clickable" style={{ display: 'flex', flexDirection: 'column' }}>
                 <div className="card-image-wrap">
-                  <img
-                    src={getSafeImageUrl(blog.coverImage)}
+                  <SafeImage
+                    src={blog.coverImage}
                     alt={blog.title}
-                    onError={onImageError}
-                    loading="lazy"
                   />
                 </div>
                 <div style={{ padding: '20px 0 0', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>

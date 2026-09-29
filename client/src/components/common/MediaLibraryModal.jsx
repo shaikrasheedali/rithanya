@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Image as ImageIcon, Video, Check, X, FolderOpen, RefreshCw } from 'lucide-react';
 import Modal from './Modal';
+import SafeImage from './SafeImage';
 import { apiRequest } from '../../utils/api';
 import { getSafeImageUrl, onImageError } from '../../utils/imageUtils';
 
@@ -66,10 +67,30 @@ export default function MediaLibraryModal({
     return matchesType && matchesSearch;
   });
 
+  const getCanonicalUrl = (item) => {
+    if (!item) return '/image.png';
+    if (item.url && typeof item.url === 'string') {
+      const trimmed = item.url.trim();
+      if (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('data:')) {
+        return trimmed;
+      }
+      return trimmed.startsWith('/') ? trimmed : `/${trimmed}`;
+    }
+    if (item.filename) {
+      return `/assets/uploads/${item.filename}`;
+    }
+    if (item.id) {
+      return `/api/media/file/${item.id}`;
+    }
+    return '/image.png';
+  };
+
   const handleCardClick = (item) => {
     const isVideo = item.mimeType?.startsWith('video/') || /\.(mp4|webm|ogg|mov|m4v)$/i.test(item.filename);
+    const canonicalUrl = getCanonicalUrl(item);
     const assetObj = {
-      url: item.url,
+      ...item,
+      url: canonicalUrl,
       type: isVideo ? 'VIDEO' : 'IMAGE',
       originalName: item.originalName || item.filename,
       size: item.size
@@ -77,9 +98,9 @@ export default function MediaLibraryModal({
 
     if (multiSelect) {
       setSelectedUrls((prev) => {
-        const exists = prev.some((a) => a.url === item.url);
+        const exists = prev.some((a) => a.url === canonicalUrl);
         if (exists) {
-          return prev.filter((a) => a.url !== item.url);
+          return prev.filter((a) => a.url !== canonicalUrl);
         } else {
           return [...prev, assetObj];
         }
@@ -231,11 +252,10 @@ export default function MediaLibraryModal({
                           <span style={{ display: 'block', fontSize: 10, fontWeight: 700 }}>VIDEO</span>
                         </div>
                       ) : (
-                        <img
-                          src={getSafeImageUrl(item.url)}
+                        <SafeImage
+                          src={getCanonicalUrl(item)}
                           alt={item.originalName || item.filename}
                           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                          onError={(e) => onImageError(e)}
                         />
                       )}
 

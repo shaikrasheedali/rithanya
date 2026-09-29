@@ -15,6 +15,7 @@ import { apiRequest } from '../../utils/api';
 import Modal from '../../components/common/Modal';
 import { parseGalleryItemMedia } from '../../utils/mediaEmbed';
 import useDynamicTranslation from '../../utils/dynamicTranslator';
+import SafeImage from '../../components/common/SafeImage';
 import { getSafeImageUrl, onImageError } from '../../utils/imageUtils';
 
 export default function GalleryPage() {
@@ -158,11 +159,10 @@ export default function GalleryPage() {
                     className="gallery-image-wrap"
                     style={{ aspectRatio: '16/10', borderRadius: 14, position: 'relative', overflow: 'hidden', background: '#0f172a' }}
                   >
-                    <img
-                      src={getSafeImageUrl(item.imageUrl)}
+                    <SafeImage
+                      src={item.imageUrl}
                       alt={item.title}
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                      onError={(e) => onImageError(e)}
                     />
 
                     {/* Play Badge Overlay for Videos */}
@@ -346,11 +346,10 @@ export default function GalleryPage() {
                       background: '#000'
                     }}
                   >
-                    <img
-                      src={getSafeImageUrl(parsed.url)}
+                    <SafeImage
+                      src={parsed.url}
                       alt={activeItem.title}
                       style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                      onError={(e) => onImageError(e)}
                     />
                   </div>
                 )}
@@ -431,11 +430,10 @@ function PublicCarouselViewer({ assets, loc }) {
             style={{ width: '100%', height: '100%', objectFit: 'contain' }}
           />
         ) : (
-          <img
-            src={getSafeImageUrl(currentAsset.url)}
+          <SafeImage
+            src={currentAsset.url}
             alt={`Slide ${currentIndex + 1}`}
             style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-            onError={(e) => onImageError(e)}
           />
         )}
 

@@ -6,6 +6,7 @@ import { useToast } from '../../components/common/Toast';
 import Modal from '../../components/common/Modal';
 import ImageUploadField from '../../components/common/ImageUploadField';
 import RichTextEditor from '../../components/common/RichTextEditor';
+import SafeImage from '../../components/common/SafeImage';
 import { getSafeImageUrl, onImageError } from '../../utils/imageUtils';
 
 export default function ServicesAdminPage() {
@@ -140,11 +141,10 @@ export default function ServicesAdminPage() {
                 <tr key={s.id}>
                   <td style={{ width: 80 }}>
                     <div style={{ width: 60, height: 40, borderRadius: 8, overflow: 'hidden' }}>
-                      <img
-                        src={getSafeImageUrl(s.coverImage)}
+                      <SafeImage
+                        src={s.coverImage}
                         alt={s.title}
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                        onError={(e) => onImageError(e)}
                       />
                     </div>
                   </td>

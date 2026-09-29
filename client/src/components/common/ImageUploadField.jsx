@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Upload, X, Check, Image as ImageIcon, Link as LinkIcon, FolderOpen } from 'lucide-react';
 import { apiRequest } from '../../utils/api';
 import { useToast } from './Toast';
+import SafeImage from './SafeImage';
 import { getSafeImageUrl, onImageError } from '../../utils/imageUtils';
 import MediaLibraryModal from './MediaLibraryModal';
 
@@ -142,11 +143,10 @@ export default function ImageUploadField({ label, value, onChange, required = fa
                   border: '1px solid var(--line)'
                 }}
               >
-                <img
-                  src={getSafeImageUrl(value)}
+                <SafeImage
+                  src={value}
                   alt="Preview"
                   style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                  onError={(e) => onImageError(e)}
                 />
               </div>
 

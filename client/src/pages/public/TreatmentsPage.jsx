@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Search, Clock, Stethoscope, CheckCircle2, Droplet, Sparkles, Activity } from 'lucide-react';
 import { apiRequest } from '../../utils/api';
 import { useDynamicTranslation } from '../../utils/dynamicTranslator';
+import SafeImage from '../../components/common/SafeImage';
 
 const DEFAULT_TREATMENT_IMAGES = [
   'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80',
@@ -145,14 +146,10 @@ export default function TreatmentsPage() {
                   {/* Media Image Wrap */}
                   <div className="card-image-wrap" style={{ position: 'relative' }}>
                     <Link to={treatmentUrl} style={{ display: 'block', width: '100%', height: '100%' }}>
-                      <img
+                      <SafeImage
                         src={imgSrc}
                         alt={item.title}
-                        loading="lazy"
-                        onError={(e) => {
-                          e.currentTarget.onerror = null;
-                          e.currentTarget.src = fallbackImg;
-                        }}
+                        fallbackSrc={fallbackImg}
                       />
                     </Link>
                     <div

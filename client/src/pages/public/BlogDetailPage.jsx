@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Clock, User, Calendar, Tag } from 'lucide-react';
 import { apiRequest } from '../../utils/api';
 import useDynamicTranslation from '../../utils/dynamicTranslator';
+import SafeImage from '../../components/common/SafeImage';
 
 export default function BlogDetailPage() {
   const { slug } = useParams();
@@ -66,7 +67,7 @@ export default function BlogDetailPage() {
         </div>
 
         <div className="article-cover-wrap" style={{ aspectRatio: '21/9', maxHeight: 480, borderRadius: 16, marginBottom: 32, overflow: 'hidden' }}>
-          <img src={currentBlog.coverImage} alt={currentBlog.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          <SafeImage src={currentBlog.coverImage} alt={currentBlog.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         </div>
 
         <div

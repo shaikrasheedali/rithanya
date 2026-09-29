@@ -13,6 +13,7 @@ import {
   Droplet,
   Share2
 } from 'lucide-react';
+import SafeImage from '../../components/common/SafeImage';
 import { apiRequest } from '../../utils/api';
 import { useToast } from '../../components/common/Toast';
 import useDynamicTranslation from '../../utils/dynamicTranslator';
@@ -118,7 +119,7 @@ export default function TreatmentDetailPage() {
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
           ) : (
-            <img
+            <SafeImage
               src={currentTreatment.coverImage}
               alt={currentTreatment.title}
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}

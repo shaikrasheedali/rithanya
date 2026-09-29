@@ -15,6 +15,7 @@ import {
   Droplet
 } from 'lucide-react';
 import useDynamicTranslation from '../../utils/dynamicTranslator';
+import SafeImage from '../common/SafeImage';
 
 // Register GSAP CustomEase plugin
 gsap.registerPlugin(CustomEase);
@@ -316,7 +317,7 @@ export default function HeroVideoSlider() {
               {/* VIDEO LAYER WITH OPTIMIZED STREAMING */}
               <div className="featured-hero__video">
                 {/* Fallback Poster Preview */}
-                <img
+                <SafeImage
                   src={slide.poster}
                   alt={slide.heading}
                   className="featured-hero__poster"

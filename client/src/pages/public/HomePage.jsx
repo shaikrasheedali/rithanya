@@ -27,6 +27,7 @@ import HeroVideoSlider from '../../components/home/HeroVideoSlider';
 import SpecialtiesMarquee from '../../components/common/SpecialtiesMarquee';
 import { formatDate } from '../../utils/formatters';
 import { useDynamicTranslation } from '../../utils/dynamicTranslator';
+import SafeImage from '../../components/common/SafeImage';
 
 const DEFAULT_TREATMENT_IMAGES = [
   'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80',
@@ -158,7 +159,7 @@ export default function HomePage() {
             {/* Left Aside: Official Hospital Storefront Image */}
             <aside className="home-about-split-media" aria-label="Hospital Building Entrance">
               <div className="home-about-img-frame">
-                <img
+                <SafeImage
                   src="/image.png"
                   alt="Rithanya Hospital Khammam Front Entrance and 24/7 Diagnostic Center"
                   className="home-about-img"
@@ -264,7 +265,7 @@ export default function HomePage() {
               displayedServices.slice(0, 6).map((s) => (
                 <div key={s.id} className="service-card" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                   <div className="card-image-wrap" style={{ aspectRatio: '16/9' }}>
-                    <img src={s.coverImage} alt={s.title} />
+                    <SafeImage src={s.coverImage} alt={s.title} />
                   </div>
                   <div className="service-card-body" style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                     <div>
@@ -324,13 +325,10 @@ export default function HomePage() {
                 return (
                   <div key={tItem.id} className="card" style={{ padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', borderRadius: 16 }}>
                     <div style={{ position: 'relative', width: '100%', height: 165, overflow: 'hidden', background: '#0b162c' }}>
-                      <img
+                      <SafeImage
                         src={imgSrc}
                         alt={tItem.title}
-                        onError={(e) => {
-                          e.currentTarget.onerror = null;
-                          e.currentTarget.src = fallbackImg;
-                        }}
+                        fallbackSrc={fallbackImg}
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       />
                       <div style={{ position: 'absolute', top: 10, left: 10 }}>
@@ -540,9 +538,10 @@ export default function HomePage() {
               displayedSpecialists.slice(0, 4).map((doc) => (
                 <div key={doc.id} className="specialist-card" style={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
                   <div style={{ width: '38%', minHeight: 220, position: 'relative' }}>
-                    <img
-                      src={doc.image || '/image.png'}
+                    <SafeImage
+                      src={doc.image}
                       alt={doc.name}
+                      fallbackSrc="/image.png"
                       style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                     />
                   </div>
@@ -601,7 +600,7 @@ export default function HomePage() {
                 <div key={pkg.id} className="card" style={{ padding: 22, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                   <div>
                     <div style={{ width: '100%', height: 160, borderRadius: 12, overflow: 'hidden', marginBottom: 14 }}>
-                      <img src={pkg.image || '/image.png'} alt={pkg.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      <SafeImage src={pkg.image} alt={pkg.name} fallbackSrc="/image.png" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </div>
                     <h3 style={{ fontSize: 17, marginBottom: 8, color: 'var(--ink)' }}>{pkg.name}</h3>
                     <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 14 }}>
@@ -669,7 +668,7 @@ export default function HomePage() {
               displayedBlogs.slice(0, 6).map((blog) => (
                 <div key={blog.id} className="card" style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column', height: '100%' }}>
                   <div style={{ width: '100%', height: 160, overflow: 'hidden' }}>
-                    <img src={blog.coverImage || '/image.png'} alt={blog.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <SafeImage src={blog.coverImage} alt={blog.title} fallbackSrc="/image.png" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
                   <div style={{ padding: 20, flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                     <div>

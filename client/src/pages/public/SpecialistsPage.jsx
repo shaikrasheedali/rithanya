@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Clock, Calendar, ArrowRight, Award, UserCheck, GraduationCap, Phone, ShieldCheck } from 'lucide-react';
 import { apiRequest } from '../../utils/api';
 import { useDynamicTranslation } from '../../utils/dynamicTranslator';
-import { getSafeImageUrl, onImageError } from '../../utils/imageUtils';
+import SafeImage from '../../components/common/SafeImage';
 
 export default function SpecialistsPage() {
   const { t, loc, locItems } = useDynamicTranslation();
@@ -79,11 +79,9 @@ export default function SpecialistsPage() {
                       )}
 
                       <Link to={profileUrl} style={{ display: 'block', width: '100%', height: '100%', textAlign: 'center' }}>
-                        <img
-                          src={getSafeImageUrl(doc.image)}
+                        <SafeImage
+                          src={doc.image}
                           alt={doc.name}
-                          onError={onImageError}
-                          loading="lazy"
                         />
                       </Link>
                     </div>

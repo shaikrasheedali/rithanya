@@ -7,6 +7,7 @@ import { useToast } from '../../components/common/Toast';
 import Modal from '../../components/common/Modal';
 import ImageUploadField from '../../components/common/ImageUploadField';
 import RichTextEditor from '../../components/common/RichTextEditor';
+import SafeImage from '../../components/common/SafeImage';
 import { getSafeImageUrl, onImageError } from '../../utils/imageUtils';
 
 export default function SpecialistsAdminPage() {
@@ -139,11 +140,11 @@ export default function SpecialistsAdminPage() {
                 <tr key={doc.id}>
                   <td style={{ width: 64 }}>
                     <div style={{ width: 48, height: 48, borderRadius: 10, overflow: 'hidden', background: '#f5f5f5', border: '1px solid var(--line)' }}>
-                      <img
-                        src={getSafeImageUrl(doc.image)}
+                      <SafeImage
+                        src={doc.image}
                         alt={doc.name}
+                        fallbackSrc="/image.png"
                         style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                        onError={(e) => onImageError(e)}
                       />
                     </div>
                   </td>

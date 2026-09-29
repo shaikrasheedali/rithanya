@@ -19,6 +19,7 @@ import { apiRequest } from '../../utils/api';
 import { formatCurrency } from '../../utils/formatters';
 import { useToast } from '../../components/common/Toast';
 import useDynamicTranslation from '../../utils/dynamicTranslator';
+import SafeImage from '../../components/common/SafeImage';
 
 export default function ProductDetailPage() {
   const { slug } = useParams();
@@ -168,8 +169,8 @@ export default function ProductDetailPage() {
               </div>
             ) : (
               <div style={{ width: '100%', height: 360, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
-                <img
-                  src={currentProduct.image || '/image.png'}
+                <SafeImage
+                  src={currentProduct.image}
                   alt={currentProduct.name}
                   style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
                 />

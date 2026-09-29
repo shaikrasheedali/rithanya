@@ -5,6 +5,9 @@ const upload = require('../middlewares/uploadMiddleware');
 const { authenticate } = require('../middlewares/authMiddleware');
 const { requirePermission } = require('../middlewares/rbacMiddleware');
 
+// Public endpoint to serve media files by ID or filename with auto-rehydration from MySQL
+router.get('/file/:idOrFilename', mediaController.serveMediaFile);
+
 router.use(authenticate);
 
 // Upload endpoints available to all authenticated users for doctor, blog, and service forms

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { getSafeImageUrl } from '../../utils/imageUtils';
 
-// Modern SVG Data URI fallback with hospital branding
-const FALLBACK_SVG_DATA_URI = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(`
+// Zero-network modern SVG Data URI fallback with hospital branding
+export const FALLBACK_SVG_DATA_URI = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(`
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="100%" height="100%">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -27,31 +28,44 @@ const FALLBACK_SVG_DATA_URI = "data:image/svg+xml;charset=utf-8," + encodeURICom
 export default function SafeImage({
   src,
   alt = 'Hospital Asset',
-  fallbackSrc = FALLBACK_SVG_DATA_URI,
+  fallbackSrc = '/image.png',
   className = '',
   style = {},
   loading = 'lazy',
   ...rest
 }) {
-  const [imgSrc, setImgSrc] = useState(src || fallbackSrc);
-  const [hasError, setHasError] = useState(false);
+  const primarySrc = src ? getSafeImageUrl(src) : fallbackSrc;
+  const [imgSrc, setImgSrc] = useState(primarySrc);
+  const [attemptLevel, setAttemptLevel] = useState(src ? 0 : 1); // 0: primary, 1: /image.png, 2: SVG data URI
 
   useEffect(() => {
     if (!src) {
       setImgSrc(fallbackSrc);
-      setHasError(true);
+      setAttemptLevel(1);
     } else {
-      setImgSrc(src);
-      setHasError(false);
+      const safe = getSafeImageUrl(src);
+      setImgSrc(safe);
+      setAttemptLevel(0);
     }
   }, [src, fallbackSrc]);
 
   const handleError = (e) => {
-    // Prevent repeated failing fetch retry loops
-    if (!hasError) {
-      setHasError(true);
+    // Stage 1: Try fallbackSrc (e.g. /image.png)
+    if (attemptLevel === 0) {
+      setAttemptLevel(1);
       setImgSrc(fallbackSrc);
     }
+    // Stage 2: Try embedded SVG Data URI (zero network load, guaranteed never to 404)
+    else if (attemptLevel === 1) {
+      setAttemptLevel(2);
+      setImgSrc(FALLBACK_SVG_DATA_URI);
+    } else {
+      // Prevent any further retries
+      if (e?.target) {
+        e.target.onerror = null;
+      }
+    }
+
     if (rest.onError) {
       rest.onError(e);
     }
@@ -61,7 +75,7 @@ export default function SafeImage({
     <img
       src={imgSrc}
       alt={alt}
-      className={`safe-image ${hasError ? 'safe-image-fallback' : ''} ${className}`}
+      className={`safe-image ${attemptLevel > 0 ? 'safe-image-fallback' : ''} ${className}`}
       style={{
         objectFit: style.objectFit || 'cover',
         ...style

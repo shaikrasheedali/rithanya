@@ -3,6 +3,7 @@ import { Upload, Copy, Trash2, Check, Image as ImageIcon, RefreshCw, ExternalLin
 import AdminTopbar from '../../components/layout/AdminTopbar';
 import { apiRequest } from '../../utils/api';
 import { useToast } from '../../components/common/Toast';
+import SafeImage from '../../components/common/SafeImage';
 
 export default function MediaLibraryPage() {
   const { addToast } = useToast();
@@ -173,14 +174,10 @@ export default function MediaLibraryPage() {
                     position: 'relative'
                   }}
                 >
-                  <img
+                  <SafeImage
                     src={asset.url}
                     alt={asset.originalName}
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = 'https://via.placeholder.com/300x190?text=Uploaded+File';
-                    }}
                   />
                   <span
                     style={{

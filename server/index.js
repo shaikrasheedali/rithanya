@@ -120,7 +120,20 @@ app.get(['/assets/uploads/:filename', '/uploads/:filename'], async (req, res) =>
     console.warn(`[Asset Rehydrate] Safe catch for ${filename}:`, err.message);
   }
 
-  // Graceful Self-Healing Fallback: Return clean SVG image (200 OK) so frontend never breaks with 404/500
+  // Graceful Self-Healing Fallback: Try /image.png first, then SVG fallback (200 OK) so frontend never breaks with 404/500
+  const fallbackImagePublic = path.join(__dirname, '../client/public/image.png');
+  const fallbackImageDist = path.join(__dirname, '../client/dist/image.png');
+  if (fs.existsSync(fallbackImagePublic)) {
+    res.setHeader('Content-Type', 'image/png');
+    res.setHeader('Cache-Control', 'public, max-age=86400, stale-while-revalidate=604800');
+    return res.status(200).sendFile(fallbackImagePublic);
+  }
+  if (fs.existsSync(fallbackImageDist)) {
+    res.setHeader('Content-Type', 'image/png');
+    res.setHeader('Cache-Control', 'public, max-age=86400, stale-while-revalidate=604800');
+    return res.status(200).sendFile(fallbackImageDist);
+  }
+
   res.setHeader('Content-Type', 'image/svg+xml');
   res.setHeader('Cache-Control', 'public, max-age=86400, stale-while-revalidate=604800');
   return res.status(200).send(generateFallbackSvg(filename));
@@ -130,7 +143,8 @@ app.get(['/assets/uploads/:filename', '/uploads/:filename'], async (req, res) =>
 const PUBLIC_CATALOG_ROUTES = ['/services', '/treatments', '/specialists', '/products', '/gallery', '/blogs', '/settings'];
 
 app.use('/api', (req, res, next) => {
-  const isPublicCatalogGet = req.method === 'GET' && PUBLIC_CATALOG_ROUTES.some((r) => req.path.startsWith(r));
+  const isAuthOrAdmin = req.headers.authorization || req.headers['x-admin-request'] || req.query._t;
+  const isPublicCatalogGet = !isAuthOrAdmin && req.method === 'GET' && PUBLIC_CATALOG_ROUTES.some((r) => req.path.startsWith(r));
 
   if (isPublicCatalogGet) {
     res.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
@@ -218,6 +232,12 @@ async function startServer() {
   try {
     if (process.env.NODE_ENV !== 'test') {
       await autoMigrate();
+      try {
+        const { sanitizeDatabaseAssets } = require('./utils/sanitizeAssets');
+        await sanitizeDatabaseAssets();
+      } catch (sanErr) {
+        console.warn('[Asset Sanitizer] Boot warning:', sanErr.message);
+      }
     }
 
     const server = app.listen(PORT, () => {
