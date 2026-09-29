@@ -1,4 +1,4 @@
--- CreateTable
+﻿-- CreateTable
 CREATE TABLE `User` (
     `id` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
@@ -372,9 +372,184 @@ CREATE TABLE `MediaAsset` (
     `size` INTEGER NOT NULL,
     `url` VARCHAR(1000) NOT NULL,
     `dimensions` VARCHAR(191) NULL,
+    `fileData` LONGTEXT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `BloodReservation` (
+    `id` VARCHAR(191) NOT NULL,
+    `reservationCode` VARCHAR(191) NOT NULL,
+    `bloodGroup` VARCHAR(191) NOT NULL,
+    `units` INTEGER NOT NULL DEFAULT 1,
+    `patientId` VARCHAR(191) NULL,
+    `patientName` VARCHAR(191) NOT NULL,
+    `status` VARCHAR(191) NOT NULL DEFAULT 'ACTIVE',
+    `reservedBy` VARCHAR(191) NOT NULL DEFAULT 'Chief Physician',
+    `notes` TEXT NULL,
+    `holdHours` INTEGER NOT NULL DEFAULT 24,
+    `expiresAt` DATETIME(3) NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    UNIQUE INDEX `BloodReservation_reservationCode_key`(`reservationCode`),
+    INDEX `BloodReservation_bloodGroup_idx`(`bloodGroup`),
+    INDEX `BloodReservation_status_idx`(`status`),
+    INDEX `BloodReservation_patientId_idx`(`patientId`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `BloodBagUnit` (
+    `id` VARCHAR(191) NOT NULL,
+    `bagId` VARCHAR(191) NOT NULL,
+    `bloodGroup` VARCHAR(191) NOT NULL,
+    `componentType` VARCHAR(191) NOT NULL DEFAULT 'Packed Red Cells (PRBC)',
+    `bagType` VARCHAR(191) NOT NULL DEFAULT 'Triple 3D',
+    `volumeMl` INTEGER NOT NULL DEFAULT 350,
+    `donorCode` VARCHAR(191) NOT NULL DEFAULT 'DNR-LOCAL',
+    `donorName` VARCHAR(191) NULL,
+    `collectionDate` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `expiryDate` DATETIME(3) NOT NULL,
+    `stage` VARCHAR(191) NOT NULL DEFAULT 'QUARANTINE',
+    `serologyStatus` VARCHAR(191) NOT NULL DEFAULT 'PENDING',
+    `hivResult` VARCHAR(191) NOT NULL DEFAULT 'PENDING',
+    `hcvResult` VARCHAR(191) NOT NULL DEFAULT 'PENDING',
+    `hbsagResult` VARCHAR(191) NOT NULL DEFAULT 'PENDING',
+    `vdrlResult` VARCHAR(191) NOT NULL DEFAULT 'PENDING',
+    `screenedBy` VARCHAR(191) NULL,
+    `screenedAt` DATETIME(3) NULL,
+    `location` VARCHAR(191) NOT NULL DEFAULT 'Refrigerated Unit A (2°C - 6°C)',
+    `notes` TEXT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    UNIQUE INDEX `BloodBagUnit_bagId_key`(`bagId`),
+    INDEX `BloodBagUnit_bloodGroup_idx`(`bloodGroup`),
+    INDEX `BloodBagUnit_stage_idx`(`stage`),
+    INDEX `BloodBagUnit_serologyStatus_idx`(`serologyStatus`),
+    INDEX `BloodBagUnit_expiryDate_idx`(`expiryDate`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `EmptyBagStock` (
+    `id` VARCHAR(191) NOT NULL,
+    `bagType` VARCHAR(191) NOT NULL,
+    `description` TEXT NULL,
+    `volume` VARCHAR(191) NOT NULL DEFAULT '450ml',
+    `anticoagulant` VARCHAR(191) NOT NULL DEFAULT 'CPDA-1',
+    `currentStock` INTEGER NOT NULL DEFAULT 50,
+    `minThreshold` INTEGER NOT NULL DEFAULT 15,
+    `unitCost` DOUBLE NOT NULL DEFAULT 0,
+    `lastRestocked` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    UNIQUE INDEX `EmptyBagStock_bagType_key`(`bagType`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `SerologyTestKit` (
+    `id` VARCHAR(191) NOT NULL,
+    `assayName` VARCHAR(191) NOT NULL,
+    `manufacturer` VARCHAR(191) NOT NULL DEFAULT 'Transasia / J. Mitra',
+    `lotNumber` VARCHAR(191) NOT NULL DEFAULT 'LOT-2026-A1',
+    `totalTestsKit` INTEGER NOT NULL DEFAULT 100,
+    `testsRemaining` INTEGER NOT NULL DEFAULT 100,
+    `minThreshold` INTEGER NOT NULL DEFAULT 20,
+    `expiryDate` DATETIME(3) NOT NULL,
+    `status` VARCHAR(191) NOT NULL DEFAULT 'ACTIVE',
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    UNIQUE INDEX `SerologyTestKit_assayName_key`(`assayName`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `ReagentUsageLog` (
+    `id` VARCHAR(191) NOT NULL,
+    `kitId` VARCHAR(191) NOT NULL,
+    `assayName` VARCHAR(191) NOT NULL,
+    `testsUsed` INTEGER NOT NULL DEFAULT 1,
+    `batchNumber` VARCHAR(191) NOT NULL,
+    `technician` VARCHAR(191) NOT NULL DEFAULT 'Lab Officer',
+    `date` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `notes` TEXT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    INDEX `ReagentUsageLog_kitId_idx`(`kitId`),
+    INDEX `ReagentUsageLog_date_idx`(`date`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `StaffPayroll` (
+    `id` VARCHAR(191) NOT NULL,
+    `payrollMonth` VARCHAR(191) NOT NULL,
+    `staffId` VARCHAR(191) NOT NULL,
+    `staffCode` VARCHAR(191) NOT NULL,
+    `staffName` VARCHAR(191) NOT NULL,
+    `designation` VARCHAR(191) NOT NULL,
+    `department` VARCHAR(191) NOT NULL,
+    `fixedMonthlySalary` DOUBLE NOT NULL DEFAULT 0,
+    `totalCalendarDays` INTEGER NOT NULL DEFAULT 30,
+    `actualWorkingDays` INTEGER NOT NULL DEFAULT 26,
+    `lopDays` DOUBLE NOT NULL DEFAULT 0,
+    `paidDays` DOUBLE NOT NULL DEFAULT 30,
+    `perDayRate` DOUBLE NOT NULL DEFAULT 0,
+    `lopDeduction` DOUBLE NOT NULL DEFAULT 0,
+    `allowances` DOUBLE NOT NULL DEFAULT 0,
+    `otherDeductions` DOUBLE NOT NULL DEFAULT 0,
+    `netPayableSalary` DOUBLE NOT NULL DEFAULT 0,
+    `staffAcknowledged` BOOLEAN NOT NULL DEFAULT false,
+    `staffSignature` LONGTEXT NULL,
+    `staffSignedAt` DATETIME(3) NULL,
+    `supervisorApproved` BOOLEAN NOT NULL DEFAULT false,
+    `supervisorName` VARCHAR(191) NULL,
+    `supervisorSignedAt` DATETIME(3) NULL,
+    `directorApproved` BOOLEAN NOT NULL DEFAULT false,
+    `directorName` VARCHAR(191) NULL DEFAULT 'Dr. Narayana Murthy, MD',
+    `directorSignature` LONGTEXT NULL,
+    `directorSignedAt` DATETIME(3) NULL,
+    `status` VARCHAR(191) NOT NULL DEFAULT 'DRAFT',
+    `paymentMode` VARCHAR(191) NOT NULL DEFAULT 'Bank Transfer',
+    `paymentReference` VARCHAR(191) NULL,
+    `disbursedAt` DATETIME(3) NULL,
+    `notes` TEXT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    INDEX `StaffPayroll_payrollMonth_idx`(`payrollMonth`),
+    INDEX `StaffPayroll_staffId_idx`(`staffId`),
+    INDEX `StaffPayroll_status_idx`(`status`),
+    UNIQUE INDEX `StaffPayroll_payrollMonth_staffId_key`(`payrollMonth`, `staffId`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `OperationalExpenseLine` (
+    `id` VARCHAR(191) NOT NULL,
+    `payrollMonth` VARCHAR(191) NOT NULL,
+    `expenseName` VARCHAR(191) NOT NULL,
+    `category` VARCHAR(191) NOT NULL DEFAULT 'Facility Rent',
+    `vendorOrPayee` VARCHAR(191) NOT NULL,
+    `amount` DOUBLE NOT NULL DEFAULT 0,
+    `paymentStatus` VARCHAR(191) NOT NULL DEFAULT 'PENDING',
+    `paymentMethod` VARCHAR(191) NOT NULL DEFAULT 'Cheque / NEFT',
+    `invoiceRef` VARCHAR(191) NULL,
+    `approvedBy` VARCHAR(191) NOT NULL DEFAULT 'Dr. Narayana Murthy',
+    `notes` TEXT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    INDEX `OperationalExpenseLine_payrollMonth_idx`(`payrollMonth`),
+    INDEX `OperationalExpenseLine_category_idx`(`category`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -388,6 +563,16 @@ CREATE TABLE `Expense` (
     `amount` DOUBLE NOT NULL,
     `date` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `status` VARCHAR(191) NOT NULL DEFAULT 'paid',
+    `invoiceRef` VARCHAR(191) NULL,
+    `receiptUrl` VARCHAR(1000) NULL,
+    `paymentMethod` VARCHAR(191) NOT NULL DEFAULT 'Bank NEFT',
+    `approvalStage` VARCHAR(191) NOT NULL DEFAULT 'PENDING_REVIEW',
+    `supervisorApproved` BOOLEAN NOT NULL DEFAULT false,
+    `supervisorName` VARCHAR(191) NULL,
+    `supervisorSignedAt` DATETIME(3) NULL,
+    `directorApproved` BOOLEAN NOT NULL DEFAULT false,
+    `directorName` VARCHAR(191) NULL,
+    `directorSignedAt` DATETIME(3) NULL,
     `notes` TEXT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
@@ -395,6 +580,7 @@ CREATE TABLE `Expense` (
     UNIQUE INDEX `Expense_expenseCode_key`(`expenseCode`),
     INDEX `Expense_category_idx`(`category`),
     INDEX `Expense_date_idx`(`date`),
+    INDEX `Expense_approvalStage_idx`(`approvalStage`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -467,4 +653,7 @@ ALTER TABLE `ClinicalReading` ADD CONSTRAINT `ClinicalReading_admissionId_fkey` 
 
 -- AddForeignKey
 ALTER TABLE `InventoryLog` ADD CONSTRAINT `InventoryLog_patientId_fkey` FOREIGN KEY (`patientId`) REFERENCES `Patient`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `ReagentUsageLog` ADD CONSTRAINT `ReagentUsageLog_kitId_fkey` FOREIGN KEY (`kitId`) REFERENCES `SerologyTestKit`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 

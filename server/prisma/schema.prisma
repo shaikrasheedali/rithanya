@@ -1,5 +1,5 @@
 // Prisma Schema for Rithanya Hospital Platform
-// Target: MySQL Database (Aiven Cloud)
+// Target: GoDaddy Hosted MySQL Database
 
 datasource db {
   provider = "mysql"

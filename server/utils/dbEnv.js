@@ -1,6 +1,12 @@
 /**
- * Database Environment Helper for GoDaddy & Cloud Hosting
- * Automatically constructs standard DATABASE_URL when DB_HOST, DB_USER, etc. are provided
+ * Database Environment Helper for GoDaddy Hosted MySQL
+ * Automatically maps GoDaddy environment variables:
+ * - DB_HOST
+ * - DB_PORT
+ * - DB_NAME
+ * - DB_USER
+ * - DB_PASSWORD
+ * into Prisma-compatible and mysql2-compatible configurations.
  */
 require('dotenv').config();
 
@@ -11,9 +17,10 @@ function initDbEnv() {
     const user = encodeURIComponent(process.env.DB_USER || 'root');
     const pass = encodeURIComponent(process.env.DB_PASSWORD || '');
     const name = process.env.DB_NAME || '';
+
     // Construct standard MySQL connection string for Prisma
-    process.env.DATABASE_URL = `mysql://${user}:${pass}@${host}:${port}/${name}`;
-    console.log(`[Database Config] Synthesized DATABASE_URL from GoDaddy environment: mysql://${user}:***@${host}:${port}/${name}`);
+    process.env.DATABASE_URL = `mysql://${user}:${pass}@${host}:${port}/${name}?connection_limit=10&connect_timeout=30&pool_timeout=60`;
+    console.log(`[Database Config] ✓ Configured GoDaddy Hosted MySQL: mysql://${user}:***@${host}:${port}/${name}`);
   }
 }
 
